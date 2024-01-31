@@ -10,7 +10,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.PathVariable;
 
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Controller used to showcase Create and Read from a LIST
@@ -25,17 +29,34 @@ public class PeopleController {
     // Springboot system.
     HashMap<String, Person> peopleList = new  HashMap<>();
 
+    // Save person number
+    private int counter;
+
     //CRUDL (create/read/update/delete/list)
     // use POST, GET, PUT, DELETE, GET methods for CRUDL
 
     // THIS IS THE LIST OPERATION
     // gets all the people in the list and returns it in JSON format
     // This controller takes no input. 
-    // Springboot automatically converts the list to JSON format 
-    // in this case because of @ResponseBody
-    // Note: To LIST, we use the GET method
+    // Springboot automatically convponseBody
+    // Note: To LIST, we use the Gerts the list to JSON format
+    //    // in this case because of @ResET method
     @GetMapping("/people/list")
     public  HashMap<String,Person> getAllPersons() {
+        if (peopleList.get(0).getID() == )
+        // Create new list to sort existing peoplelist in ID order via HOF
+        List<Person> sortedPeople = new ArrayList<>(peopleList.values());
+        // Sort the new list
+        sortedPeople.sort(Comparator.comparingInt(Person::getID));
+        // Clear existing HashMap to assign new order of people,
+        //probably not best practice for database efficiency
+
+        peopleList.clear();
+
+        // Put sorted list of people into our main peopleList
+        for(Person person : sortedPeople) {
+            peopleList.put(String.valueOf(person.getID()), person);
+        }
         return peopleList;
     }
 
@@ -47,6 +68,8 @@ public class PeopleController {
     // Note: To CREATE we use POST method
     @PostMapping("/people/create")
     public  String createPerson(@RequestBody Person person) {
+        counter++;
+        person.setID(counter);
         System.out.println(person);
         peopleList.put(person.getFirstName(), person);
         return "New person "+ person.getFirstName() + " Saved";
