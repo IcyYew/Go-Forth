@@ -30,7 +30,6 @@ public class PeopleController {
     HashMap<String, Person> peopleList = new  HashMap<>();
 
     // Save person number
-    private int counter;
 
     //CRUDL (create/read/update/delete/list)
     // use POST, GET, PUT, DELETE, GET methods for CRUDL
@@ -43,19 +42,6 @@ public class PeopleController {
     //    // in this case because of @ResET method
     @GetMapping("/people/list")
     public  HashMap<String,Person> getAllPersons() {
-        // Create new list to sort existing peoplelist in ID order via HOF
-        List<Person> sortedPeople = new ArrayList<>(peopleList.values());
-        // Sort the new list
-        sortedPeople.sort(Comparator.comparingInt(Person::getID));
-        // Clear existing HashMap to assign new order of people,
-        //probably not best practice for database efficiency
-
-        peopleList.clear();
-
-        // Put sorted list of people into our main peopleList
-        for(Person person : sortedPeople) {
-            peopleList.put(String.valueOf(person.getID()), person);
-        }
         return peopleList;
     }
 
@@ -67,8 +53,6 @@ public class PeopleController {
     // Note: To CREATE we use POST method
     @PostMapping("/people/create")
     public  String createPerson(@RequestBody Person person) {
-        counter++;
-        person.setID(counter);
         System.out.println(person);
         peopleList.put(person.getFirstName(), person);
         return "New person "+ person.getFirstName() + " Saved";

@@ -24,12 +24,11 @@ public class Person {
         
     }
 
-    public Person(String firstName, String lastName, String address, String telephone, int count){
+    public Person(String firstName, String lastName, String address, String telephone){
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
         this.telephone = telephone;
-        this.ID = count;
     }
 
     public String getFirstName() {
@@ -64,13 +63,6 @@ public class Person {
         this.telephone = telephone;
     }
 
-    public void setID(int count) {
-        this.ID = count;
-    }
-
-    public int getID() {
-        return this.ID;
-    }
 
     @Override
     public String toString() {
