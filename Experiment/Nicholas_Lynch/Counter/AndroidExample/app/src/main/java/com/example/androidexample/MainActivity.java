@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         /* extract data passed into this activity from another activity */
         Bundle extras = getIntent().getExtras();
         if(extras == null) {
-            messageText.setText("Counter Meme");
+            messageText.setText("Counter");
         } else {
             String number = extras.getString("NUM");  // this will come from LoginActivity
             messageText.setText("El numero es " + number);
