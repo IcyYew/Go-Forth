@@ -106,9 +106,9 @@ public class PeopleController {
     // Note: To DELETE we use delete method
     
     @DeleteMapping("/people/{firstName}")
-    public HashMap<String, Person> deletePerson(@PathVariable String firstName) {
+    public List<Person> deletePerson(@PathVariable String firstName) {
         peopleList.remove(firstName);
-        return peopleList;
+        return getAllPersons();
     }
 }
 
