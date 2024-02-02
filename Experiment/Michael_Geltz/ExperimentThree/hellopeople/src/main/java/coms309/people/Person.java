@@ -1,6 +1,7 @@
 package coms309.people;
 
 
+import java.time.LocalDateTime;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -19,17 +20,19 @@ public class Person {
 
     private String telephone;
     private int ID;
+    private String creationTime;
 
     public Person(){
         
     }
 
-    public Person(String firstName, String lastName, String address, String telephone, int count){
+    public Person(String firstName, String lastName, String address, String telephone, int count, String currentTime){
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
         this.telephone = telephone;
         this.ID = count;
+        this.creationTime = currentTime;
     }
 
     public String getFirstName() {
@@ -71,6 +74,13 @@ public class Person {
     public int getID() {
         return this.ID;
     }
+    public void setCreationTime(String ldt) {
+        this.creationTime = ldt;
+    }
+
+    public String getCreationTime() {
+        return this.creationTime;
+    }
 
     @Override
     public String toString() {
@@ -78,6 +88,7 @@ public class Person {
                + lastName + " "
                + address + " "
                + telephone + " "
+                + creationTime + " "
                 + ID;
     }
 }

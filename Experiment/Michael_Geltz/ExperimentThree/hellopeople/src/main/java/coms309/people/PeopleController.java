@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.PathVariable;
 
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -24,10 +26,10 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 public class PeopleController {
-
     // Note that there is only ONE instance of PeopleController in 
     // Springboot system.
     HashMap<String, Person> peopleList = new  HashMap<>();
+    private List<Person> sortedPeopleList = new ArrayList<>();
 
     // Save person number
     private int counter;
@@ -42,21 +44,17 @@ public class PeopleController {
     // Note: To LIST, we use the Gerts the list to JSON format
     //    // in this case because of @ResET method
     @GetMapping("/people/list")
-    public  HashMap<String,Person> getAllPersons() {
+    public  List<Person> getAllPersons() {
         // Create new list to sort existing peoplelist in ID order via HOF
-        List<Person> sortedPeople = new ArrayList<>(peopleList.values());
+        sortedPeopleList = new ArrayList<>(peopleList.values());
         // Sort the new list
-        sortedPeople.sort(Comparator.comparingInt(Person::getID));
+        sortedPeopleList.sort(Comparator.comparingInt(Person::getID));
         // Clear existing HashMap to assign new order of people,
         //probably not best practice for database efficiency
-
-        peopleList.clear();
+        return sortedPeopleList;
 
         // Put sorted list of people into our main peopleList
-        for(Person person : sortedPeople) {
-            peopleList.put(String.valueOf(person.getID()), person);
-        }
-        return peopleList;
+
     }
 
     // THIS IS THE CREATE OPERATION
@@ -67,7 +65,9 @@ public class PeopleController {
     // Note: To CREATE we use POST method
     @PostMapping("/people/create")
     public  String createPerson(@RequestBody Person person) {
+        LocalDateTime ldt = LocalDateTime.now();
         counter++;
+        person.setCreationTime(ldt.format(DateTimeFormatter.ofPattern("dd/MM/yyyy 'at' HH:mm")));
         person.setID(counter);
         System.out.println(person);
         peopleList.put(person.getFirstName(), person);
@@ -95,7 +95,7 @@ public class PeopleController {
     // Note: To UPDATE we use PUT method
     @PutMapping("/people/{firstName}")
     public Person updatePerson(@PathVariable String firstName, Person p) {
-        peopleList.replace(firstName, p);
+        peopleList.put(firstName, p);
         return peopleList.get(firstName);
     }
 
@@ -106,9 +106,9 @@ public class PeopleController {
     // Note: To DELETE we use delete method
     
     @DeleteMapping("/people/{firstName}")
-    public HashMap<String, Person> deletePerson(@PathVariable String firstName) {
+    public List<Person> deletePerson(@PathVariable String firstName) {
         peopleList.remove(firstName);
-        return peopleList;
+        return getAllPersons();
     }
 }
 
