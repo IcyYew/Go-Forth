@@ -91,4 +91,15 @@ public class TroopManager {
                 break;
         }
     }
+
+    @Override
+    public String toString() {
+        return "TroopManager{" +
+                ", archerNum=" + troopsCounts.get(ARCHER) +
+                ", warriorNum=" + troopsCounts.get(WARRIOR) +
+                ", mageNum=" + troopsCounts.get(MAGE) +
+                ", cavalryNum=" + troopsCounts.get(CAVALRY) +
+                ", totalTroopPower=" + totalTroopPower +
+                '}';
+    }
 }

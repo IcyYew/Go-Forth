@@ -1,4 +1,4 @@
 package buildings.resourcebuildings;
 
-public class PlatinumMIne {
+public class PlatinumMine {
 }
