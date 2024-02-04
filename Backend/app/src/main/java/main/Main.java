@@ -3,7 +3,7 @@ package main;
 
 import troops.Archer;
 import troops.Cavalry;
-/*import troops.TroopCombatCalculator;
+import troops.TroopCombatCalculator;
 import troops.TroopManager;
 
 import static troops.TroopTypes.*;
@@ -16,6 +16,8 @@ public class Main {
         attacker.addTroop(CAVALRY, 100);
         attacker.addTroop(MAGE, 100);
         attacker.addTroop(WARRIOR, 100);
+        System.out.println("Pre-battle: ");
+        System.out.println("Attacker: ");
         System.out.println(attacker.getTroopNum(ARCHER));
         System.out.println(attacker.getTroopNum(CAVALRY));
         System.out.println(attacker.getTroopNum(MAGE));
@@ -27,6 +29,7 @@ public class Main {
         defender.addTroop(CAVALRY, 100);
         defender.addTroop(MAGE, 100);
         defender.addTroop(WARRIOR, 0);
+        System.out.println("Defender: ");
         System.out.println(defender.getTroopNum(ARCHER));
         System.out.println(defender.getTroopNum(CAVALRY));
         System.out.println(defender.getTroopNum(MAGE));
@@ -57,4 +60,4 @@ public class Main {
 
 
     }
-}*/
+}
