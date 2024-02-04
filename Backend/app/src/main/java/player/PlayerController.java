@@ -2,6 +2,7 @@ package player;
 
 import org.springframework.web.bind.annotation.*;
 import troops.Troop;
+import troops.TroopCombatCalculator;
 import troops.TroopManager;
 import troops.TroopTypes;
 
@@ -50,6 +51,16 @@ public class PlayerController {
     public String banPlayer(@PathVariable int playerID) {
         playerDataBase.remove(playerID);
         return "Player of ID: " + playerID +" banned from server & removed from database";
+    }
+
+    @GetMapping("/players/fight/{playerID1}/{playerID2}")
+    public String fight(@PathVariable int playerID1, @PathVariable int playerID2) {
+        TroopCombatCalculator tcc = new TroopCombatCalculator(playerDataBase.get(playerID1).troops, playerDataBase.get(playerID2).troops);
+        playerDataBase.get(playerID1).updatePower();
+        playerDataBase.get(playerID2).updatePower();
+
+        return tcc.getResult() + "\n" + playerDataBase.get(playerID1) + "\n\n" +  playerDataBase.get(playerID2);
+
     }
 
 }
