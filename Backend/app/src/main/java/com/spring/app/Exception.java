@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-class Exception{
+class Exception extends Throwable {
 
     @RequestMapping(method = RequestMethod.GET, path = "/oops")
     public String triggerException() {

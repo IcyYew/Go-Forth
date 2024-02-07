@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 
 import static troops.TroopTypes.*;
 
+
+@JsonSerialize(using = TroopManagerSerializer.class)
 public class TroopManager {
     private Map<TroopTypes, Integer> troopsCounts;
     private int archerNum = 0;
