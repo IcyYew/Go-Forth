@@ -1,14 +1,12 @@
-<<<<<<< Updated upstream
 package resources;
 
 public abstract class Resource {
     private int quantity;
 
+
     public Resource(int quantity) {
         this.quantity = quantity;
     }
-
-
 
     public int getQuantity() {
         return quantity;
@@ -16,6 +14,10 @@ public abstract class Resource {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public void addResource(int quantity) {
+        this.quantity += quantity;
     }
 
     public void consume(int amount) {
@@ -37,10 +39,3 @@ public abstract class Resource {
                 '}';
     }
 }
-=======
-package resources;
-
-public abstract class Resource {
-
-}
->>>>>>> Stashed changes

@@ -1,6 +1,7 @@
 package troops;
 
 public class Warrior extends Troop{
+    // Warrior troop is weak to mage troop, basic stats defined, subject to change
     private final TroopTypes weakness = TroopTypes.MAGE;
     private final int power = 7;
     private final int health = 12;

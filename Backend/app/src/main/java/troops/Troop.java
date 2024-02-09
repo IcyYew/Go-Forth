@@ -14,6 +14,7 @@ public abstract class Troop {
     private TroopTypes weakness;
 
 
+
     public Troop(TroopTypes troopType) {
         this.troopType = troopType;
     }
@@ -55,6 +56,7 @@ public abstract class Troop {
     public abstract int getMovementSpeed();
     public abstract int getAttackSpeed();
 
+    // A primitive setup for the weakness system, not sure if it will be implemented any time soon 2/9/2024
     public double troopVTroopEffectiveness(Troop targetTroop) {
         TroopTypes targetWeakness = targetTroop.getWeakness();
         if (this.troopType == targetWeakness) {

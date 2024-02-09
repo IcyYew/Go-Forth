@@ -3,56 +3,80 @@ package troops;
 import static troops.TroopTypes.*;
 
 public class TroopCombatCalculator {
+    // Player v Player combat is based on a points system calculated with the below values
     final double ptsPerDamage = 2.5;
     final double ptsPerHealth = 2.0;
     final double ptsPerAttackSpeed = 3.0;
     final double ptsPerMovementSpeed = 3.0;
+    // Only three results defined here but a tie can result in one favoring the attacker or defender
     private enum Result  {ATTACKER_WIN, DEFENDER_WIN, TIE}
+
     Result result = Result.TIE;
+    // Takes in two different players troops, directly calls the battle method, a better way of doing this
+    // to be implemented eventually
     public TroopCombatCalculator(TroopManager attacker, TroopManager defender) {
         battle(attacker, defender);
     }
 
-    // Some kind of points based calculation implementation?
+    // Battle class to calculate who won a battle, who is attacker and defender is entirely arbitrary
     public void battle(TroopManager attacker, TroopManager defender) {
         double attackerPts = 0;
         double defenderPts = 0;
+        // Battle system gives our 5 different "types" of battle result depending on how the points-based calculation fairs
         int type = 0;
+
         attackerPts = calculatePlayerPoints(attacker);
         defenderPts = calculatePlayerPoints(defender);
+
+        // Take absolute difference of two point values to figure out how advantaged the battle was
         double ptsDifference = Math.abs(attackerPts - defenderPts);
+        // The points differences defined in the logic below are not very good, need to do substantial testing or
+
+        // a different method of determining battle types, this is mostly for testing
+        // Tie with slight attacker advantage
         if (ptsDifference <= 100 && attackerPts > defenderPts) {
             type = 0;
             result = Result.TIE;
         }
+        // Attacker win
         else if (ptsDifference > 100 && ptsDifference < 900 && attackerPts > defenderPts) {
             type = 1;
             result = Result.ATTACKER_WIN;
         }
+        // Overwhelming attacker victory
         else if (ptsDifference >= 900 && attackerPts > defenderPts) {
             type = 2;
             result = Result.ATTACKER_WIN;
         }
+        // Tie with slight defender advantage
         else if (ptsDifference <= 100 && attackerPts < defenderPts) {
             type = 3;
             result = Result.TIE;
         }
+        // Defender win
         else if (ptsDifference > 100 && ptsDifference < 900 && attackerPts < defenderPts) {
             type = 4;
             result = Result.DEFENDER_WIN;
         }
+        // Overwhelming defender win
         else if (ptsDifference >= 900 && attackerPts < defenderPts) {
              type = 5;
              result = Result.DEFENDER_WIN;
         }
+        // Update player troops based on battle result
         troopDeaths(attacker, defender, type);
     }
+    // Returns result enum in String format
     public String getResult() {
         return result.toString();
     }
 
+    // Update troops for both attacker and defender based on battle result or "type"
+    // Pretty messy system of doing this, could be made to look nicer in a couple of separate methods but this
+    // works and I don't see it as prudent to change for now
     public void troopDeaths(TroopManager attacker, TroopManager defender, int type) {
         switch (type) {
+            // Tie with attacker advantage, attacker loses 40% of troops they had prior to battle, defender loses 50%
             case 0:
                 attacker.removeTroop(ARCHER, (int)(attacker.getTroopNum(ARCHER) * 0.4));
                 defender.removeTroop(ARCHER, (int)(defender.getTroopNum(ARCHER) * 0.5));
@@ -63,6 +87,7 @@ public class TroopCombatCalculator {
                 attacker.removeTroop(CAVALRY, (int)(attacker.getTroopNum(CAVALRY) * 0.4));
                 defender.removeTroop(CAVALRY, (int)(defender.getTroopNum(CAVALRY) * 0.5));
                 break;
+            // Attacker win, attacker loses 30% of troops they had prior to battle, defender loses 70%
             case 1:
                 attacker.removeTroop(ARCHER, (int)(attacker.getTroopNum(ARCHER) * 0.3));
                 defender.removeTroop(ARCHER, (int)(defender.getTroopNum(ARCHER) * 0.7));
@@ -73,6 +98,7 @@ public class TroopCombatCalculator {
                 attacker.removeTroop(CAVALRY, (int)(attacker.getTroopNum(CAVALRY) * 0.3));
                 defender.removeTroop(CAVALRY, (int)(defender.getTroopNum(CAVALRY) * 0.7));
                 break;
+            // Overwhelming attacker win, attacker loses 10% of troops they had prior to battle, defender loses 80%
             case 2:
                 attacker.removeTroop(ARCHER, (int)(attacker.getTroopNum(ARCHER) * 0.1));
                 defender.removeTroop(ARCHER, (int)(defender.getTroopNum(ARCHER) * 0.8));
@@ -83,6 +109,7 @@ public class TroopCombatCalculator {
                 attacker.removeTroop(CAVALRY, (int)(attacker.getTroopNum(CAVALRY) * 0.1));
                 defender.removeTroop(CAVALRY, (int)(defender.getTroopNum(CAVALRY) * 0.8));
                 break;
+            // Tie with defender advantage, defender loses 40% of troops they had prior to battle, attacker loses 50%
             case 3:
                 attacker.removeTroop(ARCHER, (int)(attacker.getTroopNum(ARCHER) * 0.5));
                 defender.removeTroop(ARCHER, (int)(defender.getTroopNum(ARCHER) * 0.4));
@@ -93,6 +120,7 @@ public class TroopCombatCalculator {
                 attacker.removeTroop(CAVALRY, (int)(attacker.getTroopNum(CAVALRY) * 0.5));
                 defender.removeTroop(CAVALRY, (int)(defender.getTroopNum(CAVALRY) * 0.4));
                 break;
+            // Defender win, defender loses 30% of troops they had prior to battle, attacker loses 70%
             case 4:
                 attacker.removeTroop(ARCHER, (int)(attacker.getTroopNum(ARCHER) * 0.7));
                 defender.removeTroop(ARCHER, (int)(defender.getTroopNum(ARCHER) * 0.3));
@@ -103,6 +131,7 @@ public class TroopCombatCalculator {
                 attacker.removeTroop(CAVALRY, (int)(attacker.getTroopNum(CAVALRY) * 0.7));
                 defender.removeTroop(CAVALRY, (int)(defender.getTroopNum(CAVALRY) * 0.3));
                 break;
+            // Overwhelming defender win, defender loses 10% of troops they had prior to battle, attacker loses 80%
             case 5:
                 attacker.removeTroop(ARCHER, (int)(attacker.getTroopNum(ARCHER) * 0.8));
                 defender.removeTroop(ARCHER, (int)(defender.getTroopNum(ARCHER) * 0.1));
@@ -116,6 +145,7 @@ public class TroopCombatCalculator {
         }
     }
 
+    // Basic points based calculation to derive battle result
     public double calculatePlayerPoints(TroopManager player) {
         double playerPts = 0;
         Archer archer = new Archer();
@@ -128,6 +158,10 @@ public class TroopCombatCalculator {
         int mages = player.getTroopNum(MAGE);
         int cavalryNum = player.getTroopNum(CAVALRY);
 
+        // Player points updated by the muliplication of the following three parameters for all troop types:
+        // 1) amount of (insert troop type) possessed by the player
+        // 2) (insert troop types)'s stat
+        // 3) points awarded for that stat
         playerPts += (archers * archer.getAttackSpeed() * ptsPerAttackSpeed) + (archers * archer.getHealth() * ptsPerHealth) + (archers * archer.getDamage() * ptsPerDamage) +
                 (archers * archer.getMovementSpeed() * ptsPerMovementSpeed);
         playerPts += (warriors * warrior.getAttackSpeed() * ptsPerAttackSpeed) + (warriors * warrior.getHealth() * ptsPerHealth) + (warriors * warrior.getDamage() * ptsPerDamage) +

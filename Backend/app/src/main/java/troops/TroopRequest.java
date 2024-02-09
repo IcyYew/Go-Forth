@@ -1,5 +1,8 @@
 package troops;
 
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// CURRENTLY USELESS, ATTEMPT AT BETTER DATABASE MANAGEMENT
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 public class TroopRequest {
     private String troopType;
     private int quantity;

@@ -9,9 +9,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import static troops.TroopTypes.*;
 
-
+// Serializer for the troopmanager because it was impossible to pass information into fields with the PlayerController on Postman
 @JsonSerialize(using = TroopManagerSerializer.class)
 public class TroopManager {
+    // Map storing what trooptype a troop is and the quantity of that type possessed
     private Map<TroopTypes, Integer> troopsCounts;
     private int archerNum = 0;
     private int warriorNum;
@@ -19,6 +20,7 @@ public class TroopManager {
     private int cavalryNum;
     private long totalTroopPower;
 
+    // Constructor for troopmanager just creates an empty hashmap of all trooptypes
     public TroopManager() {
         this.troopsCounts = new HashMap<>();
         this.troopsCounts.put(ARCHER, 0);
@@ -28,6 +30,7 @@ public class TroopManager {
 
     }
 
+    // Returns specific number of a trooptype currently owned
     public int getTroopNum(TroopTypes troopType) {
         int troopNum = 0;
         switch (troopType) {
@@ -37,6 +40,7 @@ public class TroopManager {
         return troopNum;
     }
 
+    // calculates a troopmanagers total power taking into account each troops different power rating
     public long calculateTotalTroopPower() {
         totalTroopPower = 0;
         totalTroopPower += troopsCounts.get(ARCHER) * new Archer().getPower();
@@ -46,6 +50,7 @@ public class TroopManager {
         return totalTroopPower;
     }
 
+    // Add troop(s) to troopmanager
     public void addTroop(TroopTypes troopType, int quantity) {
         switch (troopType) {
             case ARCHER :
@@ -67,6 +72,9 @@ public class TroopManager {
         }
 
     }
+    // Remove troop(s) from troopmanager
+    // Basic logic to make sure a specific troop type isnt deducted to a value below zero
+    // !!!! Hidden issue here that sets player troop count to negative when a troopmanager is loaded with non-zero value
     public void removeTroop(TroopTypes troopType, int quantity) {
         switch (troopType) {
             case ARCHER:
