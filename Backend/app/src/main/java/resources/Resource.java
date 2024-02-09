@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 package resources;
 
 public abstract class Resource {
@@ -36,3 +37,10 @@ public abstract class Resource {
                 '}';
     }
 }
+=======
+package resources;
+
+public abstract class Resource {
+
+}
+>>>>>>> Stashed changes

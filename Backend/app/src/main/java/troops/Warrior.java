@@ -3,8 +3,8 @@ package troops;
 public class Warrior extends Troop{
     private final TroopTypes weakness = TroopTypes.MAGE;
     private final int power = 7;
-    private final int health = 10;
-    private final int damage = 3;
+    private final int health = 12;
+    private final int damage = 2;
     private final int movementSpeed = 3;
     private final int attackSpeed = 3;
 

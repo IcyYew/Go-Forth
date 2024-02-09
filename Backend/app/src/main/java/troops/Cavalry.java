@@ -5,7 +5,7 @@ public class Cavalry extends Troop{
     private final int power = 2;
     private final int health = 10;
     private final int damage = 3;
-    private final int movementSpeed = 3;
+    private final int movementSpeed = 5;
     private final int attackSpeed = 3;
 
     public Cavalry() {

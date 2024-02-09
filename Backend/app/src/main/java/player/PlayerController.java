@@ -16,7 +16,6 @@ import java.util.List;
 public class PlayerController {
 
     HashMap<Integer, Player> playerDataBase = new HashMap<>();
-    private List<Player> playerList = new ArrayList<>();
 
     private int playerID = 0;
 
@@ -62,5 +61,7 @@ public class PlayerController {
         return tcc.getResult() + "\n" + playerDataBase.get(playerID1) + "\n\n" +  playerDataBase.get(playerID2);
 
     }
+
+    
 
 }
