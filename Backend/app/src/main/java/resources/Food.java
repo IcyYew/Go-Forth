@@ -8,7 +8,4 @@ public class Food extends Resource{
         super(amount);
         this.consumptionRate = consumptionRate;
     }
-
-
-
 }
