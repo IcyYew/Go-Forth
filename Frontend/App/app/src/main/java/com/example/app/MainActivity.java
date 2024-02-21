@@ -15,15 +15,14 @@ public class MainActivity extends AppCompatActivity {
 
     private Button loginButton;     // define login button variable
     private Button signupButton;    // define signup button variable
+    private Button troopManagementButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        loginButton = findViewById(R.id.Login);
-        signupButton = findViewById(R.id.Signup);
-
-
-
+        loginButton = findViewById(R.id.loginButton);
+        signupButton = findViewById(R.id.signupButton);
+        troopManagementButton = findViewById(R.id.troopManagementButton);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,6 +45,14 @@ public class MainActivity extends AppCompatActivity {
                 /* when login button is pressed, use intent to switch to Login Activity */
                 //Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 //startActivity(intent);
+            }
+        });
+
+        troopManagementButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, TroopManagementActivity.class);
+                startActivity(intent);
             }
         });
     }
