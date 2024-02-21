@@ -29,9 +29,9 @@ public class Player {
 
     // Player constructor, will be expanded as more managers are completed
     public Player(TroopManager troops, int playerID, double power, String userName) {
-        this.troops = troops;
         //this.buildings = buildings;
         this.playerID = playerID;
+        this.troops = troops;
         this.power = power;
         this.userName = userName;
     }

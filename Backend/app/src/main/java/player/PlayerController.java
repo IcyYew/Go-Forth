@@ -32,7 +32,7 @@ public class PlayerController {
         // Increment playerID, as mentioned elsewhere will eventually be a unique IDing system
         playerID++;
         // Generate player object to be passed into the database hashmap
-        Player player = new Player(new TroopManager(), playerID, 0, userName);
+        Player player = new Player(new TroopManager(playerID), playerID, 0, userName);
         playerDataBase.put(playerID, player);
         // Return id of created player
         return "New player of ID: " + player.getPlayerID();
