@@ -23,6 +23,15 @@
         </activity>
         <activity
             android:name=".TroopManagementActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".SignupSuccessActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".SignupActivity"
             android:exported="false">
         </activity>
     </application>

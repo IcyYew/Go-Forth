@@ -51,7 +51,7 @@ public class SignupActivity extends AppCompatActivity {
                 String confirm = confirmEditText.getText().toString();
 
                 if (password.equals(confirm)){
-                    Intent intent = new Intent(SignupActivity.this, SuccessActivity.class);
+                    Intent intent = new Intent(SignupActivity.this, SignupSuccessActivity.class);
                     startActivity(intent);
                     return;
                 }

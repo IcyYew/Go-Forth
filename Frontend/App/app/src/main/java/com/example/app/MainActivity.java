@@ -27,24 +27,23 @@ public class MainActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast toast = Toast.makeText(MainActivity.this, "Login Pressed", Toast.LENGTH_SHORT);
-                toast.show();
+                //Toast toast = Toast.makeText(MainActivity.this, "Login Pressed", Toast.LENGTH_SHORT);
+                //toast.show();
 
-                /* when login button is pressed, use intent to switch to Login Activity */
-                //Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                //startActivity(intent);
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
             }
         });
 
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast toast = Toast.makeText(MainActivity.this, "Signup Pressed", Toast.LENGTH_SHORT);
-                toast.show();
+                //Toast toast = Toast.makeText(MainActivity.this, "Signup Pressed", Toast.LENGTH_SHORT);
+                //toast.show();
 
-                /* when login button is pressed, use intent to switch to Login Activity */
                 //Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                //startActivity(intent);
+                Intent intent = new Intent(MainActivity.this, SignupActivity.class);
+                startActivity(intent);
             }
         });
 

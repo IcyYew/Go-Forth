@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="358dp"
+        android:layout_height="103dp"
+        android:layout_marginStart="66dp"
+        android:layout_marginTop="115dp"
+        android:layout_marginEnd="57dp"
+        android:layout_marginBottom="296dp"
+        android:gravity="center"
+        android:text="Signup Successful!"
+        android:textColor="#33ED12"
+        android:textSize="34sp"
+        app:flow_wrapMode="none"
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.571"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="151dp"
+        android:layout_height="78dp"
+        android:layout_marginStart="154dp"
+        android:layout_marginTop="296dp"
+        android:layout_marginEnd="154dp"
+        android:gravity="center"
+        android:text="To Main Menu"
+        android:textColorHighlight="#000000"
+        android:textColorLink="#090909"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+</androidx.constraintlayout.widget.ConstraintLayout>
