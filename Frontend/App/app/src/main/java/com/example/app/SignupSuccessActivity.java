@@ -10,24 +10,22 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class SignupSuccessActivity extends AppCompatActivity {
 
-    private TextView messageText;   // define message textview variable
-    private Button loginButton;     // define login button variable
+    private TextView messageText;
+    private Button loginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup_success);             // link to Main activity XML
+        setContentView(R.layout.activity_signup_success);
 
-        /* initialize UI elements */
-        messageText = findViewById(R.id.textView);      // link to message textview in the Main activity XML
-        loginButton = findViewById(R.id.button);    // link to login button in the Main activity XML
+        //Initialize UI
+        messageText = findViewById(R.id.textView);
+        loginButton = findViewById(R.id.button);
 
-        /* click listener on login button pressed */
+        //Login button pressed
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                /* when login button is pressed, use intent to switch to Login Activity */
                 Intent intent = new Intent(SignupSuccessActivity.this, MainActivity.class);
                 startActivity(intent);
             }

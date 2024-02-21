@@ -24,6 +24,7 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
+        //UI initialization
         Username = findViewById(R.id.username);
 
         Password = findViewById(R.id.password);
@@ -34,6 +35,7 @@ public class SignupActivity extends AppCompatActivity {
 
         Back = findViewById(R.id.back);
 
+        //Back button clicked
         Back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -44,9 +46,11 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
 
+        //Signup button clicked
         Signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Convert user inputs to strings
                 String usernameString = Username.getText().toString();
                 String passwordString = Password.getText().toString();
                 String confirmString = ConfirmPassword.getText().toString();
@@ -56,6 +60,7 @@ public class SignupActivity extends AppCompatActivity {
                     print("Username used, pick a new one")
                  */
                 if(passwordString.equals(confirmString)){
+                    //Password and Confirm match
                     //TODO: Send new data to be saved in backend
                     //SendNewUser(usernameString, passwordString);
 
@@ -63,6 +68,7 @@ public class SignupActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
                 else{
+                    //Password and Confirm do not match
                     Toast toast = Toast.makeText(SignupActivity.this, "Passwords do not match", Toast.LENGTH_SHORT);
                     toast.show();
                     return;

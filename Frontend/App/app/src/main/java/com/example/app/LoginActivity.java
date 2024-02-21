@@ -22,6 +22,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        //Initialize UI
         Username = findViewById(R.id.username);
 
         Password = findViewById(R.id.password);
@@ -31,13 +32,14 @@ public class LoginActivity extends AppCompatActivity {
         Back = findViewById(R.id.back);
 
         Back.setOnClickListener(new View.OnClickListener() {
+            //Back button clicked
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
             }
         });
-
+        //Login Button Clicked
         Login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,15 +48,18 @@ public class LoginActivity extends AppCompatActivity {
                 //TODO: Get actual username and password data from backend
                 if(usernameString.equals("username")){
                     if(passwordString.equals("password")){
+                        //username and password match
                         Toast toast = Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT);
                         toast.show();
                     }
                     else{
+                        //username exist but password does not match
                         Toast toast = Toast.makeText(LoginActivity.this, "Username or password do not exist (Password)", Toast.LENGTH_SHORT);
                         toast.show();
                     }
                 }
                 else{
+                    //username does not exist
                     Toast toast = Toast.makeText(LoginActivity.this, "Username or password do not exist (Username)", Toast.LENGTH_SHORT);
                     toast.show();
                 }
