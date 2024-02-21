@@ -11,21 +11,25 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class TroopManagementActivity extends AppCompatActivity {
 
+    // stores final count
     private int archersCount = 0;
     private int knightsCount = 0;
     private int magesCount = 0;
     private int cavalryCount = 0;
 
+    // stores intermediary counts
     private int archersToTrainCount = 0;
     private int knightsToTrainCount = 0;
     private int magesToTrainCount = 0;
     private int cavalryToTrainCount = 0;
 
+    // textviews
     private TextView archersToTrainCountTextView;
     private TextView knightsToTrainCountTextView;
     private TextView magesToTrainCountTextView;
     private TextView cavalryToTrainCountTextView;
 
+    // checkboxes
     private CheckBox archersCheckbox;
     private CheckBox knightsCheckbox;
     private CheckBox magesCheckbox;
