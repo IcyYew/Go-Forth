@@ -13,6 +13,7 @@ import static troops.TroopTypes.*;
 @JsonSerialize(using = TroopManagerSerializer.class)
 public class TroopManager {
     // Map storing what trooptype a troop is and the quantity of that type possessed
+    private long playerId;
     private Map<TroopTypes, Integer> troopsCounts;
     private int archerNum = 0;
     private int warriorNum;
@@ -21,14 +22,19 @@ public class TroopManager {
     private long totalTroopPower;
 
     // Constructor for troopmanager just creates an empty hashmap of all trooptypes
-    public TroopManager() {
+    public TroopManager(long playerId) {
+        this.playerId = playerId;
         this.troopsCounts = new HashMap<>();
         this.troopsCounts.put(ARCHER, 0);
         this.troopsCounts.put(WARRIOR, 0);
         this.troopsCounts.put(MAGE, 0);
         this.troopsCounts.put(CAVALRY, 0);
-
     }
+
+    public long getPlayerId() {
+        return this.playerId;
+    }
+
 
     // Returns specific number of a trooptype currently owned
     public int getTroopNum(TroopTypes troopType) {

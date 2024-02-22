@@ -36,12 +36,21 @@ public class Player {
 
 
     // Player constructor, will be expanded as more managers are completed
+<<<<<<< HEAD
     public Player(TroopManager troops, int playerID, double power, String userName, String password) {
         setTroops(troops);
         //this.buildings = buildings;
         setPlayerID(playerID);
         setPower(power);
         setUserName(userName);
+=======
+    public Player(TroopManager troops, int playerID, double power, String userName) {
+        //this.buildings = buildings;
+        this.playerID = playerID;
+        this.troops = troops;
+        this.power = power;
+        this.userName = userName;
+>>>>>>> 619befa303b08469c38e19406308e33395202a69
     }
 
     public TroopManager getTroops() {

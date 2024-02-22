@@ -1,51 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/Login"
-        android:layout_width="189dp"
-        android:layout_height="98dp"
-        android:layout_marginStart="111dp"
-        android:layout_marginTop="162dp"
-        android:layout_marginEnd="111dp"
-        android:text="Login"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/Signup"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Title" />
-
-    <Button
-        android:id="@+id/Signup"
-        android:layout_width="189dp"
-        android:layout_height="98dp"
-        android:layout_marginStart="111dp"
-        android:layout_marginEnd="111dp"
-        android:layout_marginBottom="80dp"
-        android:text="Signup"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Login" />
-
+    <!-- Title -->
     <TextView
-        android:id="@+id/Title"
+        android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Game Title"
-        android:textSize="48sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.296" />
+        android:text="Tech Crusaders"
+        android:textSize="32sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Login Button -->
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:textSize="18sp"
+        android:layout_below="@id/titleTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"/>
+
+    <!-- Signup Button -->
+    <Button
+        android:id="@+id/signupButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Signup"
+        android:textSize="18sp"
+        android:layout_below="@id/loginButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"/>
+
+    <!-- Troop Management Button -->
+    <Button
+        android:id="@+id/troopManagementButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Troop Management"
+        android:textSize="18sp"
+        android:layout_below="@id/signupButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"/> <!-- increased margin top -->
+
+</RelativeLayout>
