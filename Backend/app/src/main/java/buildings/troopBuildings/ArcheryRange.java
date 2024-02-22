@@ -1,4 +1,4 @@
-package buildings.troopbuildings;
+package buildings.troopBuildings;
 
 public class ArcheryRange {
     int power = 100;
@@ -6,6 +6,8 @@ public class ArcheryRange {
 
     int trainingCapacity = 50;
     double trainingTime = 30.0; // in seconds
+
+    double trainingTimeTotal = 0;
 
     int stoneUpgradeCost = 500;
     int woodUpgradeCost = 500;
@@ -15,15 +17,15 @@ public class ArcheryRange {
 
 
     public void setTrainingTime(int level) {
-        this.trainingTime = this.trainingTime * ((1/5) * level);
+        this.trainingTime = this.trainingTime *((1.0/5.0) * (double)level);
     }
 
     public void setStoneUpgradeCost(int level) {
-        this.stoneUpgradeCost = this.stoneUpgradeCost * ((8/5) * level);
+        this.stoneUpgradeCost = this.stoneUpgradeCost * (int)((8.0/5.0) * (double)level);
     }
 
     public void setWoodUpgradeCost(int level) {
-        this.woodUpgradeCost = this.woodUpgradeCost * ((8/5) * level);
+        this.woodUpgradeCost = this.woodUpgradeCost * (int)((8.0/5.0) * (double)level);
     }
 
     public void upgradeBuilding(int level) throws Exception {
@@ -42,9 +44,12 @@ public class ArcheryRange {
         return quantity * this.trainingTime;
     }
 
-    public void trainBatch(int quantity) throws  Exception {
+    public double trainBatch(int quantity) throws  Exception {
         if (quantity > this.trainingCapacity) {
                 throw new Exception("Max training capacity exceeded");
+        }
+        else {
+            return calculateTrainingTime(quantity);
         }
     }
 }

@@ -16,6 +16,14 @@ public class Player {
     // Each player has a userName, eventually a check to make sure an already existing userName isn't used again will be
     // put in place
     private String userName;
+    private String password; // might add encryption, not sure if necessary
+
+    public String getPassword() {
+        return this.password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public String getUserName() {
         return userName;
@@ -28,12 +36,12 @@ public class Player {
 
 
     // Player constructor, will be expanded as more managers are completed
-    public Player(TroopManager troops, int playerID, double power, String userName) {
-        this.troops = troops;
+    public Player(TroopManager troops, int playerID, double power, String userName, String password) {
+        setTroops(troops);
         //this.buildings = buildings;
-        this.playerID = playerID;
-        this.power = power;
-        this.userName = userName;
+        setPlayerID(playerID);
+        setPower(power);
+        setUserName(userName);
     }
 
     public TroopManager getTroops() {

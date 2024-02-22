@@ -28,11 +28,11 @@ public class PlayerController {
     // Creates a new player, to test use Postman POST option with url:
     // localhost:8080/players/new/ (then send in a raw JSON body, can simply be a string, i.e. Michael), no curly brace required
     @PostMapping("/players/new/")
-    public String newPlayer(@RequestBody String userName) {
+    public String newPlayer(@RequestBody String userName, String password) {
         // Increment playerID, as mentioned elsewhere will eventually be a unique IDing system
         playerID++;
         // Generate player object to be passed into the database hashmap
-        Player player = new Player(new TroopManager(), playerID, 0, userName);
+        Player player = new Player(new TroopManager(), playerID, 0, userName, password);
         playerDataBase.put(playerID, player);
         // Return id of created player
         return "New player of ID: " + player.getPlayerID();
