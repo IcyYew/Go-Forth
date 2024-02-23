@@ -15,6 +15,9 @@ public class MainActivity extends AppCompatActivity {
     private Button loginButton;
     private Button signupButton;
     private Button troopManagementButton;
+    private Button dummyButton;
+    private Button displayButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +29,10 @@ public class MainActivity extends AppCompatActivity {
         signupButton = findViewById(R.id.signupButton);
 
         troopManagementButton = findViewById(R.id.troopManagementButton);
+
+        dummyButton = findViewById(R.id.dummyButton);
+
+        displayButton = findViewById(R.id.displayButton);
 
         //Login button pressed
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -56,6 +63,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, TroopManagementActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        dummyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, DummyActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        displayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, DisplayActivity.class);
                 startActivity(intent);
             }
         });
