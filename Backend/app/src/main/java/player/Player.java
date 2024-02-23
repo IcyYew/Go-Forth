@@ -1,12 +1,13 @@
 package player;
 
 import buildings.BuildingManager;
+import resources.ResourceManager;
 import troops.TroopManager;
 
 public class Player {
     // The player class will be the merging of all "managers", could be said to be the manager of managers
     // This is the class that will be "communicating" with a server via the PlayerController class
-
+    ResourceManager resources;
     TroopManager troops;
     //BuildingManager buildings;
     // Each player has an ID, currently juse starting at 1 and going from there, will eventualyl be some sort of
@@ -44,13 +45,22 @@ public class Player {
         setUserName(userName);
         setPassword(password);
     }
-    public Player(TroopManager troops, int playerID, double power, String userName) {
+
+    public void setResources(ResourceManager resources) {
+        this.resources = resources;
+    }
+
+
+    public ResourceManager getResources() {
+        return resources;
+    }
+    public Player(ResourceManager resources, TroopManager troops, int playerID, double power, String userName) {
         //this.buildings = buildings;
+        this.resources = resources;
         this.playerID = playerID;
         this.troops = troops;
         this.power = power;
         this.userName = userName;
-
     }
 
     public TroopManager getTroops() {
