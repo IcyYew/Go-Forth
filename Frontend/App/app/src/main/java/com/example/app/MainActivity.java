@@ -15,6 +15,11 @@ public class MainActivity extends AppCompatActivity {
     private Button loginButton;
     private Button signupButton;
     private Button troopManagementButton;
+    private Button dummyButton;
+    private Button displayButton;
+    private int userID;
+    private TextView UID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +31,24 @@ public class MainActivity extends AppCompatActivity {
         signupButton = findViewById(R.id.signupButton);
 
         troopManagementButton = findViewById(R.id.troopManagementButton);
+
+        dummyButton = findViewById(R.id.dummyButton);
+
+        displayButton = findViewById(R.id.displayButton);
+
+        UID = findViewById(R.id.userID);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras == null) {
+            if (userID == 0) {
+                userID = 0;
+                UID.setText("User ID: ");
+            }
+        } else {
+            String number = extras.getString("ID");
+            userID = Integer.parseInt(number);
+            UID.setText("User ID: " + number);
+        }
 
         //Login button pressed
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -56,6 +79,25 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, TroopManagementActivity.class);
+                intent.putExtra("ID", userID);
+                startActivity(intent);
+            }
+        });
+
+        dummyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, DummyActivity.class);
+                intent.putExtra("ID", userID);
+                startActivity(intent);
+            }
+        });
+
+        displayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, DisplayActivity.class);
+                intent.putExtra("ID", userID);
                 startActivity(intent);
             }
         });

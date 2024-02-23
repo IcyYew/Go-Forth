@@ -18,7 +18,7 @@ public class Farm extends Building {
     public int getLevel() {
         return this.level;
     }
-    public void upgrade() throws Exception {
+    /*public void upgrade() throws Exception {
         if (this.level < 5 && MainBuilding.getLevel >= this.level++) {
             this.level++;
         }
@@ -28,7 +28,7 @@ public class Farm extends Building {
         else {
             throw new Exception("Main building level requirement not met");
         }
-    }
+    }*/
 
     private void setUpgradeCostSnW() {
 
