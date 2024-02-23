@@ -56,7 +56,7 @@ public class DummyActivity extends AppCompatActivity {
 
                 /* when login button is pressed, use intent to switch to Login Activity */
                 Intent intent = new Intent(DummyActivity.this, MainActivity.class);
-                intent.putExtra("ID", userID);
+                intent.putExtra("ID", String.valueOf(userID));
                 startActivity(intent);  // go to LoginActivity
             }
         });

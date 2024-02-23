@@ -78,7 +78,7 @@ public class TroopManagementActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(TroopManagementActivity.this, MainActivity.class);
-                intent.putExtra("ID", userID);
+                intent.putExtra("ID", String.valueOf(userID));
                 startActivity(intent);
             }
         });

@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity {
     private Button loginButton;
     private Button signupButton;
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 UID.setText("User ID: ");
             }
         } else {
-            String number = extras.getString("ID");
+            String number = Objects.requireNonNull(extras.getString("ID"));
             userID = Integer.parseInt(number);
             UID.setText("User ID: " + number);
         }
