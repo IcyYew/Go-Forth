@@ -25,14 +25,18 @@ public class PlayerController {
         return new ArrayList<>(playerDataBase.values());
     }
 
+    @GetMapping("/players/getPlayer/{playerID}")
+    public Player getPlayer(@PathVariable int playerID) {
+        return playerDataBase.get(playerID);
+    }
     // Creates a new player, to test use Postman POST option with url:
-    // localhost:8080/players/new/ (then send in a raw JSON body, can simply be a string, i.e. Michael), no curly brace required
-    @PostMapping("/players/new/")
-    public String newPlayer(@RequestBody String userName, String password) {
+    // localhost:8080/players/new/ (then send in a raw JSON body, {"userName" : "(name)", "password" : "(password)"}
+    @PostMapping("/players/new")
+    public String newPlayer(@RequestBody PlayerCreator created) {
         // Increment playerID, as mentioned elsewhere will eventually be a unique IDing system
         playerID++;
         // Generate player object to be passed into the database hashmap
-        Player player = new Player(new TroopManager(playerID), playerID, 0, userName);
+        Player player = new Player(new TroopManager(playerID), playerID, 0, created.getUserName(), created.getPassword());
         playerDataBase.put(playerID, player);
         // Return id of created player
         return "New player of ID: " + player.getPlayerID();
@@ -95,6 +99,32 @@ public class PlayerController {
 
     }
 
+    public static class PlayerCreator {
+        private String userName;
+        private String password;
+
+
+        public PlayerCreator(String userName, String password) {
+            setUserName(userName);
+            setPassword(password);
+        }
+
+        public String getUserName() {
+            return userName;
+        }
+
+        public void setUserName(String userName) {
+            this.userName = userName;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+    }
     
 
 }

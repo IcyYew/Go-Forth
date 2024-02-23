@@ -42,6 +42,7 @@ public class Player {
         setPlayerID(playerID);
         setPower(power);
         setUserName(userName);
+        setPassword(password);
     }
     public Player(TroopManager troops, int playerID, double power, String userName) {
         //this.buildings = buildings;
@@ -80,10 +81,12 @@ public class Player {
         // ... more when implemented
     }
 
+
     @Override
     public String toString() {
         return "Player{" +
                 "username" + userName +
+                "password" + password +
                 "troops=" + troops +
                 ", playerID=" + playerID +
                 ", power=" + power +
