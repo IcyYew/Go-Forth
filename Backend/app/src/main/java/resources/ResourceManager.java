@@ -1,15 +1,19 @@
 package resources;
 
-import java.util.HashMap;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import troops.TroopManagerSerializer;
 
+import java.util.HashMap;
+@JsonSerialize(using = ResourceSerializer.class)
 public class ResourceManager {
     HashMap<ResourceType, Integer> resourceManager;
 
     //Usefulness of child resource classes isn't currently apparent but they will eventaully have other properties
-
+    private long playerId;
 
     // Every player starts with quantity of resource described below, allows introduction to building/recruiting/research system
-    public ResourceManager() {
+    public ResourceManager(long playerId) {
+        this.playerId = playerId;
         resourceManager = new HashMap<>();
         resourceManager.put(ResourceType.WOOD, 1000);
         resourceManager.put(ResourceType.FOOD, 5000);
