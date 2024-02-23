@@ -26,9 +26,16 @@ public class DisplayActivity extends AppCompatActivity {
     private Button confirm;
     private Button back;
 
+    private int userID;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_users);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            userID = extras.getInt("ID");
+        }
 
         ID = findViewById(R.id.IDInput);
         users = findViewById(R.id.msgResponse);
@@ -41,7 +48,15 @@ public class DisplayActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DisplayActivity.this, MainActivity.class);
+                intent.putExtra("ID", String.valueOf(userID));
                 startActivity(intent);
+            }
+        });
+
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userID = Integer.parseInt(ID.getText().toString());
             }
         });
     }

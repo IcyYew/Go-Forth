@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class TroopManagementActivity extends AppCompatActivity {
 
+    private int userID;
+
     // stores final count
     private int archersCount = 0;
     private int knightsCount = 0;
@@ -40,6 +42,11 @@ public class TroopManagementActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_troop_management);
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            userID = extras.getInt("ID");
+        }
+
         archersToTrainCountTextView = findViewById(R.id.archersToTrainCount);
         knightsToTrainCountTextView = findViewById(R.id.knightsToTrainCount);
         magesToTrainCountTextView = findViewById(R.id.magesToTrainCount);
@@ -55,6 +62,7 @@ public class TroopManagementActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(TroopManagementActivity.this, MainActivity.class);
+                intent.putExtra("ID", userID);
                 startActivity(intent);
             }
         });

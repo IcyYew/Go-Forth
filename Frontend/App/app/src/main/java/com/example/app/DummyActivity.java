@@ -22,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class DummyActivity extends AppCompatActivity {
+    private int userID;
     private EditText Username;
 
     private EditText Password;
@@ -33,6 +34,11 @@ public class DummyActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dummy);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            userID = extras.getInt("ID");
+        }
 
         //UI initialization
         Username = findViewById(R.id.username);
@@ -50,6 +56,7 @@ public class DummyActivity extends AppCompatActivity {
 
                 /* when login button is pressed, use intent to switch to Login Activity */
                 Intent intent = new Intent(DummyActivity.this, MainActivity.class);
+                intent.putExtra("ID", userID);
                 startActivity(intent);  // go to LoginActivity
             }
         });
