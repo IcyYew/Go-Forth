@@ -37,7 +37,8 @@ public class Player {
 
 
     // Player constructor, will be expanded as more managers are completed
-    public Player(TroopManager troops, int playerID, double power, String userName, String password) {
+    public Player(ResourceManager resources, TroopManager troops, int playerID, double power, String userName, String password) {
+        setResources(resources);
         setTroops(troops);
         //this.buildings = buildings;
         setPlayerID(playerID);
@@ -53,14 +54,6 @@ public class Player {
 
     public ResourceManager getResources() {
         return resources;
-    }
-    public Player(ResourceManager resources, TroopManager troops, int playerID, double power, String userName) {
-        //this.buildings = buildings;
-        this.resources = resources;
-        this.playerID = playerID;
-        this.troops = troops;
-        this.power = power;
-        this.userName = userName;
     }
 
     public TroopManager getTroops() {
@@ -97,6 +90,7 @@ public class Player {
         return "Player{" +
                 "username" + userName +
                 "password" + password +
+                "resources=" + resources +
                 "troops=" + troops +
                 ", playerID=" + playerID +
                 ", power=" + power +

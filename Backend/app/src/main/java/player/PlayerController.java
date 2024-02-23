@@ -1,6 +1,7 @@
 package player;
 
 import org.springframework.web.bind.annotation.*;
+import resources.ResourceManager;
 import troops.Troop;
 import troops.TroopCombatCalculator;
 import troops.TroopManager;
@@ -36,7 +37,7 @@ public class PlayerController {
         // Increment playerID, as mentioned elsewhere will eventually be a unique IDing system
         playerID++;
         // Generate player object to be passed into the database hashmap
-        Player player = new Player(new TroopManager(playerID), playerID, 0, created.getUserName(), created.getPassword());
+        Player player = new Player(new ResourceManager(playerID), new TroopManager(playerID), playerID, 0, created.getUserName(), created.getPassword());
         playerDataBase.put(playerID, player);
         // Return id of created player
         return "New player of ID: " + player.getPlayerID();
