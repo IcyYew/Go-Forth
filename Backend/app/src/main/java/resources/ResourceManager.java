@@ -17,6 +17,10 @@ public class ResourceManager {
         resourceManager.put(ResourceType.STONE, 1000);
     }
 
+    public int getResource(ResourceType resource) {
+        return resourceManager.get(resource);
+    }
+
     @Override
     public String toString() {
         return "ResourceManager{" +
