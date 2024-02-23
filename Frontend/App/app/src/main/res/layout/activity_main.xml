@@ -46,4 +46,23 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"/> <!-- increased margin top -->
 
+    <Button
+        android:id="@+id/dummyButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dummy user creation"
+        android:textSize="18sp"
+        android:layout_below="@id/troopManagementButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"/>
+
+    <Button
+        android:id="@+id/displayButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Display Users"
+        android:textSize="18sp"
+        android:layout_below="@id/dummyButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"/>
 </RelativeLayout>
