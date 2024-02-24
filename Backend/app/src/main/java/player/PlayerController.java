@@ -2,10 +2,7 @@ package player;
 
 import org.springframework.web.bind.annotation.*;
 import resources.ResourceManager;
-import troops.Troop;
-import troops.TroopCombatCalculator;
-import troops.TroopManager;
-import troops.TroopTypes;
+import troops.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,11 +41,11 @@ public class PlayerController {
     }
 
     // Addtroops to a declared player via their ID, to use, use Postman POST option, make sure you already have a player declared and use:
-    // localhost:8080/players/addtroops/(playerID)?troopType=(trooptype)&recruited=(num)
-    // An example request: localhost:8080/players/addtroops/1?troopType=ARCHER&recruited=100
+    // localhost:8080/players/addtroops/(playerID) --> JSON RAW BODY : { "troopType" : "TROOPTYPE", "quantity" : (integer) }
+    // Example request: localhost:8080/players/addtroops/1 --> JSON RAW BODY: { "troopType" : "WARRIOR", "quantity" : 900 }
     @PostMapping("/players/addtroops/{playerID}")
-    public Player addTroops(@PathVariable int playerID, @RequestParam TroopTypes troopType, @RequestParam int recruited) {
-        playerDataBase.get(playerID).troops.addTroop(troopType, recruited);
+    public Player addTroops(@PathVariable int playerID, @RequestBody TroopRequest troopRequest) {
+        playerDataBase.get(playerID).troops.addTroop(troopRequest.getTroopType(), troopRequest.getQuantity());
         // After adding troop(s) to a player, update their power
         playerDataBase.get(playerID).updatePower();
         // return updated player information
@@ -57,13 +54,12 @@ public class PlayerController {
 
     // !!!!!!!!!!!!!!!!!!!!!!! Note to self -- decide if when overflow troop removal passed in to deduct to zero or neglect request entirely
 
-
     // Removetroops from a declared player via their ID, to use, use Postman POST option, make sure you have a player declared and use:
-    // localhost:8080/players/removetroops/(playerID)?troopType=(trooptype)&deaths=(num)
-    // Example request: localhost:8080/players/removetroops/1?troopType=ARCHER&deaths=100
+    // localhost:8080/players/removetroops/(playerID) --> JSON RAW BODY : { "troopType" : "TROOPTYPE", "quantity" : (integer) }
+    // Example request: localhost:8080/players/removetroops/1 --> JSON RAW BODY: { "troopType" : "WARRIOR", "quantity" : 900 }
     @PostMapping("/players/removetroops/{playerID}")
-    public Player removeTroops(@PathVariable int playerID, @RequestParam TroopTypes troopType, @RequestParam int deaths) {
-        playerDataBase.get(playerID).troops.removeTroop(troopType, deaths);
+    public Player removeTroops(@PathVariable int playerID, @RequestBody TroopRequest troopRequest) {
+        playerDataBase.get(playerID).troops.removeTroop(troopRequest.getTroopType(), troopRequest.getQuantity());
         // update player power when troops removed
         playerDataBase.get(playerID).updatePower();
         // return updated player information
@@ -124,6 +120,32 @@ public class PlayerController {
 
         public void setPassword(String password) {
             this.password = password;
+        }
+    }
+
+    public static class TroopRequest {
+        private TroopTypes troopType;
+        private int quantity;
+
+        public TroopRequest(TroopTypes troopType, int quantity) {
+            setTroopType(troopType);
+            setQuantity(quantity);
+        }
+
+        public TroopTypes getTroopType() {
+            return troopType;
+        }
+
+        public void setTroopType(TroopTypes troopType) {
+            this.troopType = troopType;
+        }
+
+        public int getQuantity() {
+            return quantity;
+        }
+
+        public void setQuantity(int quantity) {
+            this.quantity = quantity;
         }
     }
     
