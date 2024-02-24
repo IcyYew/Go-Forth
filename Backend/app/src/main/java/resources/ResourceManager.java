@@ -1,19 +1,28 @@
 package resources;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import jakarta.persistence.*;
 import troops.TroopManagerSerializer;
 
 import java.util.HashMap;
+import java.util.List;
+
 @JsonSerialize(using = ResourceSerializer.class)
+@Entity
 public class ResourceManager {
-    HashMap<ResourceType, Integer> resourceManager;
+
 
     //Usefulness of child resource classes isn't currently apparent but they will eventaully have other properties
-    private long playerId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long playerID;
+
+    @OneToMany(mappedBy = "resourceManager", cascade = CascadeType.ALL)
+    private List<Resource> resourceManager;
 
     // Every player starts with quantity of resource described below, allows introduction to building/recruiting/research system
     public ResourceManager(long playerId) {
-        this.playerId = playerId;
+        this.playerID = playerId;
         resourceManager = new HashMap<>();
         resourceManager.put(ResourceType.WOOD, 1000);
         resourceManager.put(ResourceType.FOOD, 5000);

@@ -1,21 +1,28 @@
 package player;
 
 import buildings.BuildingManager;
+import jakarta.persistence.*;
 import resources.ResourceManager;
 import troops.TroopManager;
 
+@Entity
 public class Player {
     // The player class will be the merging of all "managers", could be said to be the manager of managers
     // This is the class that will be "communicating" with a server via the PlayerController class
-    ResourceManager resources;
-    TroopManager troops;
+
     //BuildingManager buildings;
     // Each player has an ID, currently juse starting at 1 and going from there, will eventualyl be some sort of
     // Random number or Hash generation for security
-    private int playerID;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer playerID;
     private double power;
     // Each player has a userName, eventually a check to make sure an already existing userName isn't used again will be
     // put in place
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "player")
+    ResourceManager resources;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "player")
+    TroopManager troops;
     private String userName;
     private String password; // might add encryption, not sure if necessary
 

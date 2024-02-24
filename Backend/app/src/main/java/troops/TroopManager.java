@@ -38,12 +38,7 @@ public class TroopManager {
 
     // Returns specific number of a trooptype currently owned
     public int getTroopNum(TroopTypes troopType) {
-        int troopNum = 0;
-        switch (troopType) {
-            case ARCHER, WARRIOR, CAVALRY, MAGE:
-                troopNum = troopsCounts.get(troopType);
-        }
-        return troopNum;
+        return troopsCounts.get(troopType);
     }
 
     // calculates a troopmanagers total power taking into account each troops different power rating

@@ -17,6 +17,7 @@ import java.util.List;
 public class PlayerController {
 
     HashMap<Integer, Player> playerDataBase = new HashMap<>();
+    private PlayerRepository playerRepository;
 
     private int playerID = 0;
 
