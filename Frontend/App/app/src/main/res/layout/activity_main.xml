@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:text="Troop Management"
         android:textSize="18sp"
-        android:layout_below="@id/signupButton"
+        android:layout_below="@id/displayButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"/>
 
@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:text="Dummy user creation"
         android:textSize="18sp"
-        android:layout_below="@id/troopManagementButton"
+        android:layout_below="@id/signupButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"/>
 
@@ -72,7 +72,7 @@
         android:layout_height="wrap_content"
         android:text="Fight"
         android:textSize="18sp"
-        android:layout_below="@id/displayButton"
+        android:layout_below="@id/troopManagementButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10sp" />
 
