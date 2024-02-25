@@ -211,6 +211,45 @@ public class TroopManagementActivity extends AppCompatActivity {
     }
 
     private void updateTroopCounts(int archersCount, int knightsCount, int magesCount, int cavalryCount) {
+        String baseURL = "http://10.0.2.2:8080/players/addtroops/" + userID;
 
+        JSONObject archerJSON = createTroopJSON("ARCHER", archersCount);
+        JSONObject warriorJSON = createTroopJSON("WARRIOR", knightsCount);
+        JSONObject mageJSON = createTroopJSON("MAGE", magesCount);
+        JSONObject cavalryJSON = createTroopJSON("CAVALRY", cavalryCount);
+
+        makePOSTRequest(baseURL, archerJSON);
+        makePOSTRequest(baseURL, warriorJSON);
+        makePOSTRequest(baseURL, mageJSON);
+        makePOSTRequest(baseURL, cavalryJSON);
+    }
+
+    private JSONObject createTroopJSON(String troopType, int quantity) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("troopType", troopType);
+            jsonObject.put("quantity", quantity);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
+    private void makePOSTRequest(String url, JSONObject requestBody) {
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, requestBody,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        getPlayerData();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(TroopManagementActivity.this, "Error updating troops: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 }
