@@ -26,6 +26,13 @@ public class MainActivity extends AppCompatActivity {
     private TextView UID;
     private EditText enterID;
 
+    /**
+     * onCreate sets onClickListeners to all of the buttons and gets the extras
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         UID = findViewById(R.id.userID);
 
+        // gets extras and sets userID to whatever we got from the extras. IF there were no extras, empty userID
         Bundle extras = getIntent().getExtras();
         if (extras == null) {
             if (userID == 0) {
@@ -96,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // dummy user creation button pressed
         dummyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // display users button pressed
         displayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // fight button pressed
         fightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // confirm ID button pressed
         confirmIDButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

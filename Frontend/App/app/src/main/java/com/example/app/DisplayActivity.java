@@ -24,16 +24,24 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Activity that displays the current users (assuming there are any)
+ */
 public class DisplayActivity extends AppCompatActivity {
+    // TextView to display users info (name, id, power level)
     private TextView users;
+
+    // Button to go back to main
     private Button back;
 
+    // tracks user ID so it can track across activities
     private int userID;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_users);
 
+        // getting the extras so ID tracks across activities
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             userID = extras.getInt("ID");
@@ -54,9 +62,14 @@ public class DisplayActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Uses the /players/getall endpoint to display users in a String format (converts endpoint's json output to string using StringBuilder)
+     */
     private void displayUsers() {
+        // use getall endpoint URL
         String url = "http://10.0.2.2:8080/players/getall";
 
+        // make a StringRequest to get the users from the server. Converts JSONArray into StringBuilder.
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -86,6 +99,7 @@ public class DisplayActivity extends AppCompatActivity {
                     }
                 });
 
+        // add to the request queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 }

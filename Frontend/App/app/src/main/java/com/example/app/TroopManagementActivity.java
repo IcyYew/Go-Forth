@@ -19,8 +19,11 @@ import com.android.volley.toolbox.StringRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * Activity for viewing the troops a user has as well as updating the troops by adding new ones.
+ */
 public class TroopManagementActivity extends AppCompatActivity {
-
+    // stores userID so it can track across activities
     private int userID;
 
     // stores intermediary counts
@@ -45,16 +48,25 @@ public class TroopManagementActivity extends AppCompatActivity {
     private CheckBox magesCheckbox;
     private CheckBox cavalryCheckbox;
 
+    /**
+     * onCreate sets onClickListeners to all of the buttons and initializes UI elements. Also gets extras.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_troop_management);
 
+        // get extras so userID can track across activities
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             userID = extras.getInt("ID");
         }
 
+        // UI initialization
         archersToTrainCountTextView = findViewById(R.id.archersToTrainCount);
         knightsToTrainCountTextView = findViewById(R.id.knightsToTrainCount);
         magesToTrainCountTextView = findViewById(R.id.magesToTrainCount);
@@ -67,8 +79,10 @@ public class TroopManagementActivity extends AppCompatActivity {
 
         Button backButton = findViewById(R.id.backButton);
 
+        // get troop data from server
         getPlayerData();
 
+        // back button pressed
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,6 +92,7 @@ public class TroopManagementActivity extends AppCompatActivity {
             }
         });
 
+        // train one button pressed (update correct troop to train count)
         Button trainOneButton = findViewById(R.id.trainOneButton);
         trainOneButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +101,7 @@ public class TroopManagementActivity extends AppCompatActivity {
             }
         });
 
+        // train 10 button pressed (update correct troop to train count)
         Button trainTenButton = findViewById(R.id.trainTenButton);
         trainTenButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,6 +110,7 @@ public class TroopManagementActivity extends AppCompatActivity {
             }
         });
 
+        // train 50 button pressed (update correct troop to train count)
         Button trainFiftyButton = findViewById(R.id.trainFiftyButton);
         trainFiftyButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,6 +119,7 @@ public class TroopManagementActivity extends AppCompatActivity {
             }
         });
 
+        // train 100 button pressed (update correct troop to train count)
         Button trainHundredButton = findViewById(R.id.trainHundredButton);
         trainHundredButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +128,7 @@ public class TroopManagementActivity extends AppCompatActivity {
             }
         });
 
+        // confirm training button pressed
         Button confirmTrainingButton = findViewById(R.id.confirmTrainingButton);
         confirmTrainingButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,6 +138,11 @@ public class TroopManagementActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Checks which troops' checkboxes are currently checked and updates their "to train" counts accordingly
+     *
+     * @param amount
+     */
     private void trainTroops(int amount) {
         if (archersCheckbox.isChecked()) {
             archersToTrainCount += amount;
@@ -138,7 +162,11 @@ public class TroopManagementActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * When training is confirmed, update the troop counts (addtroops endpoint) and get the new troop counts from server (getPlayer endpoint)
+     */
     private void confirmTraining() {
+        // server stuff
         updateTroopCounts(archersToTrainCount, knightsToTrainCount, magesToTrainCount, cavalryToTrainCount);
         getPlayerData();
 
@@ -160,14 +188,19 @@ public class TroopManagementActivity extends AppCompatActivity {
         cavalryCheckbox.setChecked(false);
     }
 
+    /**
+     * Uses the /players/getPlayer/{userID} endpoint to get the troop counts of the currently selected user
+     */
     private void getPlayerData() {
         archersCountTextView = findViewById(R.id.archersCount);
         knightsCountTextView = findViewById(R.id.knightsCount);
         magesCountTextView = findViewById(R.id.magesCount);
         cavalryCountTextView = findViewById(R.id.cavalryCount);
 
+        // use the /players/getplayer/{userID} endpoint
         String url = "http://10.0.2.2:8080/players/getPlayer/" + String.valueOf(userID);
 
+        // makes JsonObjectRequest to get the current player. GETs the archerNum, warriorNum, mageNum, and cavalryNum
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -196,14 +229,23 @@ public class TroopManagementActivity extends AppCompatActivity {
                     }
                 });
 
+        // add to volley queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 
-    private void updateTroopCounts(int archersCount, int knightsCount, int magesCount, int cavalryCount) {
+    /**
+     * Uses the /players/addtroops/{userID} endpoint to POST the new troop counts to the server
+     *
+     * @param archersCount number of archers to add
+     * @param warriorsCount number of warrior to add
+     * @param magesCount number of mages to add
+     * @param cavalryCount number of cavalry to add
+     */
+    private void updateTroopCounts(int archersCount, int warriorsCount, int magesCount, int cavalryCount) {
         String baseURL = "http://10.0.2.2:8080/players/addtroops/" + userID;
 
         JSONObject archerJSON = createTroopJSON("ARCHER", archersCount);
-        JSONObject warriorJSON = createTroopJSON("WARRIOR", knightsCount);
+        JSONObject warriorJSON = createTroopJSON("WARRIOR", warriorsCount);
         JSONObject mageJSON = createTroopJSON("MAGE", magesCount);
         JSONObject cavalryJSON = createTroopJSON("CAVALRY", cavalryCount);
 
@@ -213,6 +255,13 @@ public class TroopManagementActivity extends AppCompatActivity {
         makePOSTRequest(baseURL, cavalryJSON);
     }
 
+    /**
+     * create a troop JSON object of the selected type to use in POST
+     *
+     * @param troopType type of troop
+     * @param quantity number of troops
+     * @return returns a troop JSON
+     */
     private JSONObject createTroopJSON(String troopType, int quantity) {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -224,7 +273,14 @@ public class TroopManagementActivity extends AppCompatActivity {
         return jsonObject;
     }
 
+    /**
+     * Makes a POST request using the given url and request body
+     *
+     * @param url
+     * @param requestBody
+     */
     private void makePOSTRequest(String url, JSONObject requestBody) {
+        // make a JsonObjectRequest to POST to server
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, requestBody,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -239,6 +295,7 @@ public class TroopManagementActivity extends AppCompatActivity {
                     }
                 });
 
+        // add to volley queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 }

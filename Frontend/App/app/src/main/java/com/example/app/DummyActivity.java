@@ -21,20 +21,34 @@ import com.android.volley.toolbox.StringRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * Activity to create users
+ */
 public class DummyActivity extends AppCompatActivity {
+    // used to store ID so it tracks across activities
     private int userID;
+
+    // EditText where user will put the username
     private EditText Username;
 
+    // EditText where user will put their password
     private EditText Password;
 
     private Button confirm;
-
     private Button back;
 
+    /**
+     * When the activity launches, set onClickListeners on the back button and confirm button. Also, get the extras.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dummy);
 
+        // getting extras to ensure ID tracks across activities
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             userID = extras.getInt("ID");
@@ -42,11 +56,8 @@ public class DummyActivity extends AppCompatActivity {
 
         //UI initialization
         Username = findViewById(R.id.username);
-
         Password = findViewById(R.id.password);
-
         confirm = findViewById(R.id.confirm);
-
         back = findViewById(R.id.back);
 
         //Back button clicked
@@ -61,7 +72,7 @@ public class DummyActivity extends AppCompatActivity {
             }
         });
 
-        //Signup button clicked
+        //confirm button clicked
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,7 +85,14 @@ public class DummyActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * creates a new player in the server with the given username and password
+     *
+     * @param userName
+     * @param password
+     */
     private void createNewPlayer(String userName, String password) {
+        // use the new player endpoint
         String url = "http://10.0.2.2:8080/players/new";
 
         // Create a JSONObject with the user's details
@@ -93,7 +111,6 @@ public class DummyActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         // Handle successful response from the server
                         Log.d("User Creation", "New user created: " + response.toString());
-                        // Optionally, update your UI or perform any additional actions
                     }
                 },
                 new Response.ErrorListener() {
@@ -104,6 +121,7 @@ public class DummyActivity extends AppCompatActivity {
                     }
                 });
 
+        // add to volley request queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 }
