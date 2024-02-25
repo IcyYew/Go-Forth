@@ -2,6 +2,7 @@ package com.example.app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +15,9 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Activity to simulate fights between two users
@@ -106,7 +110,7 @@ public class FightActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        resultTextView.setText(response);
+                        handleFightResult(response);
                     }
                 },
                 new Response.ErrorListener() {
@@ -118,5 +122,37 @@ public class FightActivity extends AppCompatActivity {
 
         // add request to volley queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+    }
+
+    private void handleFightResult(String response) {
+        Log.d("Response", response);
+        // parse the response
+        String[] parts = response.split("\n");
+        String result = parts[0];
+        String player1Info = parts[1];
+        String player2Info = parts[3];
+
+        // display the appropriate message based on the result
+        String message;
+        if (result.equals("ATTACKER_WIN")) {
+            message = "Attacker wins! (User 1)";
+        } else if (result.equals("DEFENDER_WIN")) {
+            message = "Defender wins! (User 2)";
+        } else {
+            message = "It's a draw!";
+        }
+
+        // Extract power levels for player 1
+        String[] player1PowerParts = player1Info.split("power=");
+        double player1Power = Double.parseDouble(player1PowerParts[1].split("\\}")[0].trim());
+
+        // Extract power levels for player 2
+        String[] player2PowerParts = player2Info.split("power=");
+        double player2Power = Double.parseDouble(player2PowerParts[1].split("\\}")[0].trim());
+
+        // Display the message and power levels
+        resultTextView.setText("\n\n" + message + "\n\nNew Power Levels:\n\n" +
+                "Player 1 Power: " + player1Power + "\n" +
+                "Player 2 Power: " + player2Power);
     }
 }
