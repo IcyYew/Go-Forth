@@ -1,10 +1,18 @@
 package resources;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
+@Entity
+@DiscriminatorValue("PLATINUM")
 public class Platinum extends Resource{
 
-    private final ResourceType resourceType = ResourceType.PLATINUM;
 
-    public Platinum(int quantity) {
-        super(quantity);
+    public Platinum(ResourceManager resourceManager, int quantity) {
+        super(ResourceType.PLATINUM, quantity, resourceManager);
+    }
+
+    public Platinum() {
+
     }
 }

@@ -5,16 +5,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import jakarta.persistence.*;
 
 
 import static troops.TroopTypes.*;
 
 // Serializer for the troopmanager because it was impossible to pass information into fields with the PlayerController on Postman
 @JsonSerialize(using = TroopManagerSerializer.class)
+@Entity
 public class TroopManager {
     // Map storing what trooptype a troop is and the quantity of that type possessed
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long playerId;
-    private Map<TroopTypes, Integer> troopsCounts;
+
+    @OneToMany(mappedBy = "troopManager", cascade = CascadeType.ALL)
+    private List<Troop> troopManager;
+
+
     private int archerNum = 0;
     private int warriorNum;
     private int mageNum;
@@ -29,6 +37,14 @@ public class TroopManager {
         this.troopsCounts.put(WARRIOR, 0);
         this.troopsCounts.put(MAGE, 0);
         this.troopsCounts.put(CAVALRY, 0);
+    }
+
+    private void initializeTroops() {
+        troopManager.add(new Warrior())
+    }
+
+    public TroopManager() {
+
     }
 
     public long getPlayerId() {

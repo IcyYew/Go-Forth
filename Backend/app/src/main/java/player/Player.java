@@ -26,6 +26,10 @@ public class Player {
     private String userName;
     private String password; // might add encryption, not sure if necessary
 
+    public Player() {
+
+    }
+
     public String getPassword() {
         return this.password;
     }

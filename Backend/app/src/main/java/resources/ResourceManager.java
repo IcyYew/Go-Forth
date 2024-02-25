@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import troops.TroopManagerSerializer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -23,24 +24,58 @@ public class ResourceManager {
     // Every player starts with quantity of resource described below, allows introduction to building/recruiting/research system
     public ResourceManager(long playerId) {
         this.playerID = playerId;
-        resourceManager = new HashMap<>();
-        resourceManager.put(ResourceType.WOOD, 1000);
-        resourceManager.put(ResourceType.FOOD, 5000);
-        resourceManager.put(ResourceType.PLATINUM, 500);
-        resourceManager.put(ResourceType.STONE, 1000);
+        this.resourceManager = new ArrayList<>();
     }
 
-    public int getResource(ResourceType resource) {
-        return resourceManager.get(resource);
+    public ResourceManager() {
+
+    }
+
+    private void initializeResources() {
+        resourceManager.add(new Wood(this, 1000));
+        resourceManager.add(new Food(this, 5000));
+        resourceManager.add(new Platinum(this, 500));
+        resourceManager.add(new Stone(this, 1000));
+    }
+
+    public int getResource(ResourceType resourceType) {
+        for (Resource resource : resourceManager) {
+            if (resource.getType() == resourceType) {
+                return resource.getQuantity();
+            }
+        }
+        // Return 0 if resource doesnt exist, in practice should never happen
+        return 0;
+    }
+
+    public void addResource(ResourceType resourceType, int quantity) {
+        for (Resource resource : resourceManager) {
+            if (resource.getType() == resourceType) {
+               resource.setQuantity(resource.getQuantity() + quantity);
+               break;
+            }
+        }
+    }
+
+    public void removeResource(ResourceType resourceType, int quantity) {
+        for (Resource resource : resourceManager) {
+            if (resource.getType() == resourceType) {
+                int current = resource.getQuantity();
+                if (current >= quantity) {
+                    resource.setQuantity(current - quantity);
+                }
+                else {
+                }
+            }
+            break;
+        }
     }
 
     @Override
     public String toString() {
         return "ResourceManager{" +
-                "WOOD=" + resourceManager.get(ResourceType.WOOD) +
-                "STONE=" + resourceManager.get(ResourceType.STONE) +
-                "PLATINUM=" + resourceManager.get(ResourceType.PLATINUM) +
-                "FOOD=" + resourceManager.get(ResourceType.FOOD) +
+                "playerID=" + playerID +
+                ", resourceManager=" + resourceManager +
                 '}';
     }
 }

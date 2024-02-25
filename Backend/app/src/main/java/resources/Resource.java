@@ -3,6 +3,7 @@ package resources;
 import jakarta.persistence.*;
 
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Resource {
 
     @Id
@@ -14,16 +15,24 @@ public abstract class Resource {
 
     private int quantity;
 
+    @Enumerated(EnumType.STRING)
+    private ResourceType resourceType;
+
     @ManyToOne
     @JoinColumn(name = "resource_manager_id")
     private ResourceManager resourceManager;
 
-    public Resource(int quantity) {
+    public Resource(ResourceType resourceType, int quantity, ResourceManager resourceManager) {
+        this.resourceManager = resourceManager;
+        this.resourceType = resourceType;
         this.quantity = quantity;
     }
 
     public Resource() {
+    }
 
+    public ResourceType getType() {
+        return this.resourceType;
     }
 
     public int getQuantity() {

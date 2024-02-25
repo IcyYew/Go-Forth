@@ -1,9 +1,24 @@
 package troops;
 
+
+import jakarta.persistence.*;
+
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Troop {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long playerID;
+
+    @Enumerated(EnumType.STRING)
     private TroopTypes troopType;
+
     private int power;
 
+    @ManyToOne
+    @JoinColumn(name = troop_manager_id)
+    private TroopManager troopManager;
 
 
     // !!!! implement food consumption
@@ -17,6 +32,10 @@ public abstract class Troop {
 
     public Troop(TroopTypes troopType) {
         this.troopType = troopType;
+    }
+
+    public Troop() {
+
     }
 
     public TroopTypes getTroopType() {

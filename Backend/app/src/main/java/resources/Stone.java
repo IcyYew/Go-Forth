@@ -1,8 +1,16 @@
 package resources;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
+@Entity
+@DiscriminatorValue("STONE")
 public class Stone extends Resource{
-    private final ResourceType resourceType = ResourceType.STONE;
-    public Stone(int quantity) {
-        super(quantity);
+    public Stone(ResourceManager resourceManager, int quantity) {
+        super(ResourceType.STONE, quantity, resourceManager);
+    }
+
+    public Stone() {
+
     }
 }

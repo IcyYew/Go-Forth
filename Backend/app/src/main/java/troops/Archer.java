@@ -1,5 +1,7 @@
 package troops;
 
+
+
 public class Archer extends Troop{
     // Archer class is weak to cavalry troop, basic stats defined, subject to change
     private final TroopTypes weakness = TroopTypes.CAVALRY;
