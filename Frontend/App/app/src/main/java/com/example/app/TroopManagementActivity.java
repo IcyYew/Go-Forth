@@ -14,6 +14,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -149,18 +150,8 @@ public class TroopManagementActivity extends AppCompatActivity {
         magesCount += magesToTrainCount;
         cavalryCount += cavalryToTrainCount;
 
-        // Update the total troop counts
-        archersCountTextView = findViewById(R.id.archersCount);
-        archersCountTextView.setText(String.valueOf(archersCount));
-
-        knightsCountTextView = findViewById(R.id.knightsCount);
-        knightsCountTextView.setText(String.valueOf(knightsCount));
-
-        magesCountTextView = findViewById(R.id.magesCount);
-        magesCountTextView.setText(String.valueOf(magesCount));
-
-        cavalryCountTextView = findViewById(R.id.cavalryCount);
-        cavalryCountTextView.setText(String.valueOf(cavalryCount));
+        updateTroopCounts(archersCount, knightsCount, magesCount, cavalryCount);
+        getPlayerData();
 
         // Reset the troops to be trained counts
         archersToTrainCount = 0;
@@ -217,5 +208,9 @@ public class TroopManagementActivity extends AppCompatActivity {
                 });
 
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+    }
+
+    private void updateTroopCounts(int archersCount, int knightsCount, int magesCount, int cavalryCount) {
+
     }
 }
