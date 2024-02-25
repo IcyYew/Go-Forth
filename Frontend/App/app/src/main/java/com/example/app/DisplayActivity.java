@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,16 +15,17 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class DisplayActivity extends AppCompatActivity {
-    private EditText ID;
     private TextView users;
-    private Button confirm;
     private Button back;
 
     private int userID;
@@ -37,10 +39,8 @@ public class DisplayActivity extends AppCompatActivity {
             userID = extras.getInt("ID");
         }
 
-        ID = findViewById(R.id.IDInput);
         users = findViewById(R.id.msgResponse);
         back = findViewById(R.id.back);
-        confirm = findViewById(R.id.confirm);
 
         displayUsers();
 
@@ -52,38 +52,39 @@ public class DisplayActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                userID = Integer.parseInt(ID.getText().toString());
-            }
-        });
     }
 
     private void displayUsers() {
         String url = "http://10.0.2.2:8080/players/getall";
 
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONArray>() {
+        StringRequest request = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
                     @Override
-                    public void onResponse(JSONArray response) {
-                        Log.d("User Display", response.toString());
-                        users.setText(response.toString());
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray jsonArray = new JSONArray(response);
+
+                            StringBuilder playersString = new StringBuilder();
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject playerObject = jsonArray.getJSONObject(i);
+                                playersString.append("Player ID: ").append(playerObject.getInt("playerID")).append("\n");
+                                playersString.append("Player name: ").append(playerObject.getString("userName")).append("\n");
+                                playersString.append("Player power level: ").append(playerObject.getInt("power")).append("\n");
+                                playersString.append("\n");
+                            }
+
+                            users.setText(playersString.toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e("User Display Error", error.toString());
+                        Toast.makeText(getApplicationContext(), "Error fetching players: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
-                }) {
-            @Override
-            public Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                return params;
-            }
-        };
+                });
 
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.TextView;
 
@@ -19,8 +20,11 @@ public class MainActivity extends AppCompatActivity {
     private Button troopManagementButton;
     private Button dummyButton;
     private Button displayButton;
+    private Button fightButton;
+    private Button confirmIDButton;
     private int userID;
     private TextView UID;
+    private EditText enterID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,12 @@ public class MainActivity extends AppCompatActivity {
         dummyButton = findViewById(R.id.dummyButton);
 
         displayButton = findViewById(R.id.displayButton);
+
+        fightButton = findViewById(R.id.fightButton);
+
+        confirmIDButton = findViewById(R.id.confirmID);
+
+        enterID = findViewById(R.id.IDInput);
 
         UID = findViewById(R.id.userID);
 
@@ -101,6 +111,22 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, DisplayActivity.class);
                 intent.putExtra("ID", userID);
                 startActivity(intent);
+            }
+        });
+
+        fightButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, FightActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        confirmIDButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userID = Integer.parseInt(enterID.getText().toString());
+                UID.setText("User ID: " + userID);
             }
         });
     }

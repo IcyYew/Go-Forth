@@ -23,12 +23,6 @@ public class TroopManagementActivity extends AppCompatActivity {
 
     private int userID;
 
-    // stores final count
-    private int archersCount = 0;
-    private int knightsCount = 0;
-    private int magesCount = 0;
-    private int cavalryCount = 0;
-
     // stores intermediary counts
     private int archersToTrainCount = 0;
     private int knightsToTrainCount = 0;
@@ -145,12 +139,7 @@ public class TroopManagementActivity extends AppCompatActivity {
     }
 
     private void confirmTraining() {
-        archersCount += archersToTrainCount;
-        knightsCount += knightsToTrainCount;
-        magesCount += magesToTrainCount;
-        cavalryCount += cavalryToTrainCount;
-
-        updateTroopCounts(archersCount, knightsCount, magesCount, cavalryCount);
+        updateTroopCounts(archersToTrainCount, knightsToTrainCount, magesToTrainCount, cavalryToTrainCount);
         getPlayerData();
 
         // Reset the troops to be trained counts

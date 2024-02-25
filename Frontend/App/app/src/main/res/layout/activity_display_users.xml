@@ -17,20 +17,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Text" />
 
-    <EditText
-        android:id="@+id/IDInput"
-        android:layout_width="227dp"
-        android:layout_height="56dp"
-        android:layout_marginStart="59dp"
-        android:layout_marginTop="444dp"
-        android:layout_marginEnd="59dp"
-        android:ems="10"
-        android:hint="Enter ID"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Text" />
-
     <TextView
         android:id="@+id/Text"
         android:layout_width="wrap_content"
@@ -47,19 +33,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/confirm"
-        android:layout_width="155dp"
-        android:layout_height="84dp"
-        android:layout_marginStart="128dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="128dp"
-        android:text="Confirm User"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/IDInput" />
-
-    <Button
         android:id="@+id/back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -71,18 +44,5 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/IDText"
-        android:layout_width="100dp"
-        android:layout_height="55dp"
-        android:layout_marginStart="19dp"
-        android:layout_marginTop="444dp"
-        android:text="ID:"
-        android:textSize="45sp"
-        app:layout_constraintEnd_toStartOf="@+id/IDInput"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
