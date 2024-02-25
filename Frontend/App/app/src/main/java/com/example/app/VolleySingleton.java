@@ -14,6 +14,7 @@ import com.android.volley.toolbox.Volley;
  */
 public class VolleySingleton {
 
+    // Volley Singleton
     private static VolleySingleton instance;
     private RequestQueue requestQueue;
     private ImageLoader imageLoader;
