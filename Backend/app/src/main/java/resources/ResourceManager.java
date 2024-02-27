@@ -25,6 +25,7 @@ public class ResourceManager {
     public ResourceManager(long playerId) {
         this.playerID = playerId;
         this.resourceManager = new ArrayList<>();
+        initializeResources();
     }
 
     public ResourceManager() {

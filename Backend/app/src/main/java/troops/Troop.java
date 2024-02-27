@@ -9,15 +9,17 @@ public abstract class Troop {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long playerID;
+    private long playerId;
 
     @Enumerated(EnumType.STRING)
     private TroopTypes troopType;
 
     private int power;
 
+    private int quantity;
+
     @ManyToOne
-    @JoinColumn(name = troop_manager_id)
+    @JoinColumn(name = "troop_manager_id")
     private TroopManager troopManager;
 
 
@@ -30,12 +32,22 @@ public abstract class Troop {
 
 
 
-    public Troop(TroopTypes troopType) {
+    public Troop(TroopTypes troopType, int quantity, TroopManager troopManager) {
         this.troopType = troopType;
+        this.quantity = quantity;
+        this.troopManager = troopManager;
     }
 
     public Troop() {
 
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public TroopTypes getTroopType() {

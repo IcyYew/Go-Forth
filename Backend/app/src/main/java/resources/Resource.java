@@ -8,7 +8,7 @@ public abstract class Resource {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer playerID;
+    private long playerID;
 
     private String key;
     private String value;
@@ -54,15 +54,5 @@ public abstract class Resource {
         else {
             this.setQuantity(this.getQuantity() - amount);
         }
-    }
-
-
-
-
-    @Override
-    public String toString() {
-        return "Resource{" +
-                "quantity=" + quantity +
-                '}';
     }
 }

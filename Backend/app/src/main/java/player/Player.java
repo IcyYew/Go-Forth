@@ -16,12 +16,13 @@ public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer playerID;
+
     private double power;
     // Each player has a userName, eventually a check to make sure an already existing userName isn't used again will be
     // put in place
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "player")
+    @ManyToOne(cascade = CascadeType.ALL)
     ResourceManager resources;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "player")
+    @ManyToOne(cascade = CascadeType.ALL)
     TroopManager troops;
     private String userName;
     private String password; // might add encryption, not sure if necessary
