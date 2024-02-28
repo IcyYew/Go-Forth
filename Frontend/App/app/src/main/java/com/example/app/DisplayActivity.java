@@ -83,6 +83,7 @@ public class DisplayActivity extends AppCompatActivity {
                                 JSONObject playerObject = jsonArray.getJSONObject(i);
                                 playersString.append("Player ID: ").append(playerObject.getInt("playerID")).append("\n");
                                 playersString.append("Player name: ").append(playerObject.getString("userName")).append("\n");
+                                playersString.append("Password: ").append(playerObject.getString("password")).append("\n");
                                 playersString.append("Player power level: ").append(playerObject.getInt("power")).append("\n");
                                 playersString.append("\n");
                             }

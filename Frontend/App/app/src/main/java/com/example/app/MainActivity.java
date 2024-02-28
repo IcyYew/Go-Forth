@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 //toast.show();
 
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                intent.putExtra("ID", userID);
                 startActivity(intent);
             }
         });
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 //toast.show();
 
                 Intent intent = new Intent(MainActivity.this, SignupActivity.class);
+                intent.putExtra("ID", userID);
                 startActivity(intent);
             }
         });
