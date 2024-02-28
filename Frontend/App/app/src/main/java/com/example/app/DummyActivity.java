@@ -93,7 +93,7 @@ public class DummyActivity extends AppCompatActivity {
      */
     private void createNewPlayer(String userName, String password) {
         // use the new player endpoint
-        String url = "http://10.0.2.2:8080/players/new";
+        String url = "http://coms-309-048.class.las.iastate.edu:8080/players/new";
 
         // Create a JSONObject with the user's details
         JSONObject requestBody = new JSONObject();

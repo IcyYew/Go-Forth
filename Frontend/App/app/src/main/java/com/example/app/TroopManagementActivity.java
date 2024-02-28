@@ -198,7 +198,7 @@ public class TroopManagementActivity extends AppCompatActivity {
         cavalryCountTextView = findViewById(R.id.cavalryCount);
 
         // use the /players/getplayer/{userID} endpoint
-        String url = "http://10.0.2.2:8080/players/getPlayer/" + String.valueOf(userID);
+        String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getPlayer/" + String.valueOf(userID);
 
         // makes JsonObjectRequest to get the current player. GETs the archerNum, warriorNum, mageNum, and cavalryNum
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
@@ -242,7 +242,7 @@ public class TroopManagementActivity extends AppCompatActivity {
      * @param cavalryCount number of cavalry to add
      */
     private void updateTroopCounts(int archersCount, int warriorsCount, int magesCount, int cavalryCount) {
-        String baseURL = "http://10.0.2.2:8080/players/addtroops/" + userID;
+        String baseURL = "http://coms-309-048.class.las.iastate.edu:8080/players/addtroops/" + userID;
 
         JSONObject archerJSON = createTroopJSON("ARCHER", archersCount);
         JSONObject warriorJSON = createTroopJSON("WARRIOR", warriorsCount);
