@@ -64,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
         Login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url = "http://10.0.2.2:8080/players/getall";
+                String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getall";
                 String usernameString = Username.getText().toString();
                 String passwordString = Password.getText().toString();
                 // make a StringRequest to get the users from the server. Converts JSONArray into StringBuilder.
