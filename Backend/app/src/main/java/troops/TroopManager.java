@@ -14,23 +14,26 @@ import static troops.TroopTypes.*;
 @JsonSerialize(using = TroopManagerSerializer.class)
 @Entity
 public class TroopManager {
-    // Map storing what trooptype a troop is and the quantity of that type possessed
+    // ID linking troops to a player via ID
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer playerId;
 
+    // Troop manager for managing troops
     @OneToMany(mappedBy = "troopManager", cascade = CascadeType.ALL)
     private List<Troop> troopManager;
 
+    // A troop managers total troop power, useless in practice, temporarily in DB table
     private long totalTroopPower;
 
-    // Constructor for troopmanager just creates an empty hashmap of all trooptypes
+    // Constructor for troopmanager, initalizes troops for a player of playerId, in practice this should only occur once per player
     public TroopManager(Integer playerId) {
         this.playerId = playerId;
         this.troopManager = new ArrayList<>();
         initializeTroops();
     }
 
+    // Initializes troop to 0 for a player, subject to change
     private void initializeTroops() {
         troopManager.add(new Warrior(this, 0));
         troopManager.add(new Archer(this, 0));
@@ -38,6 +41,7 @@ public class TroopManager {
         troopManager.add(new Cavalry(this, 0));
     }
 
+    // Empty constructor to make Jpa happy
     public TroopManager() {
 
     }
