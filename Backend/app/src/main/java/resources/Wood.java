@@ -1,9 +1,17 @@
 package resources;
 
-public class Wood extends Resource{
 
-    private final ResourceType resourceType = ResourceType.WOOD;
-    public Wood(int quantity) {
-        super(quantity);
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
+@Entity
+@DiscriminatorValue("WOOD")
+public class Wood extends Resource{
+    public Wood(ResourceManager resourceManager, int quantity) {
+        super(ResourceType.WOOD, quantity, resourceManager);
+    }
+
+    public Wood() {
+
     }
 }

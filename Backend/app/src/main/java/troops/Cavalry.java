@@ -1,5 +1,10 @@
 package troops;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
+@Entity
+@DiscriminatorValue("CAVALRY")
 public class Cavalry extends Troop{
     // Cavalry class is weak to archer troop, basic stats defined, subject to change
     private final TroopTypes weakness = TroopTypes.ARCHER;
@@ -9,13 +14,17 @@ public class Cavalry extends Troop{
     private final int movementSpeed = 5;
     private final int attackSpeed = 3;
 
-    public Cavalry() {
-        super(TroopTypes.CAVALRY);
+    public Cavalry(TroopManager troopManager, int quantity) {
+        super(TroopTypes.CAVALRY, quantity, troopManager);
         setPower(power);
         setDamage(damage);
         setHealth(health);
         setMovementSpeed(movementSpeed);
         setAttackSpeed(attackSpeed);
+    }
+
+    public Cavalry() {
+
     }
 
     @Override

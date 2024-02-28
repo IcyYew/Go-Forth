@@ -5,30 +5,41 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import jakarta.persistence.*;
 
 
 import static troops.TroopTypes.*;
 
 // Serializer for the troopmanager because it was impossible to pass information into fields with the PlayerController on Postman
 @JsonSerialize(using = TroopManagerSerializer.class)
+@Entity
 public class TroopManager {
     // Map storing what trooptype a troop is and the quantity of that type possessed
-    private long playerId;
-    private Map<TroopTypes, Integer> troopsCounts;
-    private int archerNum = 0;
-    private int warriorNum;
-    private int mageNum;
-    private int cavalryNum;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer playerId;
+
+    @OneToMany(mappedBy = "troopManager", cascade = CascadeType.ALL)
+    private List<Troop> troopManager;
+
     private long totalTroopPower;
 
     // Constructor for troopmanager just creates an empty hashmap of all trooptypes
-    public TroopManager(long playerId) {
+    public TroopManager(Integer playerId) {
         this.playerId = playerId;
-        this.troopsCounts = new HashMap<>();
-        this.troopsCounts.put(ARCHER, 0);
-        this.troopsCounts.put(WARRIOR, 0);
-        this.troopsCounts.put(MAGE, 0);
-        this.troopsCounts.put(CAVALRY, 0);
+        this.troopManager = new ArrayList<>();
+        initializeTroops();
+    }
+
+    private void initializeTroops() {
+        troopManager.add(new Warrior(this, 0));
+        troopManager.add(new Archer(this, 0));
+        troopManager.add(new Mage(this, 0));
+        troopManager.add(new Cavalry(this, 0));
+    }
+
+    public TroopManager() {
+
     }
 
     public long getPlayerId() {
@@ -38,80 +49,54 @@ public class TroopManager {
 
     // Returns specific number of a trooptype currently owned
     public int getTroopNum(TroopTypes troopType) {
-        return troopsCounts.get(troopType);
+        for (Troop troop : troopManager) {
+            if (troop.getTroopType() == troopType) {
+                return troop.getQuantity();
+            }
+        }
+        return 0;
     }
 
     // calculates a troopmanagers total power taking into account each troops different power rating
     public long calculateTotalTroopPower() {
         totalTroopPower = 0;
-        totalTroopPower += troopsCounts.get(ARCHER) * new Archer().getPower();
-        totalTroopPower += troopsCounts.get(MAGE) * new Mage().getPower();
-        totalTroopPower += troopsCounts.get(WARRIOR) * new Warrior().getPower();
-        totalTroopPower += troopsCounts.get(CAVALRY) * new Cavalry().getPower();
+        totalTroopPower += getTroopNum(ARCHER) * new Archer().getPower();
+        totalTroopPower += getTroopNum(MAGE) * new Mage().getPower();
+        totalTroopPower += getTroopNum(WARRIOR) * new Warrior().getPower();
+        totalTroopPower += getTroopNum(CAVALRY) * new Cavalry().getPower();
         return totalTroopPower;
     }
 
     // Add troop(s) to troopmanager
     public void addTroop(TroopTypes troopType, int quantity) {
-        switch (troopType) {
-            case ARCHER :
-                archerNum += quantity;
-                troopsCounts.put(ARCHER, archerNum);
-                break;
-            case WARRIOR:
-                warriorNum += quantity;
-                troopsCounts.put(WARRIOR, warriorNum);
-                break;
-            case MAGE:
-                mageNum += quantity;
-                troopsCounts.put(MAGE, mageNum);
-                break;
-            case CAVALRY:
-                cavalryNum += quantity;
-                troopsCounts.put(CAVALRY, cavalryNum);
-                break;
+        for (Troop troop : troopManager) {
+            if (troop.getTroopType() == troopType) {
+                troop.setQuantity(troop.getQuantity() + quantity);
+            }
         }
-
     }
     // Remove troop(s) from troopmanager
     // Basic logic to make sure a specific troop type isnt deducted to a value below zero
     // !!!! Hidden issue here that sets player troop count to negative when a troopmanager is loaded with non-zero value
     public void removeTroop(TroopTypes troopType, int quantity) {
-        switch (troopType) {
-            case ARCHER:
-                if (troopsCounts.get(ARCHER) != 0 && troopsCounts.get(ARCHER) >= quantity) {
-                    archerNum-= quantity;
-                    troopsCounts.put(ARCHER, archerNum);
+        for (Troop troop : troopManager) {
+            if (troop.getTroopType() == troopType) {
+                int current = troop.getQuantity();
+                if (current >= quantity) {
+                    troop.setQuantity(current - quantity);
+                    break;
                 }
-                break;
-            case WARRIOR:
-                if (troopsCounts.get(WARRIOR) != 0 && troopsCounts.get(WARRIOR) >= quantity) {
-                    warriorNum -= quantity;
-                    troopsCounts.put(WARRIOR, warriorNum);
-                }
-                break;
-            case MAGE:
-                if (troopsCounts.get(MAGE) != 0 && troopsCounts.get(MAGE) >= quantity) {
-                    mageNum -= quantity;
-                    troopsCounts.put(MAGE, mageNum);
-                }
-                break;
-            case CAVALRY:
-                if (troopsCounts.get(CAVALRY) != 0 && troopsCounts.get(CAVALRY) >= quantity) {
-                    cavalryNum -= quantity;
-                    troopsCounts.put(CAVALRY, cavalryNum);
-                }
-                break;
+                troop.setQuantity(0);
+            }
         }
     }
+
 
     @Override
     public String toString() {
         return "TroopManager{" +
-                ", archerNum=" + troopsCounts.get(ARCHER) +
-                ", warriorNum=" + troopsCounts.get(WARRIOR) +
-                ", mageNum=" + troopsCounts.get(MAGE) +
-                ", cavalryNum=" + troopsCounts.get(CAVALRY) +
+                "playerId=" + playerId +
+                ", troopManager=" + troopManager +
                 ", totalTroopPower=" + totalTroopPower +
                 '}';
     }

@@ -1,16 +1,23 @@
 package resources;
 
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import player.Player;
 import troops.TroopManager;
 import troops.TroopTypes;
 
+@Entity
+@DiscriminatorValue("FOOD")
 public class Food extends Resource{
     private int consumptionRate; // per hour
-    private final ResourceType resourceType = ResourceType.FOOD;
 
-    public Food(int amount, int consumptionRate) {
-        super(amount);
-        this.consumptionRate = consumptionRate;
+    public Food(ResourceManager resourceManager, int quantity) {
+        super(ResourceType.FOOD, quantity, resourceManager);
+    }
+
+    public Food() {
+
     }
 
     public void calculateConsumptionRate(Player player) {
