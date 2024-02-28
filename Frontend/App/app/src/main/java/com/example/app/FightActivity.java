@@ -137,6 +137,9 @@ public class FightActivity extends AppCompatActivity {
         String player1Info = parts[1];
         String player2Info = parts[3];
 
+        Log.d("Player1 ID", "Player ID: " + player1Info);
+        Log.d("Player2 ID", "Player ID: " + player2Info);
+
         int player1ID = Integer.parseInt(player1Info);
         int player2ID = Integer.parseInt(player2Info);
 
@@ -165,13 +168,14 @@ public class FightActivity extends AppCompatActivity {
                             if (onPlayer1) {
                                 player1Power = response.getInt("power");
                                 onPlayer1 = false;
-                                Log.d("Power", "Power: " + player1Power);
+                                Log.d("Power 1", "Power: " + player1Power);
                             } else {
                                 player2Power = response.getInt("power");
-                                Log.d("Power", "Power: " + player2Power);
+                                Log.d("Power 2", "Power: " + player2Power);
                                 resultTextView.setText("\n\n" + message + "\n\nNew Power Levels:\n\n" +
                                         "Player 1 Power: " + String.valueOf(player1Power) + "\n" +
                                         "Player 2 Power: " + String.valueOf(player2Power));
+                                onPlayer1 = true;
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
