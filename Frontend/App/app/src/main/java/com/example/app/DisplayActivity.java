@@ -67,7 +67,7 @@ public class DisplayActivity extends AppCompatActivity {
      */
     private void displayUsers() {
         // use getall endpoint URL
-        String url = "http://10.0.2.2:8080/players/getall";
+        String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getall";
 
         // make a StringRequest to get the users from the server. Converts JSONArray into StringBuilder.
         StringRequest request = new StringRequest(Request.Method.GET, url,

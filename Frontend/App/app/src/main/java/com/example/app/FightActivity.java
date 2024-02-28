@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONException;
@@ -42,6 +43,10 @@ public class FightActivity extends AppCompatActivity {
     // variables to store user IDs
     private int user1ID;
     private int user2ID;
+    private int player1Power;
+    private int player2Power;
+
+    private boolean onPlayer1 = true;
 
     /**
      * onCreate that sets onClickListeners for the back, confirm, and fight buttons
@@ -103,7 +108,7 @@ public class FightActivity extends AppCompatActivity {
      */
     private void startFight(int player1ID, int player2ID) {
         // use the players/fight/{user1}/{user2} endpoint
-        String url = "http://10.0.2.2:8080/players/fight/" + player1ID + "/" + player2ID;
+        String url = "http://coms-309-048.class.las.iastate.edu:8080/players/fight/" + player1ID + "/" + player2ID;
 
         // Makes StringRequest at the endpoint and sets the TextView to the result
         StringRequest request = new StringRequest(Request.Method.GET, url,
@@ -132,6 +137,9 @@ public class FightActivity extends AppCompatActivity {
         String player1Info = parts[1];
         String player2Info = parts[3];
 
+        int player1ID = Integer.parseInt(player1Info);
+        int player2ID = Integer.parseInt(player2Info);
+
         // display the appropriate message based on the result
         String message;
         if (result.equals("ATTACKER_WIN")) {
@@ -142,17 +150,41 @@ public class FightActivity extends AppCompatActivity {
             message = "It's a draw!";
         }
 
-        // Extract power levels for player 1
-        String[] player1PowerParts = player1Info.split("power=");
-        double player1Power = Double.parseDouble(player1PowerParts[1].split("\\}")[0].trim());
+        getPowerLevel(message, player1ID);
+        getPowerLevel(message, player2ID);
+    }
 
-        // Extract power levels for player 2
-        String[] player2PowerParts = player2Info.split("power=");
-        double player2Power = Double.parseDouble(player2PowerParts[1].split("\\}")[0].trim());
+    private void getPowerLevel(String message, int playerID) {
+        String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getPlayer/" + String.valueOf(playerID);
 
-        // Display the message and power levels
-        resultTextView.setText("\n\n" + message + "\n\nNew Power Levels:\n\n" +
-                "Player 1 Power: " + player1Power + "\n" +
-                "Player 2 Power: " + player2Power);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            if (onPlayer1) {
+                                player1Power = response.getInt("power");
+                                onPlayer1 = false;
+                                Log.d("Power", "Power: " + player1Power);
+                            } else {
+                                player2Power = response.getInt("power");
+                                Log.d("Power", "Power: " + player2Power);
+                                resultTextView.setText("\n\n" + message + "\n\nNew Power Levels:\n\n" +
+                                        "Player 1 Power: " + String.valueOf(player1Power) + "\n" +
+                                        "Player 2 Power: " + String.valueOf(player2Power));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(FightActivity.this, "Error fetching power", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 }
