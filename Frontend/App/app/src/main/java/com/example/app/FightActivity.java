@@ -43,6 +43,8 @@ public class FightActivity extends AppCompatActivity {
     // variables to store user IDs
     private int user1ID;
     private int user2ID;
+
+    // variables to store user power
     private int player1Power;
     private int player2Power;
 
