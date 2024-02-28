@@ -1,5 +1,11 @@
 package troops;
 
+
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
+@Entity
+@DiscriminatorValue("MAGE")
 public class Mage extends Troop{
     // Mage troop is weak to warrior troop, basic stats defined, subject to change
     private final TroopTypes weakness = TroopTypes.WARRIOR;
@@ -9,13 +15,17 @@ public class Mage extends Troop{
     private final int movementSpeed = 3;
     private final int attackSpeed = 3;
 
-    public Mage() {
-        super(TroopTypes.MAGE);
+    public Mage(TroopManager troopManager, int quantity) {
+        super(TroopTypes.MAGE, quantity, troopManager);
         setPower(power);
         setDamage(damage);
         setHealth(health);
         setMovementSpeed(movementSpeed);
         setAttackSpeed(attackSpeed);
+    }
+
+    public Mage() {
+
     }
 
     @Override

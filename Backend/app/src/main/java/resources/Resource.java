@@ -1,11 +1,37 @@
 package resources;
 
+import jakarta.persistence.*;
+
+@Entity(name="resources")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Resource {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer resourceID;
+
+    @Column(name="quantity")
     private int quantity;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name="resourcetype")
+    private ResourceType resourceType;
 
-    public Resource(int quantity) {
+    @ManyToOne
+    @JoinColumn(name = "resource_manager_id")
+    private ResourceManager resourceManager;
+
+    public Resource(ResourceType resourceType, int quantity, ResourceManager resourceManager) {
+        this.resourceManager = resourceManager;
+        this.resourceType = resourceType;
         this.quantity = quantity;
+    }
+
+    public Resource() {
+    }
+
+    public ResourceType getType() {
+        return this.resourceType;
     }
 
     public int getQuantity() {
@@ -27,15 +53,5 @@ public abstract class Resource {
         else {
             this.setQuantity(this.getQuantity() - amount);
         }
-    }
-
-
-
-
-    @Override
-    public String toString() {
-        return "Resource{" +
-                "quantity=" + quantity +
-                '}';
     }
 }
