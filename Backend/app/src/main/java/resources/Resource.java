@@ -2,20 +2,19 @@ package resources;
 
 import jakarta.persistence.*;
 
-@Entity
+@Entity(name="resources")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Resource {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long playerID;
+    private Integer resourceID;
 
-    private String key;
-    private String value;
-
+    @Column(name="quantity")
     private int quantity;
 
     @Enumerated(EnumType.STRING)
+    @Column(name="resourcetype")
     private ResourceType resourceType;
 
     @ManyToOne

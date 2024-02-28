@@ -7,9 +7,10 @@ import jakarta.persistence.*;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Troop {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long playerId;
+    private Integer troopID;
 
     @Enumerated(EnumType.STRING)
     private TroopTypes troopType;
@@ -21,6 +22,7 @@ public abstract class Troop {
     @ManyToOne
     @JoinColumn(name = "troop_manager_id")
     private TroopManager troopManager;
+
 
 
     // !!!! implement food consumption

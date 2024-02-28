@@ -3,6 +3,8 @@ package player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import resources.ResourceManager;
+import resources.ResourceRepository;
+import resources.ResourceType;
 import troops.*;
 
 import java.util.ArrayList;
@@ -17,7 +19,6 @@ public class PlayerController {
     @Autowired
     private PlayerRepository playerRepository;
 
-    private int playerID = 0;
 
     // Returns all currently existing players and their info via an ArrayList because I prefer the format
     @GetMapping("/players/getall")
@@ -34,9 +35,13 @@ public class PlayerController {
     @PostMapping("/players/new")
     public String newPlayer(@RequestBody PlayerCreator created) {
         // Increment playerID, as mentioned elsewhere will eventually be a unique IDing system
-        playerID++;
         // Generate player object to be passed into the database hashmap
-        Player player = new Player(new ResourceManager(playerID), new TroopManager(playerID), playerID, 0, created.getUserName(), created.getPassword());
+        Player player = new Player();
+        player.setUserName(created.getUserName());
+        player.setPassword(created.getPassword());
+        player = playerRepository.save(player);
+        player.setTroops(new TroopManager(player.getPlayerID()));
+        player.setResources(new ResourceManager(player.getPlayerID()));
         playerRepository.save(player);
         // Return id of created player
         return "New player of ID: " + player.getPlayerID();
@@ -162,7 +167,4 @@ public class PlayerController {
             this.quantity = quantity;
         }
     }
-
-
-
 }

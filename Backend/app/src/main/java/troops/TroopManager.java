@@ -17,7 +17,7 @@ public class TroopManager {
     // Map storing what trooptype a troop is and the quantity of that type possessed
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long playerId;
+    private Integer playerId;
 
     @OneToMany(mappedBy = "troopManager", cascade = CascadeType.ALL)
     private List<Troop> troopManager;
@@ -25,7 +25,7 @@ public class TroopManager {
     private long totalTroopPower;
 
     // Constructor for troopmanager just creates an empty hashmap of all trooptypes
-    public TroopManager(long playerId) {
+    public TroopManager(Integer playerId) {
         this.playerId = playerId;
         this.troopManager = new ArrayList<>();
         initializeTroops();
