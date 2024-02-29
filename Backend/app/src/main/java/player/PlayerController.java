@@ -142,6 +142,9 @@ public class PlayerController {
             TroopCombatCalculator tcc = new TroopCombatCalculator(p1.troops, p2.troops);
             p1.updatePower();
             p2.updatePower();
+            playerRepository.save(p1);
+            playerRepository.save(p2);
+
             return tcc.getResult() + "\n" + p1.getPlayerID() + "\n\n" +  p2.getPlayerID();
         }
         else {
