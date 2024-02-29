@@ -161,6 +161,13 @@ public class FightActivity extends AppCompatActivity {
         }
 
         getPowerLevel(message, player1ID);
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         getPowerLevel(message, player2ID);
     }
 
