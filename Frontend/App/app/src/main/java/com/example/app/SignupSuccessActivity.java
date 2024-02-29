@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.Objects;
+
 public class SignupSuccessActivity extends AppCompatActivity {
 
     private TextView messageText;
@@ -18,15 +20,19 @@ public class SignupSuccessActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_success);
 
+
         //Initialize UI
         messageText = findViewById(R.id.textView);
         loginButton = findViewById(R.id.button);
+
+        Bundle extras = getIntent().getExtras();
 
         //Login button pressed
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SignupSuccessActivity.this, MainActivity.class);
+                intent.putExtra("ID", Objects.requireNonNull(extras.getString("ID")));
                 startActivity(intent);
             }
         });
