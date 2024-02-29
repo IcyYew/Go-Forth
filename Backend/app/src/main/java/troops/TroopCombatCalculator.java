@@ -22,7 +22,6 @@ public class TroopCombatCalculator {
     public void battle(TroopManager attacker, TroopManager defender) {
         double attackerPts = 0;
         double defenderPts = 0;
-        double ptsDiffPercent = 0;
         // Battle system gives our 5 different "types" of battle result depending on how the points-based calculation fairs
         int type = 0;
 
@@ -31,42 +30,36 @@ public class TroopCombatCalculator {
 
         // Take absolute difference of two point values to figure out how advantaged the battle was
         double ptsDifference = Math.abs(attackerPts - defenderPts);
-        if(attackerPts > defenderPts) {
-            ptsDiffPercent = defenderPts / attackerPts;
-        }
-        else {
-            ptsDiffPercent = attackerPts / defenderPts;
-        }
         // The points differences defined in the logic below are not very good, need to do substantial testing or
 
         // a different method of determining battle types, this is mostly for testing
         // Tie with slight attacker advantage
-        if (ptsDiffPercent >= .85 && attackerPts >= defenderPts) {
+        if (ptsDifference <= 100 && attackerPts > defenderPts) {
             type = 0;
             result = Result.TIE;
         }
         // Attacker win
-        else if (ptsDiffPercent < .85 && ptsDiffPercent > .35 && attackerPts >= defenderPts) {
+        else if (ptsDifference > 100 && ptsDifference < 900 && attackerPts > defenderPts) {
             type = 1;
             result = Result.ATTACKER_WIN;
         }
         // Overwhelming attacker victory
-        else if (ptsDiffPercent <= .35 && attackerPts >= defenderPts) {
+        else if (ptsDifference >= 900 && attackerPts > defenderPts) {
             type = 2;
             result = Result.ATTACKER_WIN;
         }
         // Tie with slight defender advantage
-        else if (ptsDiffPercent >= .85 && attackerPts <= defenderPts) {
+        else if (ptsDifference <= 100 && attackerPts < defenderPts) {
             type = 3;
             result = Result.TIE;
         }
         // Defender win
-        else if (ptsDiffPercent < .85 && ptsDiffPercent > .35 && attackerPts <= defenderPts) {
+        else if (ptsDifference > 100 && ptsDifference < 900 && attackerPts < defenderPts) {
             type = 4;
             result = Result.DEFENDER_WIN;
         }
         // Overwhelming defender win
-        else if (ptsDiffPercent <= .35 && attackerPts <= defenderPts) {
+        else if (ptsDifference >= 900 && attackerPts < defenderPts) {
              type = 5;
              result = Result.DEFENDER_WIN;
         }
@@ -107,14 +100,14 @@ public class TroopCombatCalculator {
                 break;
             // Overwhelming attacker win, attacker loses 10% of troops they had prior to battle, defender loses 80%
             case 2:
-                attacker.removeTroop(ARCHER, (int)(attacker.getTroopNum(ARCHER) * 0.01));
-                defender.removeTroop(ARCHER, defender.getTroopNum(ARCHER));
-                attacker.removeTroop(WARRIOR, (int)(attacker.getTroopNum(WARRIOR) * 0.01));
-                defender.removeTroop(WARRIOR, defender.getTroopNum(WARRIOR));
-                attacker.removeTroop(MAGE, (int)(attacker.getTroopNum(MAGE) * 0.01));
-                defender.removeTroop(MAGE, defender.getTroopNum(MAGE));
-                attacker.removeTroop(CAVALRY, (int)(attacker.getTroopNum(CAVALRY) * 0.01));
-                defender.removeTroop(CAVALRY, defender.getTroopNum(CAVALRY));
+                attacker.removeTroop(ARCHER, (int)(attacker.getTroopNum(ARCHER) * 0.1));
+                defender.removeTroop(ARCHER, (int)(defender.getTroopNum(ARCHER) * 0.8));
+                attacker.removeTroop(WARRIOR, (int)(attacker.getTroopNum(WARRIOR) * 0.1));
+                defender.removeTroop(WARRIOR, (int)(defender.getTroopNum(WARRIOR) * 0.8));
+                attacker.removeTroop(MAGE, (int)(attacker.getTroopNum(MAGE) * 0.1));
+                defender.removeTroop(MAGE, (int)(defender.getTroopNum(MAGE) * 0.8));
+                attacker.removeTroop(CAVALRY, (int)(attacker.getTroopNum(CAVALRY) * 0.1));
+                defender.removeTroop(CAVALRY, (int)(defender.getTroopNum(CAVALRY) * 0.8));
                 break;
             // Tie with defender advantage, defender loses 40% of troops they had prior to battle, attacker loses 50%
             case 3:
@@ -140,14 +133,14 @@ public class TroopCombatCalculator {
                 break;
             // Overwhelming defender win, defender loses 10% of troops they had prior to battle, attacker loses 80%
             case 5:
-                attacker.removeTroop(ARCHER, attacker.getTroopNum(ARCHER));
-                defender.removeTroop(ARCHER, (int)(defender.getTroopNum(ARCHER) * 0.01));
-                attacker.removeTroop(WARRIOR, attacker.getTroopNum(WARRIOR));
-                defender.removeTroop(WARRIOR, (int)(defender.getTroopNum(WARRIOR) * 0.01));
-                attacker.removeTroop(MAGE, attacker.getTroopNum(MAGE));
-                defender.removeTroop(MAGE, (int)(defender.getTroopNum(MAGE) * 0.01));
-                attacker.removeTroop(CAVALRY, attacker.getTroopNum(CAVALRY));
-                defender.removeTroop(CAVALRY, (int)(defender.getTroopNum(CAVALRY) * 0.01));
+                attacker.removeTroop(ARCHER, (int)(attacker.getTroopNum(ARCHER) * 0.8));
+                defender.removeTroop(ARCHER, (int)(defender.getTroopNum(ARCHER) * 0.1));
+                attacker.removeTroop(WARRIOR, (int)(attacker.getTroopNum(WARRIOR) * 0.8));
+                defender.removeTroop(WARRIOR, (int)(defender.getTroopNum(WARRIOR) * 0.1));
+                attacker.removeTroop(MAGE, (int)(attacker.getTroopNum(MAGE) * 0.8));
+                defender.removeTroop(MAGE, (int)(defender.getTroopNum(MAGE) * 0.1));
+                attacker.removeTroop(CAVALRY, (int)(attacker.getTroopNum(CAVALRY) * 0.8));
+                defender.removeTroop(CAVALRY, (int)(defender.getTroopNum(CAVALRY) * 0.1));
                 break;
         }
     }
