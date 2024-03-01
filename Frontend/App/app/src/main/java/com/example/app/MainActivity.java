@@ -18,14 +18,11 @@ public class MainActivity extends AppCompatActivity {
     private Button loginButton;
     private Button signupButton;
     private Button troopManagementButton;
-    private Button dummyButton;
     private Button displayButton;
     private Button fightButton;
-    private Button confirmIDButton;
     private Button resourceButton;
     private int userID;
     private TextView UID;
-    private EditText enterID;
 
     /**
      * onCreate sets onClickListeners to all of the buttons and gets the extras
@@ -46,15 +43,9 @@ public class MainActivity extends AppCompatActivity {
 
         troopManagementButton = findViewById(R.id.troopManagementButton);
 
-        dummyButton = findViewById(R.id.dummyButton);
-
         displayButton = findViewById(R.id.displayButton);
 
         fightButton = findViewById(R.id.fightButton);
-
-        confirmIDButton = findViewById(R.id.confirmID);
-
-        enterID = findViewById(R.id.IDInput);
 
         resourceButton = findViewById(R.id.ResourceButton);
 
@@ -120,16 +111,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // dummy user creation button pressed
-        dummyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, DummyActivity.class);
-                intent.putExtra("ID", userID);
-                startActivity(intent);
-            }
-        });
-
         // display users button pressed
         displayButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,16 +126,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, FightActivity.class);
+                intent.putExtra("ID", userID);
                 startActivity(intent);
-            }
-        });
-
-        // confirm ID button pressed
-        confirmIDButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                userID = Integer.parseInt(enterID.getText().toString());
-                UID.setText("User ID: " + userID);
             }
         });
     }
