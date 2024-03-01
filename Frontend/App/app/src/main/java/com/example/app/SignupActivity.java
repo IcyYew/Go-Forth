@@ -178,7 +178,7 @@ public class SignupActivity extends AppCompatActivity {
                     try {
                         JSONArray jsonArray = new JSONArray(response); //Array of users
                         Intent intent = new Intent(SignupActivity.this, SignupSuccessActivity.class);
-                        intent.putExtra("ID", Integer.toString(jsonArray.getJSONObject(jsonArray.length() - 1).getInt("playerID") + 1));
+                        intent.putExtra("ID", Integer.toString(jsonArray.getJSONObject(jsonArray.length() - 1).getInt("playerID")));
                         startActivity(intent); //go to SignupSuccess activity
                     } catch (JSONException e) {
                         e.printStackTrace();
