@@ -27,10 +27,11 @@ public class SignupSuccessActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
 
-        //Login button pressed
+        //To Main Menu button pressed
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Save ID and switch to main activity
                 Intent intent = new Intent(SignupSuccessActivity.this, MainActivity.class);
                 intent.putExtra("ID", Objects.requireNonNull(extras.getString("ID")));
                 startActivity(intent);

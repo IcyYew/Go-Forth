@@ -62,7 +62,7 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                /* when login button is pressed, use intent to switch to Login Activity */
+                /* when login button is pressed, use intent to switch to Main Activity */
                 Intent intent = new Intent(SignupActivity.this, MainActivity.class);
                 intent.putExtra("ID", String.valueOf(userID));
                 startActivity(intent);  // go to MainActivity
@@ -94,12 +94,13 @@ public class SignupActivity extends AppCompatActivity {
                                     JSONArray jsonArray = new JSONArray(response);
                                     for (int i = 0; i < jsonArray.length(); i++) {
                                         JSONObject playerObject = jsonArray.getJSONObject(i);
-                                        if ((playerObject.getString("userName")).equals((Username.getText().toString()))) {
+                                        if ((playerObject.getString("userName")).equals((Username.getText().toString()))) { //If the user name exists
                                             Toast toast = Toast.makeText(SignupActivity.this, "Username already exists", Toast.LENGTH_SHORT);
                                             toast.show();
                                             return;
                                         }
                                     }
+                                    //If no existing user is found, create a new user and switch to Main Activity
                                     createNewPlayer(usernameString, passwordString);
                                     Intent intent = new Intent(SignupActivity.this, SignupSuccessActivity.class);
                                     intent.putExtra("ID", Integer.toString(jsonArray.length() + 1));
