@@ -74,16 +74,16 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Convert user inputs to strings
-                String usernameString = Username.getText().toString();
-                String passwordString = Password.getText().toString();
-                String confirmString = ConfirmPassword.getText().toString();
+                String usernameString = Username.getText().toString(); //Username given by user
+                String passwordString = Password.getText().toString(); //Password given by user
+                String confirmString = ConfirmPassword.getText().toString(); //confirm given by user
 
-                if(!passwordString.equals(confirmString)){
+                if(!passwordString.equals(confirmString)){ //checks if password and confirm match
                     Toast toast = Toast.makeText(SignupActivity.this, "Passwords do not match", Toast.LENGTH_SHORT);
                     toast.show();
                 }
 
-                String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getall";
+                String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getall"; //URL to get all existing users
                 // make a StringRequest to get the users from the server. Converts JSONArray into StringBuilder.
                 StringRequest request = new StringRequest(Request.Method.GET, url,
                         new Response.Listener<String>() {
@@ -91,25 +91,27 @@ public class SignupActivity extends AppCompatActivity {
                             public void onResponse(String response) {
                                 Log.d("Display response", response);
                                 try {
-                                    JSONArray jsonArray = new JSONArray(response);
+                                    JSONArray jsonArray = new JSONArray(response); //Array of users
                                     for (int i = 0; i < jsonArray.length(); i++) {
-                                        JSONObject playerObject = jsonArray.getJSONObject(i);
+                                        JSONObject playerObject = jsonArray.getJSONObject(i); //Get user at current i
                                         if ((playerObject.getString("userName")).equals((Username.getText().toString()))) { //If the user name exists
                                             Toast toast = Toast.makeText(SignupActivity.this, "Username already exists", Toast.LENGTH_SHORT);
                                             toast.show();
-                                            return;
+                                            return; //exit
                                         }
                                     }
                                     //If no existing user is found, create a new user and switch to Main Activity
-                                    createNewPlayer(usernameString, passwordString);
+                                    createNewPlayer(usernameString, passwordString); //Creates player with username and password given by user
                                     Intent intent = new Intent(SignupActivity.this, SignupSuccessActivity.class);
-                                    if(jsonArray.length() != 0) {
+                                    if(jsonArray.length() != 0) { //If a user already exists
+                                        //take last user and adds one to get new ID
                                         intent.putExtra("ID", Integer.toString(jsonArray.getJSONObject(jsonArray.length() - 1).getInt("playerID") + 1));
                                     }
                                     else{
+                                        //since no other players exist, new player is given an ID of 1
                                         intent.putExtra("ID", Integer.toString(1));
                                     }
-                                    startActivity(intent);
+                                    startActivity(intent); //go to SignupSuccess activity
 
                                     return;
 
