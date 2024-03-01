@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private Button displayButton;
     private Button fightButton;
     private Button confirmIDButton;
+    private Button resourceButton;
     private int userID;
     private TextView UID;
     private EditText enterID;
@@ -55,7 +56,10 @@ public class MainActivity extends AppCompatActivity {
 
         enterID = findViewById(R.id.IDInput);
 
-        UID = findViewById(R.id.userID);
+        resourceButton = findViewById(R.id.ResourceButton);
+
+        UID = findViewById(R.id.ID);
+
 
         // gets extras and sets userID to whatever we got from the extras. IF there were no extras, empty userID
         Bundle extras = getIntent().getExtras();
@@ -91,6 +95,16 @@ public class MainActivity extends AppCompatActivity {
                 //toast.show();
 
                 Intent intent = new Intent(MainActivity.this, SignupActivity.class);
+                intent.putExtra("ID", userID);
+                startActivity(intent);
+            }
+        });
+
+        //Resource button pressed
+        resourceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ResourceActivity.class);
                 intent.putExtra("ID", userID);
                 startActivity(intent);
             }
