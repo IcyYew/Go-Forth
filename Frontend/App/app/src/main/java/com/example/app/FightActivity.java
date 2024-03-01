@@ -24,6 +24,8 @@ import org.json.JSONObject;
  * Activity to simulate fights between two users
  */
 public class FightActivity extends AppCompatActivity {
+    private int userID;
+
     // EditTexts for users
     private EditText user1;
     private EditText user2;
@@ -62,6 +64,11 @@ public class FightActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fight);
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            userID = extras.getInt("ID");
+        }
+
         // UI Initialization
         user1 = findViewById(R.id.user1Input);
         user2 = findViewById(R.id.user2Input);
@@ -77,6 +84,7 @@ public class FightActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FightActivity.this, MainActivity.class);
+                intent.putExtra("ID", String.valueOf(userID));
                 startActivity(intent);
             }
         });
@@ -161,6 +169,13 @@ public class FightActivity extends AppCompatActivity {
         }
 
         getPowerLevel(message, player1ID);
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         getPowerLevel(message, player2ID);
     }
 

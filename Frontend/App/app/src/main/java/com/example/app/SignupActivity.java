@@ -62,7 +62,7 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                /* when login button is pressed, use intent to switch to Login Activity */
+                /* when login button is pressed, use intent to switch to Main Activity */
                 Intent intent = new Intent(SignupActivity.this, MainActivity.class);
                 intent.putExtra("ID", String.valueOf(userID));
                 startActivity(intent);  // go to MainActivity
@@ -74,16 +74,16 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Convert user inputs to strings
-                String usernameString = Username.getText().toString();
-                String passwordString = Password.getText().toString();
-                String confirmString = ConfirmPassword.getText().toString();
+                String usernameString = Username.getText().toString(); //Username given by user
+                String passwordString = Password.getText().toString(); //Password given by user
+                String confirmString = ConfirmPassword.getText().toString(); //confirm given by user
 
-                if(!passwordString.equals(confirmString)){
+                if(!passwordString.equals(confirmString)){ //checks if password and confirm match
                     Toast toast = Toast.makeText(SignupActivity.this, "Passwords do not match", Toast.LENGTH_SHORT);
                     toast.show();
                 }
 
-                String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getall";
+                String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getall"; //URL to get all existing users
                 // make a StringRequest to get the users from the server. Converts JSONArray into StringBuilder.
                 StringRequest request = new StringRequest(Request.Method.GET, url,
                         new Response.Listener<String>() {
@@ -91,19 +91,18 @@ public class SignupActivity extends AppCompatActivity {
                             public void onResponse(String response) {
                                 Log.d("Display response", response);
                                 try {
-                                    JSONArray jsonArray = new JSONArray(response);
+                                    JSONArray jsonArray = new JSONArray(response); //Array of users
                                     for (int i = 0; i < jsonArray.length(); i++) {
-                                        JSONObject playerObject = jsonArray.getJSONObject(i);
-                                        if ((playerObject.getString("userName")).equals((Username.getText().toString()))) {
+                                        JSONObject playerObject = jsonArray.getJSONObject(i); //Get user at current i
+                                        if ((playerObject.getString("userName")).equals((Username.getText().toString()))) { //If the user name exists
                                             Toast toast = Toast.makeText(SignupActivity.this, "Username already exists", Toast.LENGTH_SHORT);
                                             toast.show();
-                                            return;
+                                            return; //exit
                                         }
                                     }
-                                    createNewPlayer(usernameString, passwordString);
-                                    Intent intent = new Intent(SignupActivity.this, SignupSuccessActivity.class);
-                                    intent.putExtra("ID", Integer.toString(jsonArray.length() + 1));
-                                    startActivity(intent);
+                                    //If no existing user is found, create a new user and switch to Main Activity
+                                    createNewPlayer(usernameString, passwordString); //Creates player with username and password given by user
+                                    SignupSuccess();
 
                                     return;
 
@@ -168,5 +167,35 @@ public class SignupActivity extends AppCompatActivity {
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 
+    private void SignupSuccess(){
+    String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getall"; //URL to get all existing users
+    // make a StringRequest to get the users from the server. Converts JSONArray into StringBuilder.
+    StringRequest request = new StringRequest(Request.Method.GET, url,
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.d("Display response", response);
+                    try {
+                        JSONArray jsonArray = new JSONArray(response); //Array of users
+                        Intent intent = new Intent(SignupActivity.this, SignupSuccessActivity.class);
+                        intent.putExtra("ID", Integer.toString(jsonArray.getJSONObject(jsonArray.length() - 1).getInt("playerID") + 1));
+                        startActivity(intent); //go to SignupSuccess activity
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(getApplicationContext(), "Error fetching players: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
 
+    // add to the request queue
+                VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+
+
+
+}
 }

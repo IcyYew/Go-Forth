@@ -78,7 +78,6 @@ public class ResourceManager {
                 else {
                 }
             }
-            break;
         }
     }
 

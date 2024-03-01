@@ -18,13 +18,11 @@ public class MainActivity extends AppCompatActivity {
     private Button loginButton;
     private Button signupButton;
     private Button troopManagementButton;
-    private Button dummyButton;
     private Button displayButton;
     private Button fightButton;
-    private Button confirmIDButton;
+    private Button resourceButton;
     private int userID;
     private TextView UID;
-    private EditText enterID;
 
     /**
      * onCreate sets onClickListeners to all of the buttons and gets the extras
@@ -45,17 +43,14 @@ public class MainActivity extends AppCompatActivity {
 
         troopManagementButton = findViewById(R.id.troopManagementButton);
 
-        dummyButton = findViewById(R.id.dummyButton);
-
         displayButton = findViewById(R.id.displayButton);
 
         fightButton = findViewById(R.id.fightButton);
 
-        confirmIDButton = findViewById(R.id.confirmID);
+        resourceButton = findViewById(R.id.ResourceButton);
 
-        enterID = findViewById(R.id.IDInput);
+        UID = findViewById(R.id.ID);
 
-        UID = findViewById(R.id.userID);
 
         // gets extras and sets userID to whatever we got from the extras. IF there were no extras, empty userID
         Bundle extras = getIntent().getExtras();
@@ -96,21 +91,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //Troop Management pressed
-        troopManagementButton.setOnClickListener(new View.OnClickListener() {
+        //Resource button pressed
+        resourceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, TroopManagementActivity.class);
+                Intent intent = new Intent(MainActivity.this, ResourceActivity.class);
                 intent.putExtra("ID", userID);
                 startActivity(intent);
             }
         });
 
-        // dummy user creation button pressed
-        dummyButton.setOnClickListener(new View.OnClickListener() {
+        //Troop Management pressed
+        troopManagementButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, DummyActivity.class);
+                Intent intent = new Intent(MainActivity.this, TroopManagementActivity.class);
                 intent.putExtra("ID", userID);
                 startActivity(intent);
             }
@@ -131,16 +126,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, FightActivity.class);
+                intent.putExtra("ID", userID);
                 startActivity(intent);
-            }
-        });
-
-        // confirm ID button pressed
-        confirmIDButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                userID = Integer.parseInt(enterID.getText().toString());
-                UID.setText("User ID: " + userID);
             }
         });
     }
