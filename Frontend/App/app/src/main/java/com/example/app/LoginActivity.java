@@ -55,6 +55,7 @@ public class LoginActivity extends AppCompatActivity {
             //Back button clicked
             @Override
             public void onClick(View v) {
+                //goes to MainActivity with userID
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 intent.putExtra("ID", String.valueOf(userID));
                 startActivity(intent);
@@ -64,9 +65,9 @@ public class LoginActivity extends AppCompatActivity {
         Login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getall";
-                String usernameString = Username.getText().toString();
-                String passwordString = Password.getText().toString();
+                String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getall"; //URL to get all players
+                String usernameString = Username.getText().toString(); //Get username inputed
+                String passwordString = Password.getText().toString(); //Get password inputed
                 // make a StringRequest to get the users from the server. Converts JSONArray into StringBuilder.
                 StringRequest request = new StringRequest(Request.Method.GET, url,
                         new Response.Listener<String>() {
@@ -74,19 +75,19 @@ public class LoginActivity extends AppCompatActivity {
                             public void onResponse(String response) {
                                 Log.d("Display response", response);
                                 try {
-                                    JSONArray jsonArray = new JSONArray(response);
-                                    for (int i = 0; i < jsonArray.length(); i++) {
-                                        JSONObject playerObject = jsonArray.getJSONObject(i);
-                                        if (playerObject.getString("userName").equals(usernameString))
-                                            if (playerObject.getString("password").equals(passwordString)) {
+                                    JSONArray jsonArray = new JSONArray(response); //Array of users
+                                    for (int i = 0; i < jsonArray.length(); i++) { //loop to get all players
+                                        JSONObject playerObject = jsonArray.getJSONObject(i); //gets user at I
+                                        if (playerObject.getString("userName").equals(usernameString)) //If the username matches the current username at i
+                                            if (playerObject.getString("password").equals(passwordString)) { //If the password matches the username
                                                 //username and password match
                                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                                intent.putExtra("ID", playerObject.getString("playerID"));
+                                                intent.putExtra("ID", playerObject.getString("playerID")); //Brings user ID to main activity
                                                 startActivity(intent);  // go to LoginActivity
                                                 return;
                                             } else {
                                                 //username exist but password does not match
-                                                Toast toast = Toast.makeText(LoginActivity.this, "Username or password do not exist (Password)", Toast.LENGTH_SHORT);
+                                                Toast toast = Toast.makeText(LoginActivity.this, "Username Doesnt exist or password doesn't match (Password)", Toast.LENGTH_SHORT);
                                                 toast.show();
                                                 return;
                                             }
@@ -96,7 +97,7 @@ public class LoginActivity extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
                                 //username does not exist
-                                Toast toast = Toast.makeText(LoginActivity.this, "Username or password do not exist (Username)", Toast.LENGTH_SHORT);
+                                Toast toast = Toast.makeText(LoginActivity.this, "Username Doesnt exist or password doesn't match (Username)", Toast.LENGTH_SHORT);
                                 toast.show();
                             }
                         },
