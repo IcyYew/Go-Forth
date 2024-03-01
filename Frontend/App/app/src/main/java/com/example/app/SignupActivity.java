@@ -102,16 +102,7 @@ public class SignupActivity extends AppCompatActivity {
                                     }
                                     //If no existing user is found, create a new user and switch to Main Activity
                                     createNewPlayer(usernameString, passwordString); //Creates player with username and password given by user
-                                    Intent intent = new Intent(SignupActivity.this, SignupSuccessActivity.class);
-                                    if(jsonArray.length() != 0) { //If a user already exists
-                                        //take last user and adds one to get new ID
-                                        intent.putExtra("ID", Integer.toString(jsonArray.getJSONObject(jsonArray.length() - 1).getInt("playerID") + 1));
-                                    }
-                                    else{
-                                        //since no other players exist, new player is given an ID of 1
-                                        intent.putExtra("ID", Integer.toString(1));
-                                    }
-                                    startActivity(intent); //go to SignupSuccess activity
+                                    SignupSuccess();
 
                                     return;
 
@@ -176,5 +167,35 @@ public class SignupActivity extends AppCompatActivity {
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 
+    private void SignupSuccess(){
+    String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getall"; //URL to get all existing users
+    // make a StringRequest to get the users from the server. Converts JSONArray into StringBuilder.
+    StringRequest request = new StringRequest(Request.Method.GET, url,
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.d("Display response", response);
+                    try {
+                        JSONArray jsonArray = new JSONArray(response); //Array of users
+                        Intent intent = new Intent(SignupActivity.this, SignupSuccessActivity.class);
+                        intent.putExtra("ID", Integer.toString(jsonArray.getJSONObject(jsonArray.length() - 1).getInt("playerID") + 1));
+                        startActivity(intent); //go to SignupSuccess activity
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(getApplicationContext(), "Error fetching players: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
 
+    // add to the request queue
+                VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+
+
+
+}
 }
