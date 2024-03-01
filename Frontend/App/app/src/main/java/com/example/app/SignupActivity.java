@@ -103,12 +103,16 @@ public class SignupActivity extends AppCompatActivity {
                                     //If no existing user is found, create a new user and switch to Main Activity
                                     createNewPlayer(usernameString, passwordString);
                                     Intent intent = new Intent(SignupActivity.this, SignupSuccessActivity.class);
+<<<<<<< HEAD
                                     if(jsonArray.length() != 0) {
                                         intent.putExtra("ID", Integer.toString(jsonArray.getJSONObject(jsonArray.length() - 1).getInt("playerID") + 1));
                                     }
                                     else{
                                         intent.putExtra("ID", Integer.toString(1));
                                     }
+=======
+                                    intent.putExtra("ID", Integer.toString(jsonArray.length() + 1));
+>>>>>>> 7667b8f01ca4a92f8b69c5e8002d9d132dcf97d3
                                     startActivity(intent);
 
                                     return;
