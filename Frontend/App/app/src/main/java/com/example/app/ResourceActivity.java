@@ -110,7 +110,7 @@ public class ResourceActivity extends AppCompatActivity {
             //Remove food clicked
             @Override
             public void onClick(View v) {
-                addResource(Integer.parseInt(foodPrompt.getText().toString()) * -1, "FOOD");
+                removeResource(Integer.parseInt(foodPrompt.getText().toString()), "FOOD");
             }
         });
         addWood.setOnClickListener(new View.OnClickListener() {
@@ -125,7 +125,7 @@ public class ResourceActivity extends AppCompatActivity {
             //Remove wood clicked
             @Override
             public void onClick(View v) {
-                addResource(Integer.parseInt(woodPrompt.getText().toString()) * -1, "WOOD");
+                removeResource(Integer.parseInt(woodPrompt.getText().toString()), "WOOD");
             }
         });
 
@@ -141,7 +141,7 @@ public class ResourceActivity extends AppCompatActivity {
             //Remove stone clicked
             @Override
             public void onClick(View v) {
-                addResource(Integer.parseInt(stonePrompt.getText().toString()) * -1, "STONE");
+                removeResource(Integer.parseInt(stonePrompt.getText().toString()), "STONE");
             }
         });
         addPlatinum.setOnClickListener(new View.OnClickListener() {
@@ -156,7 +156,7 @@ public class ResourceActivity extends AppCompatActivity {
             //Remove platinum clicked
             @Override
             public void onClick(View v) {
-                addResource(Integer.parseInt(platinumPrompt.getText().toString()) * -1, "PLATINUM");
+                removeResource(Integer.parseInt(platinumPrompt.getText().toString()), "PLATINUM");
             }
         });
 
