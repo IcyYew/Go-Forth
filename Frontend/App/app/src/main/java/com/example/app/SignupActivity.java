@@ -81,6 +81,7 @@ public class SignupActivity extends AppCompatActivity {
                 if(!passwordString.equals(confirmString)){ //checks if password and confirm match
                     Toast toast = Toast.makeText(SignupActivity.this, "Passwords do not match", Toast.LENGTH_SHORT);
                     toast.show();
+                    return;
                 }
 
                 String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getall"; //URL to get all existing users
