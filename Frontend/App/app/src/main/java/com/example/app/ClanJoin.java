@@ -13,11 +13,12 @@ import android.widget.TextView;
 import org.w3c.dom.Text;
 
 import java.util.Objects;
-public class ClanChat extends AppCompatActivity {
+
+public class ClanJoin extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_clan_chat);
+        setContentView(R.layout.activity_clan_join);
     }
 }
