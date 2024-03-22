@@ -16,6 +16,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ClanManagement"
+            android:exported="false" />
+        <activity
             android:name=".ClanChat"
             android:exported="false" />
         <activity
