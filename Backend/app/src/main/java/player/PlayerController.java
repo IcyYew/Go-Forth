@@ -10,7 +10,7 @@ import troops.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -51,6 +51,15 @@ public class PlayerController {
         playerRepository.save(player);
         // Return id of created player
         return "New player of ID: " + player.getPlayerID();
+    }
+
+    // Returns sorted list of players based on power, descending order
+    @GetMapping("/players/getsorted")
+    public List<Player> getSortedPlayers() {
+        List<Player> sortedList = playerRepository.findAll();
+        return sortedList.stream()
+                .sorted((z, y) -> Double.compare(y.getPower(), z.getPower()))
+                .collect(Collectors.toList());
     }
 
     // Addtroops to a declared player via their ID, to use, use Postman POST option, make sure you already have a player declared and use:
