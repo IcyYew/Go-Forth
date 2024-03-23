@@ -48,6 +48,12 @@
         <activity
             android:name=".OverworldActivity"
             android:exported="false" />
+        <activity
+            android:name=".ChatActivity2"
+            android:exported="false" />
+        <activity
+            android:name=".ChatActivity1"
+            android:exported="false" />
     </application>
 
 </manifest>
