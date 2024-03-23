@@ -5,16 +5,6 @@
 
     <!-- Title -->
 
-    <Button
-        android:id="@+id/ResourceButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/fightButton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:text="Resource"
-        android:textSize="18sp" />
-
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
@@ -75,6 +65,26 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:text="Fight"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/ResourceButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fightButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="Resource"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/OverworldButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ResourceButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="Overworld"
         android:textSize="18sp" />
 
     <TextView
