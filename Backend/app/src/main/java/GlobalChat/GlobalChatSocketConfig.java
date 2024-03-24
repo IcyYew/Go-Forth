@@ -12,5 +12,4 @@ public class GlobalChatSocketConfig
     {
         return new ServerEndpointExporter();
     }
-
 }
