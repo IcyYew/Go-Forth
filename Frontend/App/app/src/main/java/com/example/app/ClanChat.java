@@ -23,7 +23,7 @@ import org.w3c.dom.Text;
 import java.util.Objects;
 public class ClanChat extends AppCompatActivity implements WebSocketListener{
 
-    private String BASE_URL = "ws://10.0.2.2:8080/clanchat/";
+    private String BASE_URL = "ws://10.0.2.2:8080/chat/clan/";
 
     private Button Back;
     private TextView Chat;
@@ -44,7 +44,16 @@ public class ClanChat extends AppCompatActivity implements WebSocketListener{
         if (extras != null) {
             userID = extras.getInt("ID");
         }
-        String serverUrl = BASE_URL + String.valueOf(userID).toString();
+
+        Back = findViewById(R.id.Back);
+
+        Chat = findViewById(R.id.textView2);
+
+        SendMessage = findViewById(R.id.SendButton);
+        
+        Message = findViewById(R.id.input);
+
+        String serverUrl = BASE_URL + "Test_User";
 
         // Establish WebSocket connection and set listener
         ClanChatManager.getInstance().connectWebSocket(serverUrl);
@@ -55,7 +64,7 @@ public class ClanChat extends AppCompatActivity implements WebSocketListener{
             @Override
             public void onClick(View v) {
                 //goes to MainActivity with userID
-                Intent intent = new Intent(ClanChat.this, ClanActivity.class);
+                Intent intent = new Intent(ClanChat.this, MainActivity.class);
                 intent.putExtra("ID", String.valueOf(userID));
                 startActivity(intent);
             }

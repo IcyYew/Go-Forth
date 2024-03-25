@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private Button displayButton;
     private Button fightButton;
     private Button resourceButton;
-    private Button overworldButton;
+    private Button clanchatButton;
     private int userID;
     private TextView UID;
 
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         resourceButton = findViewById(R.id.ResourceButton);
 
-        overworldButton = findViewById(R.id.OverworldButton);
+        clanchatButton = findViewById(R.id.ClanChat);
 
         UID = findViewById(R.id.ID);
 
@@ -75,6 +75,18 @@ public class MainActivity extends AppCompatActivity {
                 //toast.show();
 
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                intent.putExtra("ID", userID);
+                startActivity(intent);
+            }
+        });
+
+        clanchatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast toast = Toast.makeText(MainActivity.this, "Login Pressed", Toast.LENGTH_SHORT);
+                //toast.show();
+
+                Intent intent = new Intent(MainActivity.this, ClanChat.class);
                 intent.putExtra("ID", userID);
                 startActivity(intent);
             }
@@ -128,15 +140,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, FightActivity.class);
-                intent.putExtra("ID", userID);
-                startActivity(intent);
-            }
-        });
-
-        overworldButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, OverworldActivity.class);
                 intent.putExtra("ID", userID);
                 startActivity(intent);
             }
