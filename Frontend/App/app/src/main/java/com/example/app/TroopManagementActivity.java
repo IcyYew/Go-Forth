@@ -1,6 +1,7 @@
 package com.example.app;
 
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -18,6 +19,8 @@ import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Locale;
 
 /**
  * Activity for viewing the troops a user has as well as updating the troops by adding new ones.
@@ -41,12 +44,18 @@ public class TroopManagementActivity extends AppCompatActivity {
     private TextView knightsCountTextView;
     private TextView magesCountTextView;
     private TextView cavalryCountTextView;
+    private TextView trainingTimeValue;
 
     // checkboxes
     private CheckBox archersCheckbox;
     private CheckBox knightsCheckbox;
     private CheckBox magesCheckbox;
     private CheckBox cavalryCheckbox;
+
+    // Countdown timer variable
+    private CountDownTimer countDownTimer;
+    private long totalTimeInMillis = 0;
+    private long timeLeftInMillis = 0;
 
     /**
      * onCreate sets onClickListeners to all of the buttons and initializes UI elements. Also gets extras.
@@ -71,6 +80,7 @@ public class TroopManagementActivity extends AppCompatActivity {
         knightsToTrainCountTextView = findViewById(R.id.knightsToTrainCount);
         magesToTrainCountTextView = findViewById(R.id.magesToTrainCount);
         cavalryToTrainCountTextView = findViewById(R.id.cavalryToTrainCount);
+        trainingTimeValue = findViewById(R.id.trainingTimeValue);
 
         archersCheckbox = findViewById(R.id.archersCheckbox);
         knightsCheckbox = findViewById(R.id.knightsCheckbox);
@@ -133,7 +143,7 @@ public class TroopManagementActivity extends AppCompatActivity {
         confirmTrainingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                confirmTraining();
+                startCountdownTimer();
             }
         });
     }
@@ -298,4 +308,45 @@ public class TroopManagementActivity extends AppCompatActivity {
         // add to volley queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
+
+    private long calculateTotalTrainingTime() {
+        int archerTime = archersToTrainCount * 2; // 2 seconds per archer
+        int knightTime = knightsToTrainCount * 1; // 1 second per knight
+        int mageTime = magesToTrainCount * 3; // 3 seconds per mage
+        int cavalryTime = cavalryToTrainCount * 4; // 4 seconds per cavalry
+        return (archerTime + knightTime + mageTime + cavalryTime) * 1000; // Convert to milliseconds
+    }
+
+    // Method to update countdown textview
+    private void updateCountdownText() {
+        int minutes = (int) (timeLeftInMillis / 1000) / 60;
+        int seconds = (int) (timeLeftInMillis / 1000) % 60;
+        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+        trainingTimeValue.setText(timeLeftFormatted);
+    }
+
+    // Method to start the countdown timer
+    private void startCountdownTimer() {
+        // Calculate total training time based on troops count
+        totalTimeInMillis = calculateTotalTrainingTime();
+        timeLeftInMillis = totalTimeInMillis;
+
+        // Start countdown timer
+        countDownTimer = new CountDownTimer(totalTimeInMillis, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timeLeftInMillis = millisUntilFinished;
+                updateCountdownText();
+            }
+
+            @Override
+            public void onFinish() {
+                // Reset countdown timer variables
+                timeLeftInMillis = 0;
+                updateCountdownText();
+                confirmTraining();
+            }
+        }.start();
+    }
+
 }
