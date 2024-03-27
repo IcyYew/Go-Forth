@@ -9,10 +9,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.spring.app", "player"})
-@EnableJpaRepositories(basePackages = {"player", "resources", "troops"})
+@ComponentScan(basePackages = {"com.spring.app", "player", "clans"})
+@EnableJpaRepositories(basePackages = {"player", "resources", "troops", "clans"})
 @EnableTransactionManagement
-@EntityScan(basePackages = {"player", "resources", "troops"})
+@EntityScan(basePackages = {"player", "resources", "troops", "clans"})
 public class AppApplication {
 
 	public static void main(String[] args)  {
