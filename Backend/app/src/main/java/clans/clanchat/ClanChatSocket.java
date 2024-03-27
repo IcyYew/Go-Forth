@@ -26,18 +26,26 @@ import player.PlayerRepository;
 
 
 @Controller
-@ServerEndpoint(value = "/chat/clan/{username}")
+@ServerEndpoint(value = "/chat/clan/{playerID}")
 public class ClanChatSocket {
 
     private static ClanChatMessageRepository CCMRepo;
 
 
+    private static PlayerRepository playerRepository;
+
+    @Autowired
+    public void setPlayerRepository(PlayerRepository playerRepo) {
+        playerRepository = playerRepo;
+    }
 
     @Autowired
     public void setCCMRepo(ClanChatMessageRepository repo) {
         CCMRepo = repo;
     }
 
+    @Transient
+    int clanIdPassthrough;
 
 
     private static Map<Session, String> sessionUsernameMap = new Hashtable<>();
@@ -48,8 +56,11 @@ public class ClanChatSocket {
 
 
     @OnOpen
-    public void onOpen(Session session, @PathParam("username") String username) throws IOException {
+    public void onOpen(Session session, @PathParam("playerID") Integer playerID) throws IOException {
         logger.info("Entered open");
+        Player player = playerRepository.getById(playerID);
+        String username = player.getUserName();
+        clanIdPassthrough = player.getClanMembershipID();
         sessionUsernameMap.put(session, username);
         usernameSessionMap.put(username, session);
         sendMessageToParticularUser(username, getChatHistory());
@@ -64,7 +75,7 @@ public class ClanChatSocket {
 
         broadcast(username + ": " + message);
 
-        CCMRepo.save(new ClanChatMessage(username, message));
+        CCMRepo.save(new ClanChatMessage(username, message, clanIdPassthrough));
     }
 
     @OnClose

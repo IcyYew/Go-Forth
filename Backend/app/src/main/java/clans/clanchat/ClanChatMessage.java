@@ -28,7 +28,7 @@ public class ClanChatMessage {
     public ClanChatMessage() {
     }
 
-    public ClanChatMessage(String userName, String content) {
+    public ClanChatMessage(String userName, String content, int clanid) {
         this.clanid = clanid;
         this.userName = userName;
         this.content = content;
