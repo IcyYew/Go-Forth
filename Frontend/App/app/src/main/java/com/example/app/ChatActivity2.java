@@ -23,7 +23,8 @@ import org.w3c.dom.Text;
 import java.util.Objects;
 
 /**
- * This activity is responsible for clan chat functionality
+ * This activity is responsible for clan chat functionality.
+ *
  * @author Nicholas Lynch
  */
 public class ChatActivity2 extends AppCompatActivity implements WebSocketListener{

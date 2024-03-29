@@ -26,6 +26,8 @@ import java.util.Map;
 
 /**
  * Activity that displays the current users (assuming there are any)
+ *
+ * @author Josh Dwight
  */
 public class DisplayActivity extends AppCompatActivity {
     // TextView to display users info (name, id, power level)

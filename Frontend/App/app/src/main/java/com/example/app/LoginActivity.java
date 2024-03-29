@@ -23,6 +23,7 @@ import java.util.Objects;
 
 /**
  * This activity is responsible for login functionalities.
+ *
  * @author Nicholas Lynch
  */
 public class LoginActivity extends AppCompatActivity {

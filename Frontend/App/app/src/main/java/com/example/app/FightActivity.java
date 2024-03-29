@@ -21,7 +21,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Activity to simulate fights between two users
+ * Activity to simulate fights between two users.
+ *
+ * @author Josh Dwight
  */
 public class FightActivity extends AppCompatActivity {
     private int userID;

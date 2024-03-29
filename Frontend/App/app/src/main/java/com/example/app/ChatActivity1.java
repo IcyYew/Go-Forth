@@ -14,6 +14,7 @@ import org.java_websocket.handshake.ServerHandshake;
 /**
  * This is activity is responsible for global chat functionality.
  * It uses the currently logged in user as username.
+ *
  * @author Josh Dwight
  */
 public class ChatActivity1 extends AppCompatActivity implements WebSocketListener{
