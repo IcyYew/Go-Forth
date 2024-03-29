@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private Button displayButton;
     private Button fightButton;
     private Button resourceButton;
-    private Button clanchatButton;
+    private Button clanButton;
     private int userID;
     private TextView UID;
 
@@ -50,9 +50,11 @@ public class MainActivity extends AppCompatActivity {
 
         resourceButton = findViewById(R.id.ResourceButton);
 
-        clanchatButton = findViewById(R.id.ClanChat);
+        clanButton = findViewById(R.id.ClanChat);
 
         UID = findViewById(R.id.ID);
+
+        loginButton.setText("Hello");
 
         // gets extras and sets userID to whatever we got from the extras. IF there were no extras, empty userID
         Bundle extras = getIntent().getExtras();
@@ -80,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        clanchatButton.setOnClickListener(new View.OnClickListener() {
+        clanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Toast toast = Toast.makeText(MainActivity.this, "Login Pressed", Toast.LENGTH_SHORT);

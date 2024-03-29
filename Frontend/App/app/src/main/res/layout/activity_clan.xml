@@ -28,6 +28,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ClanName" />
 
+    <Button
+        android:id="@+id/JoinClan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="144dp"
+        android:layout_marginTop="276dp"
+        android:gravity="center"
+        android:text="Join Clan"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ClanName" />
+
     <TextView
         android:id="@+id/ClanName"
         android:layout_width="wrap_content"
