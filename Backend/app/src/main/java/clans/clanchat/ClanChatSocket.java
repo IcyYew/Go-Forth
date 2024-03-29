@@ -26,18 +26,29 @@ import player.PlayerRepository;
 
 
 @Controller
-@ServerEndpoint(value = "/chat/clan/{username}")
+@ServerEndpoint(value = "/chat/clan/{playerID}")
 public class ClanChatSocket {
 
     private static ClanChatMessageRepository CCMRepo;
 
+    private static PlayerRepository playerRepository;
 
+    @Autowired
+    public void setPlayerRepository(PlayerRepository playerRepo) {
+        playerRepository = playerRepo;
+    }
+
+    @Autowired
+    private ClanRepository clanRepository;
 
     @Autowired
     public void setCCMRepo(ClanChatMessageRepository repo) {
         CCMRepo = repo;
     }
 
+
+    @Transient
+    private int clanIdPassthrough;
 
 
     private static Map<Session, String> sessionUsernameMap = new Hashtable<>();
@@ -48,13 +59,22 @@ public class ClanChatSocket {
 
 
     @OnOpen
-    public void onOpen(Session session, @PathParam("username") String username) throws IOException {
+    public void onOpen(Session session, @PathParam("username") Integer playerID) throws IOException {
         logger.info("Entered open");
-        sessionUsernameMap.put(session, username);
-        usernameSessionMap.put(username, session);
-        sendMessageToParticularUser(username, getChatHistory());
-        String message = username + " has joined the clan chat! Welcome them to the clan!";
-        broadcast(message);
+        Player player = playerRepository.getById(playerID);
+        clanIdPassthrough = player.getClanMembershipID();
+        String username = player.getUserName();
+
+
+
+        if (player != null && player.getClanMembershipID() != 0) {
+            sessionUsernameMap.put(session, username);
+            usernameSessionMap.put(username, session);
+            sendMessageToParticularUser(username, getChatHistory());
+            String message = username + " has joined the clan chat! Welcome them to the clan!";
+            broadcast(message);
+        }
+
     }
 
     @OnMessage
@@ -64,7 +84,7 @@ public class ClanChatSocket {
 
         broadcast(username + ": " + message);
 
-        CCMRepo.save(new ClanChatMessage(username, message));
+        CCMRepo.save(new ClanChatMessage(username, message, clanIdPassthrough));
     }
 
     @OnClose

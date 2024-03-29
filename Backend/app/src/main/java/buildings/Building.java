@@ -1,5 +1,6 @@
 package buildings;
 
+
 public abstract class Building {
     private double power;
     private int level;
