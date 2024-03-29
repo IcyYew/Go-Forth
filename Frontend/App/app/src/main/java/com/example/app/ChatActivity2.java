@@ -21,11 +21,9 @@ import org.java_websocket.handshake.ServerHandshake;
 import org.w3c.dom.Text;
 
 import java.util.Objects;
-public class ClanChat extends AppCompatActivity implements WebSocketListener{
+public class ChatActivity2 extends AppCompatActivity implements WebSocketListener{
 
-    private String BASE_URL = "ws://10.0.2.2:8080/chat/clan/";
-
-    //private Button Back;
+        //private Button Back;
     private TextView Chat;
 
     private EditText Message;
@@ -36,7 +34,7 @@ public class ClanChat extends AppCompatActivity implements WebSocketListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_clan_chat);
+        setContentView(R.layout.activity_chat2);
 
 
 
@@ -53,22 +51,9 @@ public class ClanChat extends AppCompatActivity implements WebSocketListener{
         
         Message = findViewById(R.id.msgEdt2);
 
-        String serverUrl = BASE_URL + "Test_User";
-
         // Establish WebSocket connection and set listener
-        WebSocketManager2.getInstance().connectWebSocket(serverUrl);
-        WebSocketManager2.getInstance().setWebSocketListener(ClanChat.this);
+        WebSocketManager2.getInstance().setWebSocketListener(ChatActivity2.this);
 
-        Back.setOnClickListener(new View.OnClickListener() {
-            //Back button clicked
-            @Override
-            public void onClick(View v) {
-                //goes to MainActivity with userID
-                Intent intent = new Intent(ClanChat.this, MainActivity.class);
-                intent.putExtra("ID", String.valueOf(userID));
-                startActivity(intent);
-            }
-        });
 
         /* send button listener */
         SendMessage.setOnClickListener(v -> {
