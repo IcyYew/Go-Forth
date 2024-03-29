@@ -33,19 +33,29 @@ public class ClanChatSocket {
 
     private static PlayerRepository playerRepository;
 
+<<<<<<< HEAD
+=======
+    private static PlayerRepository playerRepository;
+
+>>>>>>> d415915dc6d6f64ff6ec924038948f6beee65760
     @Autowired
     public void setPlayerRepository(PlayerRepository playerRepo) {
         playerRepository = playerRepo;
     }
+<<<<<<< HEAD
 
     @Autowired
     private ClanRepository clanRepository;
+=======
+>>>>>>> d415915dc6d6f64ff6ec924038948f6beee65760
 
     @Autowired
     public void setCCMRepo(ClanChatMessageRepository repo) {
         CCMRepo = repo;
     }
 
+    @Transient
+    int clanIdPassthrough;
 
     @Transient
     private int clanIdPassthrough;
@@ -59,6 +69,7 @@ public class ClanChatSocket {
 
 
     @OnOpen
+<<<<<<< HEAD
     public void onOpen(Session session, @PathParam("username") Integer playerID) throws IOException {
         logger.info("Entered open");
         Player player = playerRepository.getById(playerID);
@@ -75,6 +86,18 @@ public class ClanChatSocket {
             broadcast(message);
         }
 
+=======
+    public void onOpen(Session session, @PathParam("playerID") Integer playerID) throws IOException {
+        logger.info("Entered open");
+        Player player = playerRepository.getById(playerID);
+        String username = player.getUserName();
+        clanIdPassthrough = player.getClanMembershipID();
+        sessionUsernameMap.put(session, username);
+        usernameSessionMap.put(username, session);
+        sendMessageToParticularUser(username, getChatHistory());
+        String message = username + " has joined the clan chat! Welcome them to the clan!";
+        broadcast(message);
+>>>>>>> d415915dc6d6f64ff6ec924038948f6beee65760
     }
 
     @OnMessage
