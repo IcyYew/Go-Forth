@@ -22,6 +22,11 @@ import org.json.JSONObject;
 
 import java.util.Objects;
 
+/**
+ * This activity is responsible for sign-up/user creation.
+ *
+ * @author Nicholas Lynch
+ */
 public class SignupActivity extends AppCompatActivity {
     private EditText Username;
 
@@ -35,8 +40,17 @@ public class SignupActivity extends AppCompatActivity {
 
     private int userID;
 
-
-
+    /**
+     * On the creation of this activity, TextViews and Buttons are initialized.
+     * Extras are received and put in userID variable (for carrying across activities)
+     * The signup button's on-click is used for making a GET (and then POST) to see if the user exists, and then POSTs if it doesn't.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     *
+     * @apiNote GET
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
@@ -133,6 +147,8 @@ public class SignupActivity extends AppCompatActivity {
      *
      * @param userName
      * @param password
+     *
+     * @apiNote POST
      */
     private void createNewPlayer(String userName, String password) {
         // use the new player endpoint

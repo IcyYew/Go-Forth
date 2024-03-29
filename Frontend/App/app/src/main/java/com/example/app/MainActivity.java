@@ -22,6 +22,12 @@ import org.w3c.dom.Text;
 
 import java.util.Objects;
 
+/**
+ * Activity responsible for main menu functionality.
+ *
+ * @author Josh Dwight
+ * @author Nicholas Lynch
+ */
 public class MainActivity extends AppCompatActivity {
     private Button loginButton;
     private Button signupButton;

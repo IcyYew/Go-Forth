@@ -11,12 +11,26 @@ import android.widget.TextView;
 
 import org.java_websocket.handshake.ServerHandshake;
 
+/**
+ * This is activity is responsible for global chat functionality.
+ * It uses the currently logged in user as username.
+ * @author Josh Dwight
+ */
 public class ChatActivity1 extends AppCompatActivity implements WebSocketListener{
     private int userID;
     private Button sendBtn, backMainBtn;
     private EditText msgEtx;
     private TextView msgTv;
 
+    /**
+     * On the creation of this activity, TextViews and Buttons are initialized.
+     * Extras are received and put in userID variable (for carrying across activities)
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +69,12 @@ public class ChatActivity1 extends AppCompatActivity implements WebSocketListene
         });
     }
 
-
+    /**
+     * This method is responsible for handling WebSocket messages.
+     * When a message is received, it concatenates it to the current displayed text.
+     *
+     * @param message The received WebSocket message.
+     */
     @Override
     public void onWebSocketMessage(String message) {
         /**
@@ -70,6 +89,13 @@ public class ChatActivity1 extends AppCompatActivity implements WebSocketListene
         });
     }
 
+    /**
+     * This method is responsible for handling WebSocket close events.
+     *
+     * @param code   The status code indicating the reason for closure.
+     * @param reason A human-readable explanation for the closure.
+     * @param remote Indicates whether the closure was initiated by the remote endpoint.
+     */
     @Override
     public void onWebSocketClose(int code, String reason, boolean remote) {
         String closedBy = remote ? "server" : "local";
@@ -79,9 +105,19 @@ public class ChatActivity1 extends AppCompatActivity implements WebSocketListene
         });
     }
 
+    /**
+     * This method is responsible for handling WebSocket open events
+     *
+     * @param handshakedata Information about the server handshake.
+     */
     @Override
     public void onWebSocketOpen(ServerHandshake handshakedata) {}
 
+    /**
+     * This method is responsible for handling WebSocket error events
+     *
+     * @param ex The exception that describes the error.
+     */
     @Override
     public void onWebSocketError(Exception ex) {}
 }

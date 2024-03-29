@@ -21,6 +21,8 @@ import org.json.JSONObject;
 
 /**
  * Activity for viewing the troops a user has as well as updating the troops by adding new ones.
+ *
+ * @author Josh Dwight
  */
 public class TroopManagementActivity extends AppCompatActivity {
     // stores userID so it can track across activities
@@ -189,7 +191,9 @@ public class TroopManagementActivity extends AppCompatActivity {
     }
 
     /**
-     * Uses the /players/getPlayer/{userID} endpoint to get the troop counts of the currently selected user
+     * Uses the /players/getPlayer/{userID} endpoint to get the troop counts of the currently selected user.
+     *
+     * @apiNote GET
      */
     private void getPlayerData() {
         archersCountTextView = findViewById(R.id.archersCount);
@@ -278,6 +282,8 @@ public class TroopManagementActivity extends AppCompatActivity {
      *
      * @param url
      * @param requestBody
+     *
+     * @apiNote POST
      */
     private void makePOSTRequest(String url, JSONObject requestBody) {
         // make a JsonObjectRequest to POST to server

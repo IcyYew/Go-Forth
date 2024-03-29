@@ -115,6 +115,8 @@ public class FightActivity extends AppCompatActivity {
      *
      * @param player1ID
      * @param player2ID
+     *
+     * @apiNote GET
      */
     private void startFight(int player1ID, int player2ID) {
         // use the players/fight/{user1}/{user2} endpoint
@@ -184,6 +186,8 @@ public class FightActivity extends AppCompatActivity {
      *
      * @param message
      * @param playerID
+     *
+     * @apiNote GET
      */
     private void getPowerLevel(String message, int playerID) {
         String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getPlayer/" + String.valueOf(playerID);
