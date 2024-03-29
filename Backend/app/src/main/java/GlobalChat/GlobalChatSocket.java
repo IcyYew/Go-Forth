@@ -47,8 +47,8 @@ public class GlobalChatSocket
         sendMessageToPArticularUser(username, getChatHistory());
 
         // broadcast that new user joined
-        String message = "User:" + username + " has Joined the Chat";
-        broadcast(message);
+        /*String message = "User:" + username + " has Joined the Chat";
+        broadcast(message);*/
     }
     @OnMessage
     public void onMessage(Session session, String message) throws IOException {
