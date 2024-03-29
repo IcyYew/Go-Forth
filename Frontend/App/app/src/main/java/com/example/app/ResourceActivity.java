@@ -181,8 +181,6 @@ public class ResourceActivity extends AppCompatActivity {
      *
      * @param amount Amount of resources to add
      * @param resourceName Name of the resource to add
-     *
-     * @apiNote POST
      */
     private void addResource(int amount, String resourceName){
         JSONObject jsonObject = new JSONObject(); //Initialize input JSON
@@ -215,8 +213,6 @@ public class ResourceActivity extends AppCompatActivity {
      *
      * @param amount Amount of resources to remove
      * @param resourceName Name of resource to remove
-     *
-     * @apiNote POST
      */
     private void removeResource(int amount, String resourceName){
         JSONObject jsonObject = new JSONObject(); //Initialize input JSON
@@ -248,8 +244,6 @@ public class ResourceActivity extends AppCompatActivity {
     /**
      * This method gets the newly updated resource amount from the database.
      * It then displays the values on the corresponding TextView.
-     *
-     * @apiNote GET
      */
     private void updateAmount() {
         String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getPlayer/" + String.valueOf(userID);

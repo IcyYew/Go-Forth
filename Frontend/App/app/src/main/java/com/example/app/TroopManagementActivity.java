@@ -192,8 +192,6 @@ public class TroopManagementActivity extends AppCompatActivity {
 
     /**
      * Uses the /players/getPlayer/{userID} endpoint to get the troop counts of the currently selected user.
-     *
-     * @apiNote GET
      */
     private void getPlayerData() {
         archersCountTextView = findViewById(R.id.archersCount);
@@ -282,8 +280,6 @@ public class TroopManagementActivity extends AppCompatActivity {
      *
      * @param url
      * @param requestBody
-     *
-     * @apiNote POST
      */
     private void makePOSTRequest(String url, JSONObject requestBody) {
         // make a JsonObjectRequest to POST to server
