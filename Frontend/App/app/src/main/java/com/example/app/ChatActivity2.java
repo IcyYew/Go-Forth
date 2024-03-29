@@ -2,44 +2,84 @@ package com.example.app;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+
+
 import org.java_websocket.handshake.ServerHandshake;
+import org.w3c.dom.Text;
 
-public class ChatActivity2 extends AppCompatActivity implements WebSocketListener{
+import java.util.Objects;
+public class ClanChat extends AppCompatActivity implements WebSocketListener{
 
-    private Button sendBtn;
-    private EditText msgEtx;
-    private TextView msgTv;
+    private String BASE_URL = "ws://10.0.2.2:8080/chat/clan/";
 
+    //private Button Back;
+    private TextView Chat;
+
+    private EditText Message;
+
+    private Button SendMessage;
+
+    private int userID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat2);
+        setContentView(R.layout.activity_clan_chat);
 
-        /* initialize UI elements */
-        sendBtn = (Button) findViewById(R.id.sendBtn2);
-        msgEtx = (EditText) findViewById(R.id.msgEdt2);
-        msgTv = (TextView) findViewById(R.id.tx2);
 
-        /* connect this activity to the websocket instance */
-        WebSocketManager2.getInstance().setWebSocketListener(ChatActivity2.this);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            userID = extras.getInt("ID");
+        }
+
+        //Back = findViewById(R.id.Back);
+
+        Chat = findViewById(R.id.tx2);
+
+        SendMessage = findViewById(R.id.sendBtn2);
+        
+        Message = findViewById(R.id.msgEdt2);
+
+        String serverUrl = BASE_URL + "Test_User";
+
+        // Establish WebSocket connection and set listener
+        WebSocketManager2.getInstance().connectWebSocket(serverUrl);
+        WebSocketManager2.getInstance().setWebSocketListener(ClanChat.this);
+
+        Back.setOnClickListener(new View.OnClickListener() {
+            //Back button clicked
+            @Override
+            public void onClick(View v) {
+                //goes to MainActivity with userID
+                Intent intent = new Intent(ClanChat.this, MainActivity.class);
+                intent.putExtra("ID", String.valueOf(userID));
+                startActivity(intent);
+            }
+        });
 
         /* send button listener */
-        sendBtn.setOnClickListener(v -> {
+        SendMessage.setOnClickListener(v -> {
             try {
                 // send message
-                WebSocketManager2.getInstance().sendMessage(msgEtx.getText().toString());
+                WebSocketManager2.getInstance().sendMessage(Message.getText().toString());
             } catch (Exception e) {
                 Log.d("ExceptionSendMessage:", e.getMessage().toString());
             }
         });
     }
-
 
     @Override
     public void onWebSocketMessage(String message) {
@@ -50,8 +90,8 @@ public class ChatActivity2 extends AppCompatActivity implements WebSocketListene
          * to occur safely from a background or non-UI thread.
          */
         runOnUiThread(() -> {
-            String s = msgTv.getText().toString();
-            msgTv.setText(s + "\n"+message);
+            String s = Chat.getText().toString();
+            Chat.setText(s + "\n"+message);
         });
     }
 
@@ -59,8 +99,8 @@ public class ChatActivity2 extends AppCompatActivity implements WebSocketListene
     public void onWebSocketClose(int code, String reason, boolean remote) {
         String closedBy = remote ? "server" : "local";
         runOnUiThread(() -> {
-            String s = msgTv.getText().toString();
-            msgTv.setText(s + "---\nconnection closed by " + closedBy + "\nreason: " + reason);
+            String s = Chat.getText().toString();
+            Chat.setText(s + "---\nconnection closed by " + closedBy + "\nreason: " + reason);
         });
     }
 
