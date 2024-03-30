@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 /**
  * A REST controller for managing a player's information
+ * @author Michael Geltz
  */
 @RestController
 public class PlayerController {
