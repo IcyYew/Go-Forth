@@ -5,6 +5,11 @@ import jakarta.persistence.*;
 import resources.ResourceManager;
 import troops.TroopManager;
 
+/**
+ * Represents a player
+ * @author Michael Geltz
+ * @version 1.8
+ */
 @Entity
 @Table(name="player")
 public class Player {
@@ -24,12 +29,19 @@ public class Player {
     @Column(name="power")
     private double power;
     //Resource manager storing and managing a players resources
+    /**
+     * Represents a player's resources
+     */
     @ManyToOne(cascade = CascadeType.ALL)
     ResourceManager resources;
 
     //Troop manager storing and managing a players troops
+    /**
+     * Represents a player's troops
+     */
     @ManyToOne(cascade = CascadeType.ALL)
     TroopManager troops;
+
 
     @Column(name="clan-member-id")
     private Integer clanMembershipID = 0;
@@ -44,23 +56,43 @@ public class Player {
     private String password; // might add encryption, not sure if necessary
 
     //Empty constructor to make Jpa happy
+
+    /**
+     * Empty constructor
+     */
     public Player() {
 
     }
 
 
+    /**
+     * Gets a player's password
+     * @return A player's password
+     */
     public String getPassword() {
         return this.password;
     }
 
+    /**
+     * Sets a player's password
+     * @param password
+     */
     public void setPassword(String password) {
         this.password = password;
     }
 
+    /**
+     * Gets a player's username
+     * @return
+     */
     public String getUserName() {
         return userName;
     }
 
+    /**
+     * Sets a player's username
+     * @param userName
+     */
     public void setUserName(String userName) {
         this.userName = userName;
     }
@@ -68,15 +100,33 @@ public class Player {
     // ... further developments will take more setters/getters/etc
 
 
+    /**
+     * Sets a player's clan membership
+     * @param clanMembershipID
+     */
     public void setClanMembershipID(int clanMembershipID) {
         this.clanMembershipID = clanMembershipID;
     }
 
+    /**
+     * Gets a player's clan membership
+     * @return The id of the clan a player is in
+     */
     public Integer getClanMembershipID() {
         return clanMembershipID;
     }
 
     // Player constructor, will be expanded for building manager
+
+    /**
+     * Creates a player with resources, troops, a unqiue ID, a power, a username, and a password
+     * @param resources
+     * @param troops
+     * @param playerID
+     * @param power
+     * @param userName
+     * @param password
+     */
     public Player(ResourceManager resources, TroopManager troops, int playerID, double power, String userName, String password) {
         setResources(resources);
         setTroops(troops);
@@ -87,45 +137,84 @@ public class Player {
         setPassword(password);
     }
 
+    /**
+     * Sets a player's resources
+     * @param resources
+     */
     public void setResources(ResourceManager resources) {
         this.resources = resources;
     }
 
 
+    /**
+     * Gets a player's resources
+     * @return A player's resources
+     */
     public ResourceManager getResources() {
         return resources;
     }
 
+    /**
+     * Gets a player's troops
+     * @return A player's troops
+     */
     public TroopManager getTroops() {
         return troops;
     }
 
+    /**
+     * Sets a player's troops
+     * @param troops
+     */
     public void setTroops(TroopManager troops) {
         this.troops = troops;
     }
 
+    /**
+     * Gets a player's id
+     * @return
+     */
     public int getPlayerID() {
         return playerID;
     }
 
+    /**
+     * Sets a player's ID
+     * @param playerID
+     */
     public void setPlayerID(int playerID) {
         this.playerID = playerID;
     }
 
+    /**
+     * Gets a player's power
+     * @return A player's power
+     */
     public double getPower() {
         return power;
     }
 
+    /**
+     * Updates a player's power
+     */
     public void updatePower() {
         this.power = troops.calculateTotalTroopPower();
     }
 
+    /**
+     * Sets a player's power
+     * @param power
+     */
     public void setPower(double power) {
         this.power = troops.calculateTotalTroopPower();
         // ... more when implemented
     }
 
 
+    /**
+     * Returns a string of player info
+     * @return A string of the player's info
+     */
     @Override
     public String toString() {
         return "Player{" +
