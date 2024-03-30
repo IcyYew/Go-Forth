@@ -31,6 +31,9 @@ public class Player {
     @ManyToOne(cascade = CascadeType.ALL)
     TroopManager troops;
 
+    @Column(name="clan-member-id")
+    private Integer clanMembershipID = 0;
+
     //A players self-created username
     @Column(name="username")
     private String userName;
@@ -64,6 +67,14 @@ public class Player {
 
     // ... further developments will take more setters/getters/etc
 
+
+    public void setClanMembershipID(int clanMembershipID) {
+        this.clanMembershipID = clanMembershipID;
+    }
+
+    public Integer getClanMembershipID() {
+        return clanMembershipID;
+    }
 
     // Player constructor, will be expanded for building manager
     public Player(ResourceManager resources, TroopManager troops, int playerID, double power, String userName, String password) {

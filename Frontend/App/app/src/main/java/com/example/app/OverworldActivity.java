@@ -14,14 +14,27 @@ import com.example.app.MainActivity;
 
 import java.util.Random;
 
+/**
+ * This activity is responsible for displaying and updating the overworld.
+ *
+ * @author Josh Dwight
+ */
 public class OverworldActivity extends AppCompatActivity {
-
     private static final int GRID_SIZE = 20; // Adjust grid size as needed
     private static final int GRID_ITEM_SIZE_DP = 100; // Adjust grid item size as needed
     private static final String MAP_DATA_KEY = "map_data";
     private SharedPreferences sharedPreferences;
     private int userID;
 
+    /**
+     * On the creation of this activity, TextViews and Buttons are initialized.
+     * Extras are received and put in userID variable (for carrying across activities)
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +60,13 @@ public class OverworldActivity extends AppCompatActivity {
         }
     }
 
-    // Function to generate map data
+    /**
+     * This method is used to generate the map.
+     * Once a map is generated, it stores the generated map to use always,
+     * even if the activity is closed then re-opened.
+     *
+     * @return the built map
+     */
     private String generateMap() {
         StringBuilder mapBuilder = new StringBuilder();
 
@@ -64,14 +83,25 @@ public class OverworldActivity extends AppCompatActivity {
         return mapBuilder.toString();
     }
 
-    // Function to save map data to SharedPreferences
+    /**
+     * This method is used to save the map data to use every time the overworld activity is launched.
+     *
+     * @param mapData map to store
+     */
     private void saveMapData(String mapData) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(MAP_DATA_KEY, mapData);
         editor.apply();
     }
 
-    // Function to display the map using the provided map data
+    /**
+     * This method displays a map.
+     * If the activity is launched for the first time in a session,
+     * then it will be a new map.
+     * Each subsequent time will be the same map.
+     *
+     * @param mapData new or stored map
+     */
     private void displayMap(String mapData) {
         LinearLayout gridLayout = findViewById(R.id.gridLayout);
 
@@ -120,12 +150,22 @@ public class OverworldActivity extends AppCompatActivity {
         }
     }
 
-    // Function to convert dp to pixels
+    /**
+     * Allows us to convert dp to px so we can accurately display the grid blocks.
+     *
+     * @param dp dp to convert
+     * @return px
+     */
     private int dpToPx(int dp) {
         float density = getResources().getDisplayMetrics().density;
         return Math.round((float) dp * density);
     }
 
+    /**
+     * This method returns you to the main activity and puts the ID as an extra.
+     *
+     * @param view current activity (overworld)
+     */
     public void goBack(View view) {
         Intent intent = new Intent(OverworldActivity.this, MainActivity.class);
         intent.putExtra("ID", String.valueOf(userID));

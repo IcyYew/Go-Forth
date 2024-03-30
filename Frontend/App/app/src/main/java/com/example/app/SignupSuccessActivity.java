@@ -20,11 +20,23 @@ import org.json.JSONException;
 
 import java.util.Objects;
 
+/**
+ * This activity is responsible for sign-up success confirmation.
+ *
+ * @author Nicholas Lynch
+ */
 public class SignupSuccessActivity extends AppCompatActivity {
-
     private TextView messageText;
     private Button loginButton;
 
+    /**
+     * On the creation of this activity, TextViews and Buttons are initialized.
+     * Extras are received and put in userID variable (for carrying across activities)
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +57,12 @@ public class SignupSuccessActivity extends AppCompatActivity {
             }
         });
     }
+
+    /**
+     * This method checks if sign-up was successful.
+     * If a new user was create on the database, return success message.
+     * Otherwise, return error message.
+     */
     private void SignupSuccess(){
         String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getall"; //URL to get all existing users
         // make a StringRequest to get the users from the server. Converts JSONArray into StringBuilder.
@@ -72,8 +90,5 @@ public class SignupSuccessActivity extends AppCompatActivity {
 
         // add to the request queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
-
-
-
     }
 }
