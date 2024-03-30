@@ -6,8 +6,12 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 import java.io.IOException;
 
+/**
+ * Serializer class for the TroopManager class.
+ * Improves passage of JSON request bodies.
+ * @author Michael Geltz
+ */
 public class TroopManagerSerializer  extends JsonSerializer<TroopManager> {
-    // Serializer for troopmanager solves issue of not being able to pass in JSON request bodies
     @Override
     public void serialize(TroopManager troopManager, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartObject();
