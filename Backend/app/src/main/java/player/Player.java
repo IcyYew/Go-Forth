@@ -42,6 +42,20 @@ public class Player {
     @ManyToOne(cascade = CascadeType.ALL)
     TroopManager troops;
 
+    @Column(name="clan-permissions-level")
+    private Integer clanPermissions = 0;
+
+    public Integer getClanPermissions() {
+        return clanPermissions;
+    }
+
+    public void setClanPermissions(Integer clanPermissions) {
+        this.clanPermissions = clanPermissions;
+    }
+
+    public void setClanMembershipID(Integer clanMembershipID) {
+        this.clanMembershipID = clanMembershipID;
+    }
 
     @Column(name="clan-member-id")
     private Integer clanMembershipID = 0;
