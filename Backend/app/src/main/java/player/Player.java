@@ -215,12 +215,28 @@ public class Player {
         this.power = troops.calculateTotalTroopPower();
         // ... more when implemented
     }
+    public int getLocationX() {
+        return locationX;
+    }
 
+    public void setLocationX(int locationX) {
+        this.locationX = locationX;
+    }
+
+    public int getLocationY() {
+        return locationY;
+    }
+
+    public void setLocationY(int locationY) {
+        this.locationY = locationY;
+    }
 
     /**
      * Returns a string of player info
      * @return A string of the player's info
      */
+
+
     @Override
     public String toString() {
         return "Player{" +
