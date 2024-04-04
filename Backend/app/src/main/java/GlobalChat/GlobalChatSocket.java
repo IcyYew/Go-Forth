@@ -57,18 +57,8 @@ public class GlobalChatSocket
         logger.info("Entered into Message: Got Message:" + message);
         String username = sessionUsernameMap.get(session);
 
-        // Direct message to a user using the format "@username <message>"
-        if (message.startsWith("@")) {
-            String destUsername = message.split(" ")[0].substring(1);
+        broadcast(username + ": " + message);
 
-            // send the message to the sender and receiver
-            sendMessageToPArticularUser(destUsername, "[DM] " + username + ": " + message);
-            sendMessageToPArticularUser(username, "[DM] " + username + ": " + message);
-
-        }
-        else { // broadcast
-            broadcast(username + ": " + message);
-        }
 
         // Saving chat history to repository
         chatRepository.save(new GlobalChatMessage(username, message));
@@ -123,8 +113,6 @@ public class GlobalChatSocket
 
     }
 
-
-    // Gets the Chat history from the repository
     private String getChatHistory() {
         List<GlobalChatMessage> messages = chatRepository.findAll();
 
@@ -138,4 +126,4 @@ public class GlobalChatSocket
         return sb.toString();
     }
 
-} // end of Class
+}
