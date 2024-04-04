@@ -133,7 +133,7 @@ public class Player {
      * @param userName
      * @param password
      */
-    public Player(ResourceManager resources, TroopManager troops, int playerID, double power, String userName, String password) {
+    public Player(ResourceManager resources, TroopManager troops, int playerID, double power, String userName, String password, int locationX, int locationY) {
         setResources(resources);
         setTroops(troops);
         //this.buildings = buildings;
@@ -141,6 +141,8 @@ public class Player {
         setPower(power);
         setUserName(userName);
         setPassword(password);
+        setLocationX(locationX);
+        setLocationY(locationY);
     }
 
     /**
