@@ -16,7 +16,7 @@ import org.springframework.stereotype.Controller;
 import java.util.Hashtable;
 
 @Controller
-@ServerEndpoint(value = "/chat/{username}")
+@ServerEndpoint(value = "/globalchat/{username}")
 public class GlobalChatSocket
 {
     private static GlobalChatRepository chatRepository;

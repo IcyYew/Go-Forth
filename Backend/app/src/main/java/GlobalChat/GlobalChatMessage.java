@@ -14,7 +14,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Entity
-@Table(name = "chat")
+@Table(name = "globalchat")
 @Data
 public class GlobalChatMessage
 {
