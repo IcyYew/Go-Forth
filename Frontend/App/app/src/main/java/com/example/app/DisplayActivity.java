@@ -96,6 +96,7 @@ public class DisplayActivity extends AppCompatActivity {
                                 playersString.append("Player name: ").append(playerObject.getString("userName")).append("\n");
                                 playersString.append("Password: ").append(playerObject.getString("password")).append("\n");
                                 playersString.append("Player power level: ").append(playerObject.getInt("power")).append("\n");
+                                playersString.append("Player Map Position: (").append(playerObject.getInt("locationX")).append(", ").append(playerObject.getInt("locationY")).append(")\n");
                                 playersString.append("\n");
                             }
 
