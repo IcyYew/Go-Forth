@@ -55,6 +55,12 @@ public class Player {
     @Column(name="password")
     private String password; // might add encryption, not sure if necessary
 
+    @Column(name="locationX")
+    private int locationX;
+
+    @Column(name="locationY")
+    private int locationY;
+
     //Empty constructor to make Jpa happy
 
     /**
