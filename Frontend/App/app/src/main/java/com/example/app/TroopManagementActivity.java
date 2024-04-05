@@ -1,7 +1,9 @@
 package com.example.app;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -56,7 +58,8 @@ public class TroopManagementActivity extends AppCompatActivity {
     private CountDownTimer countDownTimer;
     private long totalTimeInMillis = 0;
     private long timeLeftInMillis = 0;
-
+    private SharedPreferences prefs;
+    private static final String PREF_NAME = "troop_training_timer";
     /**
      * onCreate sets onClickListeners to all of the buttons and initializes UI elements. Also gets extras.
      *
@@ -75,6 +78,9 @@ public class TroopManagementActivity extends AppCompatActivity {
             userID = extras.getInt("ID");
         }
 
+        // Initialize SharedPreferences
+        prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+
         // UI initialization
         archersToTrainCountTextView = findViewById(R.id.archersToTrainCount);
         knightsToTrainCountTextView = findViewById(R.id.knightsToTrainCount);
@@ -91,6 +97,14 @@ public class TroopManagementActivity extends AppCompatActivity {
 
         // get troop data from server
         getPlayerData();
+
+        // Load remaining time from SharedPreferences
+        timeLeftInMillis = prefs.getLong("millisLeft", 0);
+        updateCountdownText();
+        if (timeLeftInMillis != 0) {
+            startCountdownTimer();
+        }
+
 
         // back button pressed
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -329,10 +343,13 @@ public class TroopManagementActivity extends AppCompatActivity {
     private void startCountdownTimer() {
         // Calculate total training time based on troops count
         totalTimeInMillis = calculateTotalTrainingTime();
-        timeLeftInMillis = totalTimeInMillis;
+        if (timeLeftInMillis == 0) {
+            Log.d("Unhappy", String.valueOf(timeLeftInMillis));
+            timeLeftInMillis = totalTimeInMillis;
+        }
 
         // Start countdown timer
-        countDownTimer = new CountDownTimer(totalTimeInMillis, 1000) {
+        countDownTimer = new CountDownTimer(timeLeftInMillis, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 timeLeftInMillis = millisUntilFinished;
@@ -347,6 +364,19 @@ public class TroopManagementActivity extends AppCompatActivity {
                 confirmTraining();
             }
         }.start();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Save remaining time to SharedPreferences
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putLong("millisLeft", timeLeftInMillis);
+        editor.apply();
+        // Cancel the countdown timer
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
     }
 
 }
