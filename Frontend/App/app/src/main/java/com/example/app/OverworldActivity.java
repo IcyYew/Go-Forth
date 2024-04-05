@@ -100,15 +100,15 @@ public class OverworldActivity extends AppCompatActivity {
                 switch (type) {
                     case 0:
                         gridItem.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
-                        gridItem.setText("Enemy");
+                        gridItem.setText("");
                         break;
                     case 1:
                         gridItem.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
-                        gridItem.setText("Resource");
+                        gridItem.setText("");
                         break;
                     case 2:
                         gridItem.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                        gridItem.setText("Empty");
+                        gridItem.setText("");
                         break;
                     case 3:
                         gridItem.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_light));
