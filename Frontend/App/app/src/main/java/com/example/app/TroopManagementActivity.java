@@ -356,8 +356,8 @@ public class TroopManagementActivity extends AppCompatActivity {
      * @return time
      */
     private long calculateTotalTrainingTime() {
-        int archerTime = archersToTrainCount * 2; // 2 seconds per archer
-        int knightTime = knightsToTrainCount * 1; // 1 second per knight
+        int archerTime = archersToTrainCount * 1; // 1 second per archer
+        int knightTime = knightsToTrainCount * 2; // 2 seconds per knight
         int mageTime = magesToTrainCount * 3; // 3 seconds per mage
         int cavalryTime = cavalryToTrainCount * 4; // 4 seconds per cavalry
         return (archerTime + knightTime + mageTime + cavalryTime) * 1000; // Convert to milliseconds
