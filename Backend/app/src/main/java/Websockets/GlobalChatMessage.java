@@ -20,6 +20,7 @@ public class GlobalChatMessage
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "global-chat-message-id")
     private int messageID;
 
     @Column

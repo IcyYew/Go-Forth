@@ -11,7 +11,9 @@ import java.util.Date;
 public class ClanChatMessage {
     @Id
     @GeneratedValue
+    @Column(name ="clan-message-id")
     private long id;
+
     @Column
     private String userName;
 
