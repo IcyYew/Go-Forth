@@ -1,6 +1,9 @@
 package com.example.app;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -19,8 +22,12 @@ import com.android.volley.toolbox.StringRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Locale;
+
 /**
  * Activity for viewing the troops a user has as well as updating the troops by adding new ones.
+ *
+ * @author Josh Dwight
  */
 public class TroopManagementActivity extends AppCompatActivity {
     // stores userID so it can track across activities
@@ -41,6 +48,7 @@ public class TroopManagementActivity extends AppCompatActivity {
     private TextView knightsCountTextView;
     private TextView magesCountTextView;
     private TextView cavalryCountTextView;
+    private TextView trainingTimeValue;
 
     // checkboxes
     private CheckBox archersCheckbox;
@@ -48,6 +56,12 @@ public class TroopManagementActivity extends AppCompatActivity {
     private CheckBox magesCheckbox;
     private CheckBox cavalryCheckbox;
 
+    // Countdown timer variable
+    private CountDownTimer countDownTimer;
+    private long totalTimeInMillis = 0;
+    private long timeLeftInMillis = 0;
+    private SharedPreferences prefs;
+    private static final String PREF_NAME = "troop_training_timer";
     /**
      * onCreate sets onClickListeners to all of the buttons and initializes UI elements. Also gets extras.
      *
@@ -66,11 +80,26 @@ public class TroopManagementActivity extends AppCompatActivity {
             userID = extras.getInt("ID");
         }
 
+        // Initialize SharedPreferences
+        prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+
+        archersToTrainCount = prefs.getInt("archersToTrainCount", 0);
+        knightsToTrainCount = prefs.getInt("knightsToTrainCount", 0);
+        magesToTrainCount = prefs.getInt("magesToTrainCount", 0);
+        cavalryToTrainCount = prefs.getInt("cavalryToTrainCount", 0);
+
         // UI initialization
         archersToTrainCountTextView = findViewById(R.id.archersToTrainCount);
         knightsToTrainCountTextView = findViewById(R.id.knightsToTrainCount);
         magesToTrainCountTextView = findViewById(R.id.magesToTrainCount);
         cavalryToTrainCountTextView = findViewById(R.id.cavalryToTrainCount);
+        trainingTimeValue = findViewById(R.id.trainingTimeValue);
+
+        archersToTrainCountTextView.setText(String.valueOf(archersToTrainCount));
+        knightsToTrainCountTextView.setText(String.valueOf(knightsToTrainCount));
+        magesToTrainCountTextView.setText(String.valueOf(magesToTrainCount));
+        cavalryToTrainCountTextView.setText(String.valueOf(cavalryToTrainCount));
+
 
         archersCheckbox = findViewById(R.id.archersCheckbox);
         knightsCheckbox = findViewById(R.id.knightsCheckbox);
@@ -81,6 +110,14 @@ public class TroopManagementActivity extends AppCompatActivity {
 
         // get troop data from server
         getPlayerData();
+
+        // Load remaining time from SharedPreferences
+        timeLeftInMillis = prefs.getLong("millisLeft", 0);
+        updateCountdownText();
+        if (timeLeftInMillis != 0) {
+            startCountdownTimer();
+        }
+
 
         // back button pressed
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -133,7 +170,7 @@ public class TroopManagementActivity extends AppCompatActivity {
         confirmTrainingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                confirmTraining();
+                startCountdownTimer();
             }
         });
     }
@@ -160,6 +197,12 @@ public class TroopManagementActivity extends AppCompatActivity {
             cavalryToTrainCount += amount;
             cavalryToTrainCountTextView.setText(String.valueOf(cavalryToTrainCount));
         }
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("archersToTrainCount", archersToTrainCount);
+        editor.putInt("knightsToTrainCount", knightsToTrainCount);
+        editor.putInt("magesToTrainCount", magesToTrainCount);
+        editor.putInt("cavalryToTrainCount", cavalryToTrainCount);
+        editor.apply();
     }
 
     /**
@@ -186,10 +229,18 @@ public class TroopManagementActivity extends AppCompatActivity {
         knightsCheckbox.setChecked(false);
         magesCheckbox.setChecked(false);
         cavalryCheckbox.setChecked(false);
+
+        // Clear SharedPreferences for troop counts
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove("archersToTrainCount");
+        editor.remove("knightsToTrainCount");
+        editor.remove("magesToTrainCount");
+        editor.remove("cavalryToTrainCount");
+        editor.apply();
     }
 
     /**
-     * Uses the /players/getPlayer/{userID} endpoint to get the troop counts of the currently selected user
+     * Uses the /players/getPlayer/{userID} endpoint to get the troop counts of the currently selected user.
      */
     private void getPlayerData() {
         archersCountTextView = findViewById(R.id.archersCount);
@@ -298,4 +349,74 @@ public class TroopManagementActivity extends AppCompatActivity {
         // add to volley queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
+
+    /**
+     * Calculates the total time to train troops
+     *
+     * @return time
+     */
+    private long calculateTotalTrainingTime() {
+        int archerTime = archersToTrainCount * 1; // 1 second per archer
+        int knightTime = knightsToTrainCount * 2; // 2 seconds per knight
+        int mageTime = magesToTrainCount * 3; // 3 seconds per mage
+        int cavalryTime = cavalryToTrainCount * 4; // 4 seconds per cavalry
+        return (archerTime + knightTime + mageTime + cavalryTime) * 1000; // Convert to milliseconds
+    }
+
+    /**
+     * Method used to update countdown textview.
+     */
+    private void updateCountdownText() {
+        int minutes = (int) (timeLeftInMillis / 1000) / 60;
+        int seconds = (int) (timeLeftInMillis / 1000) % 60;
+        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+        trainingTimeValue.setText(timeLeftFormatted);
+    }
+
+    /**
+     * Method that starts the timer.
+     * Also declares what happens on tick and on finish.
+     */
+    private void startCountdownTimer() {
+        // Calculate total training time based on troops count
+        totalTimeInMillis = calculateTotalTrainingTime();
+        if (timeLeftInMillis == 0) {
+            Log.d("Unhappy", String.valueOf(timeLeftInMillis));
+            timeLeftInMillis = totalTimeInMillis;
+        }
+
+        // Start countdown timer
+        countDownTimer = new CountDownTimer(timeLeftInMillis, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timeLeftInMillis = millisUntilFinished;
+                updateCountdownText();
+            }
+
+            @Override
+            public void onFinish() {
+                // Reset countdown timer variables
+                timeLeftInMillis = 0;
+                updateCountdownText();
+                confirmTraining();
+            }
+        }.start();
+    }
+
+    /**
+     * Method that runs when you switch to a different activity.
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Save remaining time to SharedPreferences
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putLong("millisLeft", timeLeftInMillis);
+        editor.apply();
+        // Cancel the countdown timer
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+    }
+
 }

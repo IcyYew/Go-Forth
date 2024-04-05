@@ -4,16 +4,30 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.util.Objects;
 
+/**
+ * Activity responsible for main menu functionality.
+ *
+ * @author Josh Dwight
+ * @author Nicholas Lynch
+ */
 public class MainActivity extends AppCompatActivity {
     private Button loginButton;
     private Button signupButton;
@@ -21,9 +35,12 @@ public class MainActivity extends AppCompatActivity {
     private Button displayButton;
     private Button fightButton;
     private Button resourceButton;
-    private Button clanButton;
+    private Button overworldButton;
+    private Button globalChatButton;
+    private Button clanChatButton;
     private int userID;
     private TextView UID;
+    private String username;
 
     /**
      * onCreate sets onClickListeners to all of the buttons and gets the extras
@@ -51,6 +68,10 @@ public class MainActivity extends AppCompatActivity {
         resourceButton = findViewById(R.id.ResourceButton);
 
         clanButton = findViewById(R.id.ClanChat);
+
+        globalChatButton = findViewById(R.id.globalChatButton);
+
+        clanChatButton = findViewById(R.id.clanChatButton);
 
         UID = findViewById(R.id.ID);
 
@@ -141,6 +162,94 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("ID", userID);
                 startActivity(intent);
             }
+        });
+
+        overworldButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, OverworldActivity.class);
+                intent.putExtra("ID", userID);
+                startActivity(intent);
+            }
+        });
+
+        globalChatButton.setOnClickListener(view -> {
+            String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getPlayer/" + String.valueOf(userID);
+
+            // makes JsonObjectRequest to get the current player. GETs the archerNum, warriorNum, mageNum, and cavalryNum
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                username = response.getString("userName");
+
+                                Log.d("Username", username);
+
+                                String domain = "ws://coms-309-048.class.las.iastate.edu:8080/chat/globalchat/";
+
+                                String serverUrl = domain + username;
+
+                                Log.d("URL", serverUrl);
+
+                                // Establish WebSocket connection and set listener
+                                WebSocketManager1.getInstance().connectWebSocket(serverUrl);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                Toast.makeText(MainActivity.this, "Error parsing JSON response", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(MainActivity.this, "Error fetching player data: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+            // add to volley queue
+            VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+
+            // got to chat activity
+            Intent intent = new Intent(this, ChatActivity1.class);
+            intent.putExtra("ID", userID);
+            startActivity(intent);
+        });
+
+        clanChatButton.setOnClickListener(view -> {
+            String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getPlayer/" + String.valueOf(userID);
+
+            // makes JsonObjectRequest to get the current player. GETs the archerNum, warriorNum, mageNum, and cavalryNum
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                String serverUrl = "ws://10.0.2.2:8080/chat/clan/" + response.getString("userName");
+                                Log.d("URL", serverUrl);
+
+                                // Establish WebSocket connection and set listener
+                                WebSocketManager2.getInstance().connectWebSocket(serverUrl);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                Toast.makeText(MainActivity.this, "Error parsing JSON response", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(MainActivity.this, "Error fetching player data: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+            // add to volley queue
+            VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+
+            // got to chat activity
+            Intent intent = new Intent(this, ChatActivity2.class);
+            intent.putExtra("ID", userID);
+            startActivity(intent);
         });
     }
 }
