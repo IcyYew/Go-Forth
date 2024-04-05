@@ -1,4 +1,4 @@
-package clans.clanchat;
+package Websockets;
 
 import jakarta.persistence.*;
 import jdk.jfr.DataAmount;
