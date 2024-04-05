@@ -13,10 +13,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @author Michael Geltz
  */
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.spring.app", "player", "clans"})
+@ComponentScan(basePackages = {"com.spring.app", "player", "clans", "clans.clanchat"})
 @EnableJpaRepositories(basePackages = {"player", "resources", "troops", "clans"})
 @EnableTransactionManagement
-@EntityScan(basePackages = {"player", "resources", "troops", "clans"})
+@EntityScan(basePackages = {"player", "resources", "troops", "clans", "clans.clanchat"})
 public class AppApplication {
 
 	/**
