@@ -32,6 +32,9 @@ public class ClanManagement extends AppCompatActivity {
 
     private int permission;
 
+    private int userIndex;
+
+
     Button Back;
 
     Button Left;
@@ -64,6 +67,7 @@ public class ClanManagement extends AppCompatActivity {
         fillList();
 
         Index = 0;
+
 
         Back =  findViewById(R.id.Back);
 
@@ -166,6 +170,7 @@ public class ClanManagement extends AppCompatActivity {
                     if(permission == 3 && List.get(Index).userPermission == 2){
                         permission = 2;
                         List.get(Index).userPermission = 3;
+                        List.get(userIndex).userPermission = 2;
                     }
                     else List.get(Index).userPermission++;
                 }
@@ -212,7 +217,10 @@ public class ClanManagement extends AppCompatActivity {
                             JSONArray jsonArray = new JSONArray(response);
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject playerObject = jsonArray.getJSONObject(i);
-                                if(playerObject.getInt("playerID") == userID) permission = playerObject.getInt("clanPermissions");
+                                if(playerObject.getInt("playerID") == userID){
+                                    permission = playerObject.getInt("clanPermissions");
+                                    userIndex = i;
+                                }
                                 List.add(new User(playerObject.getInt("playerID"), (int)playerObject.getDouble("power"), playerObject.getInt("clanPermissions"), playerObject.getString("userName")));
                             }
                             Display.setText("User: " + List.get(Index).name + "\nPower: " + List.get(Index).userPower + "\nRank: " + getRank(List.get(Index).userPermission));
