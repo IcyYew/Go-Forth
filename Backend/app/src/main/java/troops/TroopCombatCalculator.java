@@ -2,6 +2,13 @@ package troops;
 
 import static troops.TroopTypes.*;
 
+/**
+ * The class for Troop Combat Calculation.
+ * This class calculates the outcomes of battles in the game.
+ * The calculation uses a points system that takes into account the attributes of each type of troop in combat.
+ * There are several different potential outcomes for a fight based on the point calculation.
+ * @author Michael Geltz
+ */
 public class TroopCombatCalculator {
     // Player v Player combat is based on a points system calculated with the below values
     final double ptsPerDamage = 2.5;
@@ -12,13 +19,31 @@ public class TroopCombatCalculator {
     private enum Result  {ATTACKER_WIN, DEFENDER_WIN, TIE}
 
     Result result = Result.TIE;
+
     // Takes in two different players troops, directly calls the battle method, a better way of doing this
     // to be implemented eventually
+
+    /**
+     * Constructor for the Troop Combat Calculator.
+     * Calls the battle method with the attack and defender parameters.
+     * @param attacker TroopManager for the attacking player.
+     * @param defender TroopManager for the defending player.
+     */
     public TroopCombatCalculator(TroopManager attacker, TroopManager defender) {
         battle(attacker, defender);
     }
 
     // Battle class to calculate who won a battle, who is attacker and defender is entirely arbitrary
+
+    /**
+     * Method which determines the outcome of a battle.
+     * First, the point total for each player's army is calculated by calling the calculatePlayerPoints method for each.
+     * Next, the point totals are compared and the percentage difference is calculated.
+     * Then, the percentage difference is used to determine which of the 5 battle outcomes occurs.
+     * Finally, calls the troopDeaths method to determine the losses for each player.
+     * @param attacker TroopManager for the attacking player.
+     * @param defender TroopManager for the defending player.
+     */
     public void battle(TroopManager attacker, TroopManager defender) {
         double attackerPts = 0;
         double defenderPts = 0;
@@ -74,6 +99,11 @@ public class TroopCombatCalculator {
         troopDeaths(attacker, defender, type);
     }
     // Returns result enum in String format
+
+    /**
+     * Method to return the result of a battle.
+     * @return Returns a String result.
+     */
     public String getResult() {
         return result.toString();
     }
@@ -81,6 +111,14 @@ public class TroopCombatCalculator {
     // Update troops for both attacker and defender based on battle result or "type"
     // Pretty messy system of doing this, could be made to look nicer in a couple of separate methods but this
     // works and I don't see it as prudent to change for now
+
+    /**
+     * Method for updating the troop quantities for each player based on the outcome determined by the battle method.
+     * A better outcome for the attacker and therefore a worse outcome for the defender will result in few losses for the attacker and more losses for the defender, and vice versa.
+     * @param attacker TroopManager for the attacking player.
+     * @param defender TroopManager for the defending player.
+     * @param type The outcome determined by the battle Method.
+     */
     public void troopDeaths(TroopManager attacker, TroopManager defender, int type) {
         switch (type) {
             // Tie with attacker advantage, attacker loses 40% of troops they had prior to battle, defender loses 50%
@@ -153,6 +191,13 @@ public class TroopCombatCalculator {
     }
 
     // Basic points based calculation to derive battle result
+
+    /**
+     * This method calculates the player's points total to be used in combat.
+     * The total strength of a player's army is calculated using the number of each troop type in the army and the attributes of each troop type.
+     * @param player TroopManager for the current player's troops.
+     * @return Returns a double representing the player's army's strength.
+     */
     public double calculatePlayerPoints(TroopManager player) {
         double playerPts = 0;
         Archer archer = new Archer();

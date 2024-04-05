@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ac834994-cd00-427d-aa49-7a9ffc0fbff9" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../../../Backend/app/src/main/java/GlobalChat/GlobalChatSocket.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../Backend/app/src/main/java/GlobalChat/GlobalChatSocket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_1_helloworld/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_1_helloworld/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_1_helloworld/helloworld/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_1_helloworld/helloworld/Readme.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_1_helloworld/helloworld/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_1_helloworld/helloworld/src/main/java/coms309/Application.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_1_helloworld/helloworld/src/main/java/coms309/WelcomeController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_1_helloworld/helloworld/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_2_hellopeople/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_2_hellopeople/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_2_hellopeople/hellopeople/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_2_hellopeople/hellopeople/Readme.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_2_hellopeople/hellopeople/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_2_hellopeople/hellopeople/src/main/java/coms309/Application.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_2_hellopeople/hellopeople/src/main/java/coms309/ExceptionController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_2_hellopeople/hellopeople/src/main/java/coms309/WelcomeController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_2_hellopeople/hellopeople/src/main/java/coms309/people/PeopleController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_2_hellopeople/hellopeople/src/main/java/coms309/people/Person.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_2_hellopeople/hellopeople/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_3_petclinic_example/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_3_petclinic_example/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_3_petclinic_example/Spring/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_3_petclinic_example/Spring/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_3_petclinic_example/Spring/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_3_petclinic_example/Spring/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_3_petclinic_example/Spring/src/main/java/org/springframework/samples/petclinic/PetClinicApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_3_petclinic_example/Spring/src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_3_petclinic_example/Spring/src/main/java/org/springframework/samples/petclinic/owner/OwnerRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_3_petclinic_example/Spring/src/main/java/org/springframework/samples/petclinic/owner/Owners.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_3_petclinic_example/Spring/src/main/java/org/springframework/samples/petclinic/system/CrashController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_3_petclinic_example/Spring/src/main/java/org/springframework/samples/petclinic/system/WelcomeController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_3_petclinic_example/Spring/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tutorials-springboot_unit1_3_petclinic_example/Spring/src/main/resources/banner.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client_JS/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client_JS/style.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client_JS/websocket.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/MavenWrapperDownloader.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cs309/websocket3/Websocket3Application.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cs309/websocket3/chat/ChatSocket.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cs309/websocket3/chat/ChatSocketConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cs309/websocket3/chat/Message.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cs309/websocket3/chat/MessageRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testClient.html" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../../.." />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 5
+}]]></component>
+  <component name="ProjectId" id="2e2iqCazyOfTM9Qb3fzYlshB4nc" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "12-websocket-implementation-for-global-chat-backend",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/oogie/OneDrive/Documents/ComS309Tutorials/sd2_1/Experiment/Ryan_Johnson/tutorials-unit3_2_websockets/websocket3/pom.xml"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-22-openjdk-22-3183f394aec4-bad0321e" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ac834994-cd00-427d-aa49-7a9ffc0fbff9" name="Changes" comment="" />
+      <created>1711109261699</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1711109261699</updated>
+    </task>
+    <servers />
+  </component>
+</project>

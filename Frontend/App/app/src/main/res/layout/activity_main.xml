@@ -87,6 +87,27 @@
         android:text="Overworld"
         android:textSize="18sp" />
 
+    <Button
+        android:id="@+id/globalChatButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Global Chat"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Button for Clan Chat -->
+    <Button
+        android:id="@+id/clanChatButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Clan Chat"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"/>
+
     <TextView
         android:id="@+id/ID"
         android:layout_width="151dp"

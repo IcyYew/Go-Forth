@@ -8,6 +8,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+/**
+ * Application Class.
+ * @author Michael Geltz
+ */
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.spring.app", "player", "clans", "clans.clanchat"})
 @EnableJpaRepositories(basePackages = {"player", "resources", "troops", "clans"})
@@ -15,6 +19,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EntityScan(basePackages = {"player", "resources", "troops", "clans", "clans.clanchat"})
 public class AppApplication {
 
+	/**
+	 * Runs the application.
+	 * @param args
+	 */
 	public static void main(String[] args)  {
 		SpringApplication.run(AppApplication.class, args);
 	}

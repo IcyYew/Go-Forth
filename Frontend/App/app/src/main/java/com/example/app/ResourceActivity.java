@@ -20,6 +20,11 @@ import com.android.volley.toolbox.StringRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * This activity is respnsible for resource management.
+ *
+ * @author Nicholas Lynch
+ */
 public class ResourceActivity extends AppCompatActivity {
     //Current userID
     private int userID;
@@ -51,6 +56,15 @@ public class ResourceActivity extends AppCompatActivity {
     private Button removePlatinum;
     private EditText platinumPrompt;
 
+    /**
+     * On the creation of this activity, TextViews and Buttons are initialized.
+     * Extras are received and put in userID variable (for carrying across activities)
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -164,6 +178,7 @@ public class ResourceActivity extends AppCompatActivity {
 
     /**
      * Adds resources to the backend then updates the current count shown onscreen.
+     *
      * @param amount Amount of resources to add
      * @param resourceName Name of the resource to add
      */
@@ -226,6 +241,10 @@ public class ResourceActivity extends AppCompatActivity {
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 
+    /**
+     * This method gets the newly updated resource amount from the database.
+     * It then displays the values on the corresponding TextView.
+     */
     private void updateAmount() {
         String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getPlayer/" + String.valueOf(userID);
 

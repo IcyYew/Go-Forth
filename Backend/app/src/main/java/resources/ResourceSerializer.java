@@ -7,6 +7,11 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.io.IOException;
 
+/**
+ * Serializer class for the ResourceManager class.
+ * Improves passage of JSON request bodies.
+ * @author Michael Geltz
+ */
 public class ResourceSerializer extends JsonSerializer<ResourceManager> {
 
     @Override

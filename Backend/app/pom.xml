@@ -35,8 +35,12 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-websocket</artifactId>
+		</dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-websocket</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.mysql</groupId>
@@ -57,7 +61,7 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
-    </dependencies>
+	</dependencies>
 
 	<build>
 		<plugins>

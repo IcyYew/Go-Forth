@@ -12,6 +12,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+/**
+ * Repository storing players based on generated ID
+ * @author Michael Geltz
+ */
 @Repository
 public interface PlayerRepository extends JpaRepository<Player, Integer> {
 }
