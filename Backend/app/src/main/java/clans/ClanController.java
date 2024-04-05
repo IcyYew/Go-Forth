@@ -20,7 +20,7 @@ public class ClanController {
 
     @Autowired
     private PlayerRepository playerRepository;
-    
+
 
 
     @GetMapping("/clan/getallclans")
