@@ -7,23 +7,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 
 
 import org.java_websocket.handshake.ServerHandshake;
-import org.w3c.dom.Text;
 
-import java.util.Objects;
 public class ClanChat extends AppCompatActivity implements WebSocketListener{
 
-    private String BASE_URL = "ws://10.0.2.2:8080/chat/clan/";
+    private String BASE_URL = "ws://coms-309-048.class.las.iastate.edu:8080/chat/clan/";
 
     private Button Back;
     private TextView Chat;
@@ -64,7 +57,7 @@ public class ClanChat extends AppCompatActivity implements WebSocketListener{
             @Override
             public void onClick(View v) {
                 //goes to MainActivity with userID
-                Intent intent = new Intent(ClanChat.this, MainActivity.class);
+                Intent intent = new Intent(ClanChat.this, ClanActivity.class);
                 intent.putExtra("ID", String.valueOf(userID));
                 startActivity(intent);
             }

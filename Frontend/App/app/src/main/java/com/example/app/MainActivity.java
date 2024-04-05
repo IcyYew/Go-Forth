@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
 
         UID = findViewById(R.id.ID);
 
-        loginButton.setText("Hello");
 
         // gets extras and sets userID to whatever we got from the extras. IF there were no extras, empty userID
         Bundle extras = getIntent().getExtras();
@@ -85,11 +84,8 @@ public class MainActivity extends AppCompatActivity {
         clanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast toast = Toast.makeText(MainActivity.this, "Login Pressed", Toast.LENGTH_SHORT);
-                //toast.show();
-
-                Intent intent = new Intent(MainActivity.this, ClanChat.class);
-                intent.putExtra("ID", userID);
+                Intent intent = new Intent(MainActivity.this, ClanActivity.class);
+                intent.putExtra("ID", Integer.toString(userID));
                 startActivity(intent);
             }
         });

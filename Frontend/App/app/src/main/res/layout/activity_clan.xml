@@ -7,6 +7,17 @@
     tools:context=".ClanActivity">
 
     <Button
+        android:id="@+id/Create"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="144dp"
+        android:layout_marginTop="284dp"
+        android:gravity="center"
+        android:text="Create Clan"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Name" />
+
+    <Button
         android:id="@+id/ClanManagement"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,21 +37,21 @@
         android:gravity="center"
         android:text="View Members"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ClanName" />
+        app:layout_constraintTop_toBottomOf="@+id/Name" />
 
     <Button
         android:id="@+id/JoinClan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="144dp"
-        android:layout_marginTop="276dp"
+        android:layout_marginStart="152dp"
+        android:layout_marginTop="208dp"
         android:gravity="center"
         android:text="Join Clan"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ClanName" />
+        app:layout_constraintTop_toBottomOf="@+id/Name" />
 
     <TextView
-        android:id="@+id/ClanName"
+        android:id="@+id/Name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="108dp"
@@ -71,5 +82,15 @@
         android:text="Back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/ClanList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="160dp"
+        android:layout_marginTop="136dp"
+        android:text="Clans"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

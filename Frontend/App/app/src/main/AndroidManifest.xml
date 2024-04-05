@@ -16,6 +16,15 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ClanJoinActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ClanCreateActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ClanDisplay"
+            android:exported="false" />
+        <activity
             android:name=".ClanManagement"
             android:exported="false" />
         <activity

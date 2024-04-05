@@ -1,7 +1,5 @@
 package com.example.app;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -20,71 +20,54 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Objects;
-
-public class SignupActivity extends AppCompatActivity {
-    private EditText Username;
-
-    private EditText Password;
-
-    private EditText ConfirmPassword;
-
-    private Button Signup;
-
-    private Button Back;
+public class ClanCreateActivity extends AppCompatActivity {
 
     private int userID;
 
+    private Button Create;
 
+    private Button Back;
 
+    private EditText Name;
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup);
+        setContentView(R.layout.activity_clan_create);
 
+        //Get ID
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             userID = extras.getInt("ID");
         }
 
-        //UI initialization
-        Username = findViewById(R.id.username);
+        Create = findViewById(R.id.Create);
 
-        Password = findViewById(R.id.password);
+        Back = findViewById(R.id.Back);
 
-        ConfirmPassword = findViewById(R.id.confirm);
+        Name = findViewById(R.id.Name);
 
-        Signup = findViewById(R.id.Button);
 
-        Back = findViewById(R.id.back);
 
-        //Back button clicked
         Back.setOnClickListener(new View.OnClickListener() {
+            //Back button clicked
             @Override
             public void onClick(View v) {
-
-                /* when login button is pressed, use intent to switch to Main Activity */
-                Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+                //goes to ClanActivity with userID
+                Intent intent = new Intent(ClanCreateActivity.this, ClanActivity.class);
                 intent.putExtra("ID", String.valueOf(userID));
-                startActivity(intent);  // go to MainActivity
+                startActivity(intent);
             }
         });
 
-        //Signup button clicked
-        Signup.setOnClickListener(new View.OnClickListener() {
+
+        Create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Convert user inputs to strings
-                String usernameString = Username.getText().toString(); //Username given by user
-                String passwordString = Password.getText().toString(); //Password given by user
-                String confirmString = ConfirmPassword.getText().toString(); //confirm given by user
+                String clannameString = Name.getText().toString(); //Username given by user
 
-                if(!passwordString.equals(confirmString)){ //checks if password and confirm match
-                    Toast toast = Toast.makeText(SignupActivity.this, "Passwords do not match", Toast.LENGTH_SHORT);
-                    toast.show();
-                    return;
-                }
-
-                String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getall"; //URL to get all existing users
+                String url = "http://coms-309-048.class.las.iastate.edu:8080/clan/getallclans"; //URL to get all existing users
                 // make a StringRequest to get the users from the server. Converts JSONArray into StringBuilder.
                 StringRequest request = new StringRequest(Request.Method.GET, url,
                         new Response.Listener<String>() {
@@ -92,19 +75,17 @@ public class SignupActivity extends AppCompatActivity {
                             public void onResponse(String response) {
                                 Log.d("Display response", response);
                                 try {
-                                    JSONArray jsonArray = new JSONArray(response); //Array of users
-                                    for (int i = 0; i < jsonArray.length(); i++) {
-                                        JSONObject playerObject = jsonArray.getJSONObject(i); //Get user at current i
-                                        if ((playerObject.getString("userName")).equals((Username.getText().toString()))) { //If the user name exists
-                                            Toast toast = Toast.makeText(SignupActivity.this, "Username already exists", Toast.LENGTH_SHORT);
+                                    JSONArray jsonArray = new JSONArray(response); //Array of clans
+                                    for (int i = 1; i <= jsonArray.length(); i++) {
+                                        JSONObject clanObject = jsonArray.getJSONObject(i); //Get clan at current i
+                                        if ((clanObject.getString("clanName")).equals((Name.getText().toString()))) { //If the user name exists
+                                            Toast toast = Toast.makeText(ClanCreateActivity.this, "Clan already exists", Toast.LENGTH_SHORT);
                                             toast.show();
                                             return; //exit
                                         }
                                     }
-                                    //If no existing user is found, create a new user and switch to Main Activity
-                                    createNewPlayer(usernameString, passwordString); //Creates player with username and password given by user
-                                    Intent intent = new Intent(SignupActivity.this, SignupSuccessActivity.class);
-                                    startActivity(intent); //go to SignupSuccess activity
+                                    createNewClan(clannameString); //Creates clan
+
 
                                     return;
 
@@ -129,21 +110,14 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * creates a new player in the server with the given username and password
-     *
-     * @param userName
-     * @param password
-     */
-    private void createNewPlayer(String userName, String password) {
-        // use the new player endpoint
-        String url = "http://coms-309-048.class.las.iastate.edu:8080/players/new";
+    private void createNewClan(String clanname) {
+        String url = "http://coms-309-048.class.las.iastate.edu:8080/clans/createclan";
 
-        // Create a JSONObject with the user's details
+        // Create a JSONObject with the clan's details
         JSONObject requestBody = new JSONObject();
         try {
-            requestBody.put("userName", userName);
-            requestBody.put("password", password);
+            requestBody.put("playerID", userID);
+            requestBody.put("clanName", clanname);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -154,7 +128,10 @@ public class SignupActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         // Handle successful response from the server
-                        Log.d("User Creation", "New user created: " + response.toString());
+                        Log.d("Clan Creation", "New clan created: " + response.toString());
+                        Intent intent = new Intent(ClanCreateActivity.this, ClanActivity.class);
+                        intent.putExtra("ID", String.valueOf(userID));
+                        startActivity(intent);
                     }
                 },
                 new Response.ErrorListener() {
