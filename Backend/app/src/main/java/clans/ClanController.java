@@ -20,6 +20,11 @@ public class ClanController {
 
 
 
+    @GetMapping("/clan/getallclans")
+    public List<Clan> clanList() {
+        return clanRepository.findAll();
+    }
+
     @GetMapping("/clans/getclan/{clanID}")
     public Clan getClan(@PathVariable int clanID) {
         return clanRepository.findById(clanID).orElse(null);
