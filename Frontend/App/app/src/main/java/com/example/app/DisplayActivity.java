@@ -26,6 +26,8 @@ import java.util.Map;
 
 /**
  * Activity that displays the current users (assuming there are any)
+ *
+ * @author Josh Dwight
  */
 public class DisplayActivity extends AppCompatActivity {
     // TextView to display users info (name, id, power level)
@@ -37,6 +39,15 @@ public class DisplayActivity extends AppCompatActivity {
     // tracks user ID so it can track across activities
     private int userID;
 
+    /**
+     * On the creation of this activity, TextViews and Buttons are initialized.
+     * Extras are received and put in userID variable (for carrying across activities)
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     *
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_users);
@@ -85,6 +96,7 @@ public class DisplayActivity extends AppCompatActivity {
                                 playersString.append("Player name: ").append(playerObject.getString("userName")).append("\n");
                                 playersString.append("Password: ").append(playerObject.getString("password")).append("\n");
                                 playersString.append("Player power level: ").append(playerObject.getInt("power")).append("\n");
+                                playersString.append("Player Map Position: (").append(playerObject.getInt("locationX")).append(", ").append(playerObject.getInt("locationY")).append(")\n");
                                 playersString.append("\n");
                             }
 
