@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 Log.d("Username", username);
 
-                                String domain = "ws://10.0.2.2:8080/chat/1/";
+                                String domain = "ws://coms-309-048.class.las.iastate.edu:8080/globalchat/";
 
                                 String serverUrl = domain + username;
 
