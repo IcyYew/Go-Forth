@@ -1,4 +1,4 @@
-package GlobalChat;
+package Websockets;
 
 import java.io.IOException;
 import java.util.Hashtable;
@@ -13,10 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import java.util.Hashtable;
-
 @Controller
-@ServerEndpoint(value = "/globalchat/{username}")
+@ServerEndpoint(value = "chat/globalchat/{username}")
 public class GlobalChatSocket
 {
     private static GlobalChatRepository chatRepository;

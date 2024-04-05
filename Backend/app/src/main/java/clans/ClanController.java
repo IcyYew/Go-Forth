@@ -20,11 +20,20 @@ public class ClanController {
 
     @Autowired
     private PlayerRepository playerRepository;
+
+
+
+    @GetMapping("/clan/getallclans")
+    public List<Clan> clanList() {
+        return clanRepository.findAll();
+    }
+
     /**
      * Gets the clan with the specified ID from the database.
      * @param clanID The ID of the clan.
      * @return Returns the specified Clan.
      */
+
     @GetMapping("/clans/getclan/{clanID}")
     public Clan getClan(@PathVariable int clanID) {
         return clanRepository.findById(clanID).orElse(null);

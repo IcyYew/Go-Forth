@@ -1,15 +1,11 @@
-package clans.clanchat;
+package Websockets;
 
 
-import clans.ClanRepository;
-import jakarta.persistence.Transient;
 import jakarta.websocket.*;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
-import org.apache.logging.log4j.message.Message;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
@@ -18,11 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
-import player.Player;
-import player.PlayerRepository;
-
 
 
 @Controller
