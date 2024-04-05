@@ -18,9 +18,6 @@ public class ClanChatMessage {
     @Lob
     private String content;
 
-    @Column
-    private int clanid;
-
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "time-sent")
     private Date sent = new Date();
@@ -28,12 +25,8 @@ public class ClanChatMessage {
     public ClanChatMessage() {
     }
 
-<<<<<<< HEAD
-    public ClanChatMessage(String userName, String content,int clanid) {
-=======
-    public ClanChatMessage(String userName, String content, int clanid) {
->>>>>>> d415915dc6d6f64ff6ec924038948f6beee65760
-        this.clanid = clanid;
+    public ClanChatMessage(String userName, String content) {
+
         this.userName = userName;
         this.content = content;
     }
@@ -62,13 +55,6 @@ public class ClanChatMessage {
         this.content = content;
     }
 
-    public int getClanid() {
-        return clanid;
-    }
-
-    public void setClanid(int clanid) {
-        this.clanid = clanid;
-    }
 
     public Date getSent() {
         return sent;
