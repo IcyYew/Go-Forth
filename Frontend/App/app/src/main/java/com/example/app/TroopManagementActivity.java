@@ -364,7 +364,7 @@ public class TroopManagementActivity extends AppCompatActivity {
     }
 
     /**
-     * Method used to update countdown textview
+     * Method used to update countdown textview.
      */
     private void updateCountdownText() {
         int minutes = (int) (timeLeftInMillis / 1000) / 60;
