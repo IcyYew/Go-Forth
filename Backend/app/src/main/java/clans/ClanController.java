@@ -20,8 +20,6 @@ public class ClanController {
 
     @Autowired
     private PlayerRepository playerRepository;
-
-
     /**
      * Gets the clan with the specified ID from the database.
      * @param clanID The ID of the clan.
@@ -49,13 +47,44 @@ public class ClanController {
             clan.getMembers().addMember(player);
             clan.setClanMembersNumber();
             clan.calculateTotalClanPower();
-
             player.setClanMembershipID(clan.getClanID());
-
+            player.setClanPermissions(3);
 
             clanRepository.save(clan);
             playerRepository.save(player);
             return "New clan of name: " + clan.getClanName();
+        }
+        else {
+            return null;
+        }
+    }
+
+    @PostMapping("/clans/promotemember")
+    public String promoteMember(@RequestBody PermissionsRequest permissionsRequest) {
+        Player player = playerRepository.getById(permissionsRequest.targetID);
+        if (permissionsRequest.getInitiatorPermissionsLevel() > permissionsRequest.getTargetPermissionsLevel()) {
+            player.setClanPermissions(player.getClanPermissions() + 1);
+            playerRepository.save(player);
+            if (player.getClanPermissions() == 3) {
+                playerRepository.getById(permissionsRequest.initiatorID).setClanPermissions(2);
+                playerRepository.save(playerRepository.getById(permissionsRequest.initiatorID));
+                return playerRepository.getById(permissionsRequest.initiatorID).getUserName() + " promoted " +
+                        player.getUserName() + " to leader, they are now an elder";
+            }
+            return player.getUserName() + " promoted to permissions level " + player.getClanPermissions();
+        }
+        else {
+            return null;
+        }
+    }
+    
+    @PostMapping("/clan/demotemember")
+    public String demoteMember(@RequestBody PermissionsRequest permissionsRequest) {
+        Player player = playerRepository.getById(permissionsRequest.targetID);
+        if (permissionsRequest.getInitiatorPermissionsLevel() > permissionsRequest.getTargetPermissionsLevel() && player.getClanPermissions() != 1) {
+            player.setClanPermissions(player.getClanPermissions() - 1);
+            playerRepository.save(player);
+            return player.getUserName() + " demoted to clan permissions " + player.getClanPermissions();
         }
         else {
             return null;
@@ -89,6 +118,7 @@ public class ClanController {
             player.setClanMembershipID(clan.getClanID());
             clan.calculateTotalClanPower();
             clan.setClanMembersNumber();
+            player.setClanPermissions(1);
 
             playerRepository.save(player);
             clanRepository.save(clan);
@@ -111,6 +141,7 @@ public class ClanController {
         if (clan != null && player != null && player.getClanMembershipID() == clan.getClanID()) {
             clan.getMembers().removeMember(player);
             player.setClanMembershipID(0);
+            player.setClanPermissions(0);
             clan.calculateTotalClanPower();
             clan.setClanMembersNumber();
 
@@ -226,6 +257,53 @@ public class ClanController {
          */
         public void setPlayerID(int playerID) {
             this.playerID = playerID;
+        }
+    }
+
+    public static class PermissionsRequest {
+        int initiatorPermissionsLevel;
+        int initiatorID;
+        int targetPermissionsLevel;
+        int targetID;
+
+
+        public PermissionsRequest(int initiatorPermissionsLevel, int initiatorID, int targetPermissionsLeve, int targetID) {
+            this.initiatorPermissionsLevel = initiatorPermissionsLevel;
+            this.initiatorID = initiatorID;
+            this.targetPermissionsLevel = targetPermissionsLeve;
+            this.targetID = targetID;
+        }
+
+        public int getInitiatorPermissionsLevel() {
+            return initiatorPermissionsLevel;
+        }
+
+        public void setInitiatorPermissionsLevel(int initiatorPermissionsLevel) {
+            this.initiatorPermissionsLevel = initiatorPermissionsLevel;
+        }
+
+        public int getInitiatorID() {
+            return initiatorID;
+        }
+
+        public void setInitiatorID(int initiatorID) {
+            this.initiatorID = initiatorID;
+        }
+
+        public int getTargetPermissionsLevel() {
+            return targetPermissionsLevel;
+        }
+
+        public void setTargetPermissionsLevel(int targetPermissionsLeve) {
+            this.targetPermissionsLevel = targetPermissionsLeve;
+        }
+
+        public int getTargetID() {
+            return targetID;
+        }
+
+        public void setTargetID(int targetID) {
+            this.targetID = targetID;
         }
     }
 }
