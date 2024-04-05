@@ -83,12 +83,23 @@ public class TroopManagementActivity extends AppCompatActivity {
         // Initialize SharedPreferences
         prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
 
+        archersToTrainCount = prefs.getInt("archersToTrainCount", 0);
+        knightsToTrainCount = prefs.getInt("knightsToTrainCount", 0);
+        magesToTrainCount = prefs.getInt("magesToTrainCount", 0);
+        cavalryToTrainCount = prefs.getInt("cavalryToTrainCount", 0);
+
         // UI initialization
         archersToTrainCountTextView = findViewById(R.id.archersToTrainCount);
         knightsToTrainCountTextView = findViewById(R.id.knightsToTrainCount);
         magesToTrainCountTextView = findViewById(R.id.magesToTrainCount);
         cavalryToTrainCountTextView = findViewById(R.id.cavalryToTrainCount);
         trainingTimeValue = findViewById(R.id.trainingTimeValue);
+
+        archersToTrainCountTextView.setText(String.valueOf(archersToTrainCount));
+        knightsToTrainCountTextView.setText(String.valueOf(knightsToTrainCount));
+        magesToTrainCountTextView.setText(String.valueOf(magesToTrainCount));
+        cavalryToTrainCountTextView.setText(String.valueOf(cavalryToTrainCount));
+
 
         archersCheckbox = findViewById(R.id.archersCheckbox);
         knightsCheckbox = findViewById(R.id.knightsCheckbox);
@@ -186,6 +197,12 @@ public class TroopManagementActivity extends AppCompatActivity {
             cavalryToTrainCount += amount;
             cavalryToTrainCountTextView.setText(String.valueOf(cavalryToTrainCount));
         }
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("archersToTrainCount", archersToTrainCount);
+        editor.putInt("knightsToTrainCount", knightsToTrainCount);
+        editor.putInt("magesToTrainCount", magesToTrainCount);
+        editor.putInt("cavalryToTrainCount", cavalryToTrainCount);
+        editor.apply();
     }
 
     /**
@@ -212,6 +229,14 @@ public class TroopManagementActivity extends AppCompatActivity {
         knightsCheckbox.setChecked(false);
         magesCheckbox.setChecked(false);
         cavalryCheckbox.setChecked(false);
+
+        // Clear SharedPreferences for troop counts
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove("archersToTrainCount");
+        editor.remove("knightsToTrainCount");
+        editor.remove("magesToTrainCount");
+        editor.remove("cavalryToTrainCount");
+        editor.apply();
     }
 
     /**
