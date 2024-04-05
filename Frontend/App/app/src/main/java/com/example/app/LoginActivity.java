@@ -21,6 +21,11 @@ import org.json.JSONObject;
 
 import java.util.Objects;
 
+/**
+ * This activity is responsible for login functionalities.
+ *
+ * @author Nicholas Lynch
+ */
 public class LoginActivity extends AppCompatActivity {
     private EditText Username;
 
@@ -32,6 +37,15 @@ public class LoginActivity extends AppCompatActivity {
 
     private int userID;
 
+    /**
+     * On the creation of this activity, TextViews and Buttons are initialized.
+     * Extras are received and put in userID variable (for carrying across activities).
+     * The login button is used to make a GET request to get all users to see if login can succeed.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);

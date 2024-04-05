@@ -22,6 +22,12 @@ import org.w3c.dom.Text;
 
 import java.util.Objects;
 
+/**
+ * Activity responsible for main menu functionality.
+ *
+ * @author Josh Dwight
+ * @author Nicholas Lynch
+ */
 public class MainActivity extends AppCompatActivity {
     private Button loginButton;
     private Button signupButton;
@@ -196,6 +202,42 @@ public class MainActivity extends AppCompatActivity {
 
             // got to chat activity
             Intent intent = new Intent(this, ChatActivity1.class);
+            intent.putExtra("ID", userID);
+            startActivity(intent);
+        });
+
+        clanChatButton.setOnClickListener(view -> {
+            String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getPlayer/" + String.valueOf(userID);
+
+            // makes JsonObjectRequest to get the current player. GETs the archerNum, warriorNum, mageNum, and cavalryNum
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                String serverUrl = "ws://10.0.2.2:8080/chat/clan/" + response.getString("userName");
+                                Log.d("URL", serverUrl);
+
+                                // Establish WebSocket connection and set listener
+                                WebSocketManager2.getInstance().connectWebSocket(serverUrl);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                Toast.makeText(MainActivity.this, "Error parsing JSON response", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(MainActivity.this, "Error fetching player data: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+            // add to volley queue
+            VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+
+            // got to chat activity
+            Intent intent = new Intent(this, ChatActivity2.class);
             intent.putExtra("ID", userID);
             startActivity(intent);
         });

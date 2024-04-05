@@ -26,6 +26,8 @@ import java.util.Locale;
 
 /**
  * Activity for viewing the troops a user has as well as updating the troops by adding new ones.
+ *
+ * @author Josh Dwight
  */
 public class TroopManagementActivity extends AppCompatActivity {
     // stores userID so it can track across activities
@@ -213,7 +215,7 @@ public class TroopManagementActivity extends AppCompatActivity {
     }
 
     /**
-     * Uses the /players/getPlayer/{userID} endpoint to get the troop counts of the currently selected user
+     * Uses the /players/getPlayer/{userID} endpoint to get the troop counts of the currently selected user.
      */
     private void getPlayerData() {
         archersCountTextView = findViewById(R.id.archersCount);

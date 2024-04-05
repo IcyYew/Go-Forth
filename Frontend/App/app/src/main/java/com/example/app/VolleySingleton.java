@@ -20,6 +20,11 @@ public class VolleySingleton {
     private ImageLoader imageLoader;
     private static Context ctx;
 
+    /**
+     * Singleton constructor
+     *
+     * @param context
+     */
     private VolleySingleton(Context context) {
         ctx = context;
         requestQueue = getRequestQueue();
@@ -41,6 +46,12 @@ public class VolleySingleton {
                 });
     }
 
+    /**
+     * get Singleton instance
+     *
+     * @param context
+     * @return instance
+     */
     public static synchronized VolleySingleton getInstance(Context context) {
         if (instance == null) {
             instance = new VolleySingleton(context);
@@ -48,6 +59,11 @@ public class VolleySingleton {
         return instance;
     }
 
+    /**
+     * get the Singleton request queue
+     *
+     * @return request queue
+     */
     public RequestQueue getRequestQueue() {
         if (requestQueue == null) {
             // getApplicationContext() is key, it keeps you from leaking the
@@ -57,10 +73,21 @@ public class VolleySingleton {
         return requestQueue;
     }
 
+    /**
+     * Add an item to the request queue
+     *
+     * @param req request
+     * @param <T>
+     */
     public <T> void addToRequestQueue(Request<T> req) {
         getRequestQueue().add(req);
     }
 
+    /**
+     * get an image loader
+     *
+     * @return image loader
+     */
     public ImageLoader getImageLoader() {
         return imageLoader;
     }
