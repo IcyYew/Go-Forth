@@ -21,4 +21,14 @@ public class ClanManagement extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clan_management);
     }
+
+    private class User{
+
+        private int userID;
+
+        private int clanID;
+
+        private int power;
+
+    }
 }

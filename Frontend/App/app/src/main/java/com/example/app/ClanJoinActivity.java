@@ -132,5 +132,9 @@ public class ClanJoinActivity extends AppCompatActivity {
 
         // add to volley request queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+        //goes to MainActivity with userID
+        Intent intent = new Intent(ClanJoinActivity.this, ClanActivity.class);
+        intent.putExtra("ID", String.valueOf(userID));
+        startActivity(intent);
     }
 }

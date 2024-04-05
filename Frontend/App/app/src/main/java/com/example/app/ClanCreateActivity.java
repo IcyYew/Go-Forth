@@ -76,7 +76,7 @@ public class ClanCreateActivity extends AppCompatActivity {
                                 Log.d("Display response", response);
                                 try {
                                     JSONArray jsonArray = new JSONArray(response); //Array of clans
-                                    for (int i = 1; i <= jsonArray.length(); i++) {
+                                    for (int i = 1; i < jsonArray.length(); i++) {
                                         JSONObject clanObject = jsonArray.getJSONObject(i); //Get clan at current i
                                         if ((clanObject.getString("clanName")).equals((Name.getText().toString()))) { //If the user name exists
                                             Toast toast = Toast.makeText(ClanCreateActivity.this, "Clan already exists", Toast.LENGTH_SHORT);
@@ -129,9 +129,6 @@ public class ClanCreateActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         // Handle successful response from the server
                         Log.d("Clan Creation", "New clan created: " + response.toString());
-                        Intent intent = new Intent(ClanCreateActivity.this, ClanActivity.class);
-                        intent.putExtra("ID", String.valueOf(userID));
-                        startActivity(intent);
                     }
                 },
                 new Response.ErrorListener() {
@@ -144,5 +141,8 @@ public class ClanCreateActivity extends AppCompatActivity {
 
         // add to volley request queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+        Intent intent = new Intent(ClanCreateActivity.this, ClanActivity.class);
+        intent.putExtra("ID", String.valueOf(userID));
+        startActivity(intent);
     }
 }

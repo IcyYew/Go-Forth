@@ -26,16 +26,16 @@
         android:gravity="center"
         android:text="Clan Management"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/memberList" />
+        app:layout_constraintTop_toBottomOf="@+id/LeaveClan" />
 
     <Button
-        android:id="@+id/memberList"
+        android:id="@+id/LeaveClan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="134dp"
-        android:layout_marginTop="357dp"
+        android:layout_marginStart="144dp"
+        android:layout_marginTop="368dp"
         android:gravity="center"
-        android:text="View Members"
+        android:text="Leave Clan"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Name" />
 
@@ -89,6 +89,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="160dp"
         android:layout_marginTop="136dp"
+        android:gravity="center"
         android:text="Clans"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Name" />

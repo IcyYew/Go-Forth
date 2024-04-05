@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONArray;
@@ -39,6 +40,8 @@ public class ClanActivity extends AppCompatActivity {
     Button CreateClan;
 
     TextView ClanName;
+
+    Button LeaveClan;
 
     private int clanID;
 
@@ -67,6 +70,9 @@ public class ClanActivity extends AppCompatActivity {
 
         DisplayClans =  findViewById(R.id.ClanList);
 
+        LeaveClan =  findViewById(R.id.LeaveClan);
+
+
         logIntoCurrentClan();
 
         back.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +81,7 @@ public class ClanActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //goes to MainActivity with userID
                 Intent intent = new Intent(ClanActivity.this, MainActivity.class);
-                intent.putExtra("ID", userID);
+                intent.putExtra("ID", String.valueOf(userID));
                 startActivity(intent);
             }
         });
@@ -86,6 +92,45 @@ public class ClanActivity extends AppCompatActivity {
                 Intent intent = new Intent(ClanActivity.this, ClanManagement.class);
                 intent.putExtra("ID", userID);
                 startActivity(intent);
+            }
+        });
+
+        LeaveClan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = "http://coms-309-048.class.las.iastate.edu:8080/clans/removemember";
+
+                // Create a JSONObject with the clan's details
+                JSONObject requestBody = new JSONObject();
+                try {
+                    requestBody.put("clanID", clanID);
+                    requestBody.put("playerID", userID);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                // Create a JsonObjectRequest with the POST method
+                JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, requestBody,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                // Handle successful response from the server
+                                Log.d("Clan leave", "clan left: " + response.toString());
+
+
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                // Handle error response from the server
+                                Log.e("Clan Leave", "Error leaving clan: " + error.getMessage());
+                            }
+                        });
+
+                // add to volley request queue
+                VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+                logIntoCurrentClan();
             }
         });
 
