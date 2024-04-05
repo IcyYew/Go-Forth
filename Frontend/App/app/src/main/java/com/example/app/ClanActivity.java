@@ -134,11 +134,11 @@ public class ClanActivity extends AppCompatActivity {
             }
         });
 
-        ClanChat.setOnClickListener(new View.OnClickListener() {
+        CreateClan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //goes to MainActivity with userID
-                Intent intent = new Intent(ClanActivity.this, ClanChat.class);
+                Intent intent = new Intent(ClanActivity.this, ClanCreateActivity.class);
                 intent.putExtra("ID", userID);
                 startActivity(intent);
             }
@@ -154,11 +154,40 @@ public class ClanActivity extends AppCompatActivity {
             }
         });
 
-        CreateClan.setOnClickListener(new View.OnClickListener() {
+        ClanChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //goes to MainActivity with userID
-                Intent intent = new Intent(ClanActivity.this, ClanCreateActivity.class);
+                String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getPlayer/" + String.valueOf(userID);
+
+                // makes JsonObjectRequest to get the current player. GETs the archerNum, warriorNum, mageNum, and cavalryNum
+                JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    String serverUrl = "ws://coms-309-048.class.las.iastate.edu:8080/globalchat/" + response.getString("userName");
+                                    Log.d("URL", serverUrl);
+
+                                    // Establish WebSocket connection and set listener
+                                    ClanChatManager.getInstance().connectWebSocket(serverUrl);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(ClanActivity.this, "Error parsing JSON response", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(ClanActivity.this, "Error fetching player data: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                // add to volley queue
+                VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+
+                // got to chat activity
+                Intent intent = new Intent(ClanActivity.this, ClanChat.class);
                 intent.putExtra("ID", userID);
                 startActivity(intent);
             }
