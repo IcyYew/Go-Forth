@@ -1,4 +1,4 @@
-package buildings.troopbuildings;
+package buildings.troopBuildings;
 
 public class TroopTrainingBuilding extends buildings.Building {
     double trainingTime; // seconds
@@ -11,4 +11,6 @@ public class TroopTrainingBuilding extends buildings.Building {
     public double getTrainingTime() {
         return this.trainingTime;
     }
+
+
 }

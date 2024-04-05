@@ -75,6 +75,18 @@ public class Player {
     @Column(name="locationY")
     private int locationY;
 
+    @Column(name="archerFinalDate")
+    private String archerFinalDate = "a";
+
+    @Column(name="mageFinalDate")
+    private String mageFinalDate = "m";
+
+    @Column(name="cavalryFinalDate")
+    private String cavalryFinalDate = "c";
+
+    @Column(name="warriorFinalDate")
+    private String warriorFinalDate = "w";
+
     //Empty constructor to make Jpa happy
 
     /**
@@ -245,6 +257,38 @@ public class Player {
 
     public void setLocationY(int locationY) {
         this.locationY = locationY;
+    }
+
+    public String getArcherFinalDate() {
+        return archerFinalDate;
+    }
+
+    public void setArcherFinalDate(String archerFinalDate) {
+        this.archerFinalDate = archerFinalDate;
+    }
+
+    public String getMageFinalDate() {
+        return mageFinalDate;
+    }
+
+    public void setMageFinalDate(String mageFinalDate) {
+        this.mageFinalDate = mageFinalDate;
+    }
+
+    public String getCavalryFinalDate() {
+        return cavalryFinalDate;
+    }
+
+    public void setCavalryFinalDate(String cavalryFinalDate) {
+        this.cavalryFinalDate = cavalryFinalDate;
+    }
+
+    public String getWarriorFinalDate() {
+        return warriorFinalDate;
+    }
+
+    public void setWarriorFinalDate(String warriorFinalDate) {
+        this.warriorFinalDate = warriorFinalDate;
     }
 
     /**

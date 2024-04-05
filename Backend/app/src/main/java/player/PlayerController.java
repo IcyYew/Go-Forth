@@ -1,5 +1,9 @@
 package player;
 
+import buildings.troopBuildings.ArcheryRange;
+import buildings.troopBuildings.MageTower;
+import buildings.troopBuildings.Stables;
+import buildings.troopBuildings.WarriorSchool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import resources.ResourceManager;
@@ -10,6 +14,7 @@ import troops.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 /**
@@ -62,12 +67,15 @@ public class PlayerController {
 
         // Create empty player and store username and password to generate a player ID used in the managers
         Player player = new Player();
+        Random rand = new Random();
         player.setUserName(created.getUserName());
         player.setPassword(created.getPassword());
         // Save "empty" player to generate ID
         player = playerRepository.save(player);
         player.setTroops(new TroopManager(player.getPlayerID()));
         player.setResources(new ResourceManager(player.getPlayerID()));
+        player.setLocationX(rand.nextInt(20));
+        player.setLocationY(rand.nextInt(20));
         //Save fully created player into database
         playerRepository.save(player);
         // Return id of created player
@@ -111,6 +119,39 @@ public class PlayerController {
         }
     }
 
+    @GetMapping("/players/calculateTrainingTime/{playerID}")
+    public String calculateTrainingTime(@PathVariable int playerID, @RequestBody TroopRequest troopRequest)
+    {
+        Player player = playerRepository.findById(playerID).orElse(null);
+        if (player != null)
+        {
+            String formattedTime;
+            switch (troopRequest.getTroopType())
+            {
+                case ARCHER:
+                    ArcheryRange a = new ArcheryRange(1);
+                    formattedTime = a.trainBatch(troopRequest.getQuantity());
+                    player.setArcherFinalDate(formattedTime);
+                    return formattedTime;
+                case MAGE:
+                    MageTower m = new MageTower(1);
+                    formattedTime = m.trainBatch(troopRequest.getQuantity());
+                    player.setMageFinalDate(formattedTime);
+                    return formattedTime;
+                case CAVALRY:
+                    Stables s = new Stables(1);
+                    formattedTime = s.trainBatch(troopRequest.getQuantity());
+                    player.setCavalryFinalDate(formattedTime);
+                    return formattedTime;
+                case WARRIOR:
+                    WarriorSchool w = new WarriorSchool(1);
+                    formattedTime = w.trainBatch(troopRequest.getQuantity());
+                    player.setCavalryFinalDate(formattedTime);
+                    return formattedTime;
+            }
+        }
+        return null;
+    }
 
     // Removetroops from a declared player via their ID, to use, use Postman POST option, make sure you have a player declared and use:
     // http://coms-309-048.class.las.iastate,edu:8080/players/removetroops/(playerID) --> Raw JSON, {"troopType" : "(trooptype)", "quantity" : (integer)}
