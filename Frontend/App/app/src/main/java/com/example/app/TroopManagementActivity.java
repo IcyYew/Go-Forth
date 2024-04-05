@@ -350,6 +350,11 @@ public class TroopManagementActivity extends AppCompatActivity {
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 
+    /**
+     * Calculates the total time to train troops
+     *
+     * @return time
+     */
     private long calculateTotalTrainingTime() {
         int archerTime = archersToTrainCount * 2; // 2 seconds per archer
         int knightTime = knightsToTrainCount * 1; // 1 second per knight
@@ -358,7 +363,9 @@ public class TroopManagementActivity extends AppCompatActivity {
         return (archerTime + knightTime + mageTime + cavalryTime) * 1000; // Convert to milliseconds
     }
 
-    // Method to update countdown textview
+    /**
+     * Method used to update countdown textview
+     */
     private void updateCountdownText() {
         int minutes = (int) (timeLeftInMillis / 1000) / 60;
         int seconds = (int) (timeLeftInMillis / 1000) % 60;
@@ -366,7 +373,10 @@ public class TroopManagementActivity extends AppCompatActivity {
         trainingTimeValue.setText(timeLeftFormatted);
     }
 
-    // Method to start the countdown timer
+    /**
+     * Method that starts the timer.
+     * Also declares what happens on tick and on finish.
+     */
     private void startCountdownTimer() {
         // Calculate total training time based on troops count
         totalTimeInMillis = calculateTotalTrainingTime();
@@ -393,6 +403,9 @@ public class TroopManagementActivity extends AppCompatActivity {
         }.start();
     }
 
+    /**
+     * Method that runs when you switch to a different activity.
+     */
     @Override
     protected void onPause() {
         super.onPause();
