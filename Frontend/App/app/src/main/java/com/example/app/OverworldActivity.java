@@ -151,6 +151,9 @@ public class OverworldActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /**
+     * Get coords for players and generate map
+     */
     private void fetchPlayerDataAndGenerateMap() {
         // use getall endpoint URL
         String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getall";
