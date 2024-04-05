@@ -67,13 +67,14 @@ public class MainActivity extends AppCompatActivity {
 
         resourceButton = findViewById(R.id.ResourceButton);
 
-        overworldButton = findViewById(R.id.OverworldButton);
+        clanButton = findViewById(R.id.ClanChat);
 
         globalChatButton = findViewById(R.id.globalChatButton);
 
         clanChatButton = findViewById(R.id.clanChatButton);
 
         UID = findViewById(R.id.ID);
+
 
         // gets extras and sets userID to whatever we got from the extras. IF there were no extras, empty userID
         Bundle extras = getIntent().getExtras();
@@ -97,6 +98,15 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 intent.putExtra("ID", userID);
+                startActivity(intent);
+            }
+        });
+
+        clanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ClanActivity.class);
+                intent.putExtra("ID", Integer.toString(userID));
                 startActivity(intent);
             }
         });

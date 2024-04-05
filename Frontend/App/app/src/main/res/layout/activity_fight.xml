@@ -16,7 +16,7 @@
         app:layout_constraintEnd_toStartOf="@+id/user1Input"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Text" />
+        app:layout_constraintTop_toBottomOf="@+id/Back" />
 
     <EditText
         android:id="@+id/user2Input"
@@ -46,10 +46,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.984"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Text" />
+        app:layout_constraintTop_toBottomOf="@+id/Back" />
 
     <TextView
-        android:id="@+id/Text"
+        android:id="@+id/Back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="113dp"
@@ -100,7 +100,7 @@
         app:layout_constraintEnd_toStartOf="@+id/user2Input"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Text" />
+        app:layout_constraintTop_toBottomOf="@+id/Back" />
 
     <TextView
         android:id="@+id/result"

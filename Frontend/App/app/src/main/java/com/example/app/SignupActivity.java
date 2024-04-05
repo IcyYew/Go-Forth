@@ -115,7 +115,8 @@ public class SignupActivity extends AppCompatActivity {
                                     }
                                     //If no existing user is found, create a new user and switch to Main Activity
                                     createNewPlayer(usernameString, passwordString); //Creates player with username and password given by user
-
+                                    Intent intent = new Intent(SignupActivity.this, SignupSuccessActivity.class);
+                                    startActivity(intent); //go to SignupSuccess activity
 
                                     return;
 
@@ -173,8 +174,6 @@ public class SignupActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         // Handle error response from the server
                         Log.e("User Creation", "Error creating user: " + error.getMessage());
-                        Intent intent = new Intent(SignupActivity.this, SignupSuccessActivity.class);
-                        startActivity(intent); //go to SignupSuccess activity
                     }
                 });
 
