@@ -4,14 +4,25 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.example.app.MainActivity;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -47,51 +58,7 @@ public class OverworldActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences("MapData", Context.MODE_PRIVATE);
 
-        // Check if map data exists in SharedPreferences
-        if (sharedPreferences.contains(MAP_DATA_KEY)) {
-            // If map data exists, load and display the map
-            String mapData = sharedPreferences.getString(MAP_DATA_KEY, "");
-            displayMap(mapData);
-        } else {
-            // If map data doesn't exist, generate and save a new map
-            String mapData = generateMap();
-            saveMapData(mapData);
-            displayMap(mapData);
-        }
-    }
-
-    /**
-     * This method is used to generate the map.
-     * Once a map is generated, it stores the generated map to use always,
-     * even if the activity is closed then re-opened.
-     *
-     * @return the built map
-     */
-    private String generateMap() {
-        StringBuilder mapBuilder = new StringBuilder();
-
-        // Generate map data (example: randomly assign types)
-        Random random = new Random();
-        for (int i = 0; i < GRID_SIZE; i++) {
-            for (int j = 0; j < GRID_SIZE; j++) {
-                int type = random.nextInt(3); // Generates a random number between 0 and 2
-                mapBuilder.append(type).append(" "); // Append type to map data
-            }
-            mapBuilder.append("\n"); // Add newline after each row
-        }
-
-        return mapBuilder.toString();
-    }
-
-    /**
-     * This method is used to save the map data to use every time the overworld activity is launched.
-     *
-     * @param mapData map to store
-     */
-    private void saveMapData(String mapData) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(MAP_DATA_KEY, mapData);
-        editor.apply();
+        fetchPlayerDataAndGenerateMap();
     }
 
     /**
@@ -102,12 +69,14 @@ public class OverworldActivity extends AppCompatActivity {
      *
      * @param mapData new or stored map
      */
-    private void displayMap(String mapData) {
+    private void displayMap(String mapData, ArrayList<String> names) {
         LinearLayout gridLayout = findViewById(R.id.gridLayout);
 
         // Loop to create grid items based on the provided map data
         String[] rows = mapData.split("\n");
-        for (String row : rows) {
+        int currentPlayer = 0;
+
+        for (int i = 0; i < rows.length; i++) {
             LinearLayout rowLayout = new LinearLayout(this);
             rowLayout.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -115,9 +84,9 @@ public class OverworldActivity extends AppCompatActivity {
             ));
             rowLayout.setOrientation(LinearLayout.HORIZONTAL);
 
-            String[] types = row.split(" ");
-            for (String typeStr : types) {
-                int type = Integer.parseInt(typeStr);
+            String[] types = rows[i].split(" ");
+            for (int j = 0; j < types.length; j++) {
+                int type = Integer.parseInt(types[j]);
 
                 TextView gridItem = new TextView(this);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -140,6 +109,16 @@ public class OverworldActivity extends AppCompatActivity {
                     case 2:
                         gridItem.setBackgroundColor(getResources().getColor(android.R.color.transparent));
                         gridItem.setText("Empty");
+                        break;
+                    case 3:
+                        gridItem.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_light));
+
+                        gridItem.setText("Player");
+                        break;
+                    case 4:
+                        gridItem.setBackgroundColor(getResources().getColor(android.R.color.holo_purple));
+
+                        gridItem.setText("Me");
                         break;
                 }
 
@@ -170,5 +149,96 @@ public class OverworldActivity extends AppCompatActivity {
         Intent intent = new Intent(OverworldActivity.this, MainActivity.class);
         intent.putExtra("ID", String.valueOf(userID));
         startActivity(intent);
+    }
+
+    private void fetchPlayerDataAndGenerateMap() {
+        // use getall endpoint URL
+        String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getall";
+
+        // make a StringRequest to get the users from the server. Converts JSONArray into StringBuilder.
+        StringRequest request = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray jsonArray = new JSONArray(response);
+
+                            ArrayList<Integer> ids = new ArrayList<>();
+                            ArrayList<String> names = new ArrayList<>();
+                            ArrayList<Integer> xCoords = new ArrayList<>();
+                            ArrayList<Integer> yCoords = new ArrayList<>();
+
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject playerObject = jsonArray.getJSONObject(i);
+                                ids.add(playerObject.getInt("playerID"));
+                                names.add(playerObject.getString("userName"));
+                                xCoords.add(playerObject.getInt("locationX"));
+                                yCoords.add(playerObject.getInt("locationY"));
+                            }
+
+                            // Generate and display map after player data is fetched
+                            String mapData = generateMap(ids, xCoords, yCoords);
+                            displayMap(mapData, names);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), "Error fetching players: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        // add to the request queue
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+    }
+
+    /**
+     * This method is used to generate the map after player data is fetched.
+     *
+     * @param ids List of player ids
+     * @param xCoords List of player x-coordinates
+     * @param yCoords List of player y-coordinates
+     * @return the built map
+     */
+    private String generateMap(ArrayList<Integer> ids, ArrayList<Integer> xCoords, ArrayList<Integer> yCoords) {
+        StringBuilder mapBuilder = new StringBuilder();
+
+        // Generate map data
+        Random random = new Random();
+        for (int i = 0; i < GRID_SIZE; i++) {
+            for (int j = 0; j < GRID_SIZE; j++) {
+                boolean isUserPosition = false;
+                boolean isCurrentUser = false;
+
+                // Check if current grid position matches any user's position
+                for (int k = 0; k < xCoords.size(); k++) {
+                    if (i == xCoords.get(k) && j == yCoords.get(k)) {
+                        Log.d("User at", i + ", " + j);
+                        if (ids.get(k) == userID) {
+                            isCurrentUser = true;
+                            break;
+                        }
+                        isUserPosition = true;
+                        break;
+                    }
+                }
+
+                int type;
+                if (isUserPosition) {
+                    type = 3; // Assuming 3 represents the user
+                } else if (isCurrentUser) {
+                    type = 4;
+                } else {
+                    type = random.nextInt(3); // Generates a random number between 0 and 2
+                }
+                mapBuilder.append(type).append(" "); // Append type to map data
+            }
+            mapBuilder.append("\n"); // Add newline after each row
+        }
+
+        return mapBuilder.toString();
     }
 }
