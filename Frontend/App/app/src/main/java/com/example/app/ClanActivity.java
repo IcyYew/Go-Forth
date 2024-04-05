@@ -91,6 +91,7 @@ public class ClanActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(ClanActivity.this, ClanManagement.class);
                 intent.putExtra("ID", userID);
+                intent.putExtra("clanID", clanID);
                 startActivity(intent);
             }
         });
@@ -165,7 +166,7 @@ public class ClanActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(JSONObject response) {
                                 try {
-                                    String serverUrl = "ws://coms-309-048.class.las.iastate.edu:8080/globalchat/" + response.getString("userName");
+                                    String serverUrl = "ws://coms-309-048.class.las.iastate.edu:8080/chat/clan/" + response.getString("userName");
                                     Log.d("URL", serverUrl);
 
                                     // Establish WebSocket connection and set listener
