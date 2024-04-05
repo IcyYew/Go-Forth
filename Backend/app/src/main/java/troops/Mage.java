@@ -11,7 +11,7 @@ import jakarta.persistence.Entity;
  */
 @Entity
 @DiscriminatorValue("MAGE")
-public class Mage extends Troop{
+public class Mage extends Troop {
     // Mage troop is weak to warrior troop, basic stats defined, subject to change
     private final TroopTypes weakness = TroopTypes.WARRIOR;
     private final int power = 5;
@@ -23,8 +23,9 @@ public class Mage extends Troop{
     /**
      * Constructor for the Mage class.
      * This constructor creates a Mage instance using troopManager and quantity parameters.
+     *
      * @param troopManager
-     * @param quantity Number of troops created.
+     * @param quantity     Number of troops created.
      */
     public Mage(TroopManager troopManager, int quantity) {
         super(TroopTypes.MAGE, quantity, troopManager);
@@ -45,6 +46,7 @@ public class Mage extends Troop{
 
     /**
      * Gets the troop against which the Mage is weak.
+     *
      * @return Returns a TroopTypes representing the troop.
      */
     @Override
@@ -54,6 +56,7 @@ public class Mage extends Troop{
 
     /**
      * Gets the power of the Mage.
+     *
      * @return Returns the Mage's power value.
      */
     @Override
@@ -63,6 +66,7 @@ public class Mage extends Troop{
 
     /**
      * Gets the health of the Mage.
+     *
      * @return Returns the Mage's health value.
      */
     @Override
@@ -72,6 +76,7 @@ public class Mage extends Troop{
 
     /**
      * Gets the damage of the Mage.
+     *
      * @return Returns the Mage's damage value.
      */
     @Override
@@ -81,6 +86,7 @@ public class Mage extends Troop{
 
     /**
      * Gets the movement speed of the Mage.
+     *
      * @return Returns the Mage's movement speed value.
      */
     @Override
@@ -90,6 +96,7 @@ public class Mage extends Troop{
 
     /**
      * Gets the attack speed of the Mage.
+     *
      * @return Returns the Mage's attack speed value.
      */
     @Override

@@ -20,6 +20,7 @@ public class Warrior extends Troop{
     private final int movementSpeed = 3;
     private final int attackSpeed = 3;
 
+
     /**
      * Constructor for the Warrior class.
      * This constructor creates a Warrior instance using troopManager and quantity parameters.
@@ -96,5 +97,4 @@ public class Warrior extends Troop{
     public int getAttackSpeed() {
         return this.attackSpeed;
     }
-
 }

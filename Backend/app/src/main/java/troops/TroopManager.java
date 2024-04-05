@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 
@@ -118,6 +119,7 @@ public class TroopManager {
             }
         }
     }
+
     // Remove troop(s) from troopmanager
     // Basic logic to make sure a specific troop type isnt deducted to a value below zero
     // !!!! Hidden issue here that sets player troop count to negative when a troopmanager is loaded with non-zero value
