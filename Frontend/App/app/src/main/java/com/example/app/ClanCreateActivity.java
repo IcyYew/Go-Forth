@@ -20,6 +20,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * Activity to create new clans
+ */
 public class ClanCreateActivity extends AppCompatActivity {
 
     private int userID;
@@ -48,7 +51,9 @@ public class ClanCreateActivity extends AppCompatActivity {
         Name = findViewById(R.id.Name);
 
 
-
+        /**
+         * Goes back to ClanActivity
+         */
         Back.setOnClickListener(new View.OnClickListener() {
             //Back button clicked
             @Override
@@ -60,14 +65,16 @@ public class ClanCreateActivity extends AppCompatActivity {
             }
         });
 
-
+        /**
+         * Creates user based on input to clannameString
+         */
         Create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Convert user inputs to strings
                 String clannameString = Name.getText().toString(); //Username given by user
 
-                String url = "http://coms-309-048.class.las.iastate.edu:8080/clan/getallclans"; //URL to get all existing users
+                String url = "http://coms-309-048.class.las.iastate.edu:8080/clan/getallclans"; //URL to get all existing clans
                 // make a StringRequest to get the users from the server. Converts JSONArray into StringBuilder.
                 StringRequest request = new StringRequest(Request.Method.GET, url,
                         new Response.Listener<String>() {
@@ -78,7 +85,7 @@ public class ClanCreateActivity extends AppCompatActivity {
                                     JSONArray jsonArray = new JSONArray(response); //Array of clans
                                     for (int i = 0; i < jsonArray.length(); i++) {
                                         JSONObject clanObject = jsonArray.getJSONObject(i); //Get clan at current i
-                                        if ((clanObject.getString("clanName")).equals((Name.getText().toString()))) { //If the user name exists
+                                        if ((clanObject.getString("clanName")).equals((Name.getText().toString()))) { //If the clan exists
                                             Toast toast = Toast.makeText(ClanCreateActivity.this, "Clan already exists", Toast.LENGTH_SHORT);
                                             toast.show();
                                             return; //exit
@@ -110,8 +117,12 @@ public class ClanCreateActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Creates a new clan and goes back to ClanActivity
+     * @param clanname name of the new clan
+     */
     private void createNewClan(String clanname) {
-        String url = "http://coms-309-048.class.las.iastate.edu:8080/clans/createclan";
+        String url = "http://coms-309-048.class.las.iastate.edu:8080/clans/createclan"; //URL to create clan
 
         // Create a JSONObject with the clan's details
         JSONObject requestBody = new JSONObject();

@@ -20,6 +20,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * Activity to join a clan
+ */
 public class ClanJoinActivity extends AppCompatActivity {
 
     private int userID;
@@ -47,6 +50,9 @@ public class ClanJoinActivity extends AppCompatActivity {
 
         Name = findViewById(R.id.Name);
 
+        /**
+         * Goes back to ClanActivity
+         */
         Back.setOnClickListener(new View.OnClickListener() {
             //Back button clicked
             @Override
@@ -59,11 +65,14 @@ public class ClanJoinActivity extends AppCompatActivity {
         });
 
 
+        /**
+         * Joins clan inputted by user
+         */
         Join.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String url = "http://coms-309-048.class.las.iastate.edu:8080/clan/getallclans"; //URL to get all players
-                String clanString = Name.getText().toString(); //Get clan inputed// make a StringRequest to get the users from the server. Converts JSONArray into StringBuilder.
+                String clanString = Name.getText().toString(); //Get clan inputed
                 StringRequest request = new StringRequest(Request.Method.GET, url,
                         new Response.Listener<String>() {
                             @Override
@@ -73,8 +82,8 @@ public class ClanJoinActivity extends AppCompatActivity {
                                     JSONArray jsonArray = new JSONArray(response); //Array of clans
                                     for (int i = 0; i <= jsonArray.length(); i++) {
                                         JSONObject clanObject = jsonArray.getJSONObject(i); //Get clan at current i
-                                        if ((clanObject.getString("clanName")).equals((Name.getText().toString()))) { //If the user name exists
-                                            join(jsonArray.getJSONObject(i).getInt("clanID"));
+                                        if ((clanObject.getString("clanName")).equals((Name.getText().toString()))) { //If the clan exists
+                                            join(jsonArray.getJSONObject(i).getInt("clanID")); //join clan
                                             return; //exit
                                         }
                                     }
@@ -101,6 +110,10 @@ public class ClanJoinActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Join a clan
+     * @param ID ID of the clan to join
+     */
     private void join(int ID) {
         String url = "http://coms-309-048.class.las.iastate.edu:8080/clans/addmember";
 
@@ -132,7 +145,7 @@ public class ClanJoinActivity extends AppCompatActivity {
 
         // add to volley request queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
-        //goes to MainActivity with userID
+        //goes to ClanActivity with userID
         Intent intent = new Intent(ClanJoinActivity.this, ClanActivity.class);
         intent.putExtra("ID", String.valueOf(userID));
         startActivity(intent);

@@ -22,6 +22,10 @@ import com.android.volley.toolbox.StringRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+/**
+ * Activity to manage current clan
+ */
 public class ClanManagement extends AppCompatActivity {
 
     private ArrayList<User> List;
@@ -50,21 +54,20 @@ public class ClanManagement extends AppCompatActivity {
     TextView Display;
 
     private int Index;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clan_management);
 
-        //Get ID
+        //Get ID and ClanID
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             userID = extras.getInt("ID");
             clanID = extras.getInt("clanID");
         }
 
-        List = new ArrayList<>();
-        fillList();
+        List = new ArrayList<>(); //Create a list of users
+        fillList(); //Fills list of users
 
         Index = 0;
 
@@ -84,6 +87,9 @@ public class ClanManagement extends AppCompatActivity {
         Display =  findViewById(R.id.Display);
 
 
+        /**
+         * Goes back to ClanActivity
+         */
         Back.setOnClickListener(new View.OnClickListener() {
             //Back button clicked
             @Override
@@ -95,60 +101,68 @@ public class ClanManagement extends AppCompatActivity {
             }
         });
 
+        /**
+         * Moves left through the list
+         */
         Left.setOnClickListener(new View.OnClickListener() {
-            //Back button clicked
             @Override
             public void onClick(View v) {
-                if(Index == 0) Index = List.size() -1;
-                else Index--;
-                Display.setText("User: " + List.get(Index).name + "\nPower: " + List.get(Index).userPower + "\nRank: " + getRank(List.get(Index).userPermission));
+                if(Index == 0) Index = List.size() -1; //If the index is at 0, go all the way to the right of the list
+                else Index--; //Current position to the leeft
+                Display.setText("User: " + List.get(Index).name + "\nPower: " + List.get(Index).userPower + "\nRank: " + getRank(List.get(Index).userPermission)); //set text
             }
         });
 
+        /**
+         * Moves left through the list
+         */
         Right.setOnClickListener(new View.OnClickListener() {
-            //Back button clicked
             @Override
             public void onClick(View v) {
-                if(Index == List.size() -1) Index = 0;
-                else Index++;
-                Display.setText("User: " + List.get(Index).name + "\nPower: " + List.get(Index).userPower + "\nRank: " + getRank(List.get(Index).userPermission));
+                if(Index == List.size() -1) Index = 0; //If index is at the far right, go to the beggining
+                else Index++; //Goes right through the list
+                Display.setText("User: " + List.get(Index).name + "\nPower: " + List.get(Index).userPower + "\nRank: " + getRank(List.get(Index).userPermission)); //set text
             }
         });
 
-        Kick.setOnClickListener(new View.OnClickListener() {
-            //Back button clicked
-            @Override
+        /**
+         * Kick the current player shown on screen
+         */
+        Kick.setOnClickListener(new View.OnClickListener() {@Override
             public void onClick(View v) {
-                if(permission > List.get(Index).userPermission) {
+                if(permission > List.get(Index).userPermission) { //If user permission is greater than the current
                     int before;
-                    kickCurrent();
-                    List.remove(Index);
-                    if(Index == List.size()) Index--;
+                    kickCurrent(); //Kick the current player
+                    List.remove(Index); //Remove player from list
+                    if(Index == List.size()) Index--; //Go to the left of the list if currently on the far right
                 }
-                else{
+                else{ //If user does not have permission over the current player
                     Toast toast = Toast.makeText(ClanManagement.this, "You Don't have Permission to do this", Toast.LENGTH_SHORT);
                     toast.show();
                 }
-                Display.setText("User: " + List.get(Index).name + "\nPower: " + List.get(Index).userPower + "\nRank: " + getRank(List.get(Index).userPermission));
+                Display.setText("User: " + List.get(Index).name + "\nPower: " + List.get(Index).userPower + "\nRank: " + getRank(List.get(Index).userPermission)); //set text
 
 
             }
         });
 
+        /**
+         * Demote the current player selected
+         */
         Demote.setOnClickListener(new View.OnClickListener() {
             //Back button clicked
             @Override
             public void onClick(View v) {
-                if(List.get(Index).userPermission == 1){
+                if(List.get(Index).userPermission == 1){ //Player is a member
                     Toast toast = Toast.makeText(ClanManagement.this, "User is already the lowest rank", Toast.LENGTH_SHORT);
                     toast.show();
                 }
-                else if(permission > List.get(Index).userPermission) {
+                else if(permission > List.get(Index).userPermission) { //Player has permission over the other
                     demoteCurrent();
                     List.get(Index).userPermission--;
 
                 }
-                else{
+                else{ //Player does not have permission over the other
                     Toast toast = Toast.makeText(ClanManagement.this, "You Don't have Permission to do this", Toast.LENGTH_SHORT);
                     toast.show();
                 }
@@ -157,33 +171,39 @@ public class ClanManagement extends AppCompatActivity {
             }
         });
 
+        /**
+         * Promotes the current player selected
+         */
         Promote.setOnClickListener(new View.OnClickListener() {
             //Back button clicked
             @Override
             public void onClick(View v) {
-                if(List.get(Index).userPermission == 3){
+                if(List.get(Index).userPermission == 3){ //If user is a leader
                     Toast toast = Toast.makeText(ClanManagement.this, "User is already the highest rank", Toast.LENGTH_SHORT);
                     toast.show();
                 }
-                else if(permission > List.get(Index).userPermission){
-                    promoteCurrent();
-                    if(permission == 3 && List.get(Index).userPermission == 2){
+                else if(permission > List.get(Index).userPermission){ //If user promoting is Leader and target is Elder
+                    promoteCurrent(); //Promote
+                    if(permission == 3 && List.get(Index).userPermission == 2){ //Swap their permissions
                         permission = 2;
                         List.get(Index).userPermission = 3;
                         List.get(userIndex).userPermission = 2;
                     }
-                    else List.get(Index).userPermission++;
+                    else List.get(Index).userPermission++; //Increment permission on the list
                 }
                 else{
                     Toast toast = Toast.makeText(ClanManagement.this, "You Don't have Permission to do this", Toast.LENGTH_SHORT);
                     toast.show();
                 }
-                Display.setText("User: " + List.get(Index).name + "\nPower: " + List.get(Index).userPower + "\nRank: " + getRank(List.get(Index).userPermission));
+                Display.setText("User: " + List.get(Index).name + "\nPower: " + List.get(Index).userPower + "\nRank: " + getRank(List.get(Index).userPermission)); //set text
 
             }
         });
     }
 
+    /**
+     * Class to store user data
+     */
     private class User{
 
         private int userID;
@@ -203,6 +223,9 @@ public class ClanManagement extends AppCompatActivity {
 
     }
 
+    /**
+     * Fills the list based on clan ID
+     */
     private void fillList(){
         // use getall endpoint URL
         String url = "http://coms-309-048.class.las.iastate.edu:8080/clans/memberlist/" + Integer.toString(clanID);
@@ -217,13 +240,13 @@ public class ClanManagement extends AppCompatActivity {
                             JSONArray jsonArray = new JSONArray(response);
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject playerObject = jsonArray.getJSONObject(i);
-                                if(playerObject.getInt("playerID") == userID){
-                                    permission = playerObject.getInt("clanPermissions");
-                                    userIndex = i;
+                                if(playerObject.getInt("playerID") == userID){ //If the user is the current user
+                                    permission = playerObject.getInt("clanPermissions"); //set user permission
+                                    userIndex = i; //set user index
                                 }
-                                List.add(new User(playerObject.getInt("playerID"), (int)playerObject.getDouble("power"), playerObject.getInt("clanPermissions"), playerObject.getString("userName")));
+                                List.add(new User(playerObject.getInt("playerID"), (int)playerObject.getDouble("power"), playerObject.getInt("clanPermissions"), playerObject.getString("userName"))); //Add new player
                             }
-                            Display.setText("User: " + List.get(Index).name + "\nPower: " + List.get(Index).userPower + "\nRank: " + getRank(List.get(Index).userPermission));
+                            Display.setText("User: " + List.get(Index).name + "\nPower: " + List.get(Index).userPower + "\nRank: " + getRank(List.get(Index).userPermission)); //set text
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -241,6 +264,11 @@ public class ClanManagement extends AppCompatActivity {
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 
+    /**
+     * Converts integer rank to string rank
+     * @param n integer representation of rank
+     * @return corresponding string
+     */
     private String getRank(int n){
         switch(n){
             case 1 : return "Member";
@@ -250,10 +278,13 @@ public class ClanManagement extends AppCompatActivity {
         }
     }
 
+    /**
+     * Kicks the current player
+     */
     private void kickCurrent() {
         String url = "http://coms-309-048.class.las.iastate.edu:8080/clans/removemember";
 
-        // Create a JSONObject with the clan's details
+        // Create a JSONObject with the player's details
         JSONObject requestBody = new JSONObject();
         try {
             requestBody.put("clanID", clanID);
@@ -283,10 +314,13 @@ public class ClanManagement extends AppCompatActivity {
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 
+    /**
+     * Demotes current user
+     */
     private void demoteCurrent(){
         String url = "http://coms-309-048.class.las.iastate.edu:8080/clan/demotemember";
 
-        // Create a JSONObject with the clan's details
+        // Create a JSONObject with current and target users information
         JSONObject requestBody = new JSONObject();
         try {
             requestBody.put("initiatorPermissionsLevel", permission);
@@ -318,10 +352,13 @@ public class ClanManagement extends AppCompatActivity {
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 
+    /**
+     * Promotes current player
+     */
     private void promoteCurrent(){
         String url = "http://coms-309-048.class.las.iastate.edu:8080/clans/promotemember";
 
-        // Create a JSONObject with the clan's details
+        // Create a JSONObject with current and target users information
         JSONObject requestBody = new JSONObject();
         try {
             requestBody.put("initiatorPermissionsLevel", permission);

@@ -22,6 +22,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * Shows all clans and their corresponding IDS
+ */
 public class ClanDisplay extends AppCompatActivity {
 
     private int userID;
@@ -47,6 +50,9 @@ public class ClanDisplay extends AppCompatActivity {
 
         displayClans();
 
+        /**
+         * Goes back to ClanActivity
+         */
         Back.setOnClickListener(new View.OnClickListener() {
             //Back button clicked
             @Override
@@ -60,8 +66,11 @@ public class ClanDisplay extends AppCompatActivity {
 
     }
 
+    /**
+     * Displays all clans
+     */
     private void displayClans() {
-        // use getall endpoint URL
+        // use getallclans endpoint URL
         String url = "http://coms-309-048.class.las.iastate.edu:8080/clan/getallclans";
 
         // make a StringRequest to get the users from the server. Converts JSONArray into StringBuilder.
@@ -75,6 +84,7 @@ public class ClanDisplay extends AppCompatActivity {
 
                             StringBuilder clansString = new StringBuilder();
                             for (int i = 0; i < jsonArray.length(); i++) {
+                                //Prints clan ID and clan name
                                 JSONObject playerObject = jsonArray.getJSONObject(i);
                                 clansString.append("Clan ID: ").append(playerObject.getInt("clanID")).append("\n");
                                 clansString.append("Clan name: ").append(playerObject.getString("clanName")).append("\n");
@@ -82,7 +92,7 @@ public class ClanDisplay extends AppCompatActivity {
                                 clansString.append("\n");
                             }
 
-                            Text.setText(clansString.toString());
+                            Text.setText(clansString.toString()); //Sets text onscreen
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -96,6 +106,6 @@ public class ClanDisplay extends AppCompatActivity {
                 });
 
         // add to the request queue
-        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request); //Add to queue
     }
 }

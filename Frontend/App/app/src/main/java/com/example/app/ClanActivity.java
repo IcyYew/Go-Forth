@@ -22,7 +22,9 @@ import org.json.JSONObject;
 
 import java.util.Objects;
 
-
+/**
+ * Main Screen for clans
+ */
 public class ClanActivity extends AppCompatActivity {
 
     private int userID;
@@ -73,8 +75,10 @@ public class ClanActivity extends AppCompatActivity {
         LeaveClan =  findViewById(R.id.LeaveClan);
 
 
-        logIntoCurrentClan();
-
+        logIntoCurrentClan(); //Loads current clan information for user
+        /**
+         * Goes back to main activity
+         */
         back.setOnClickListener(new View.OnClickListener() {
             //Back button clicked
             @Override
@@ -85,7 +89,9 @@ public class ClanActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
+        /**
+         * Goes to clan manager
+         */
         ClanManagement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,7 +101,9 @@ public class ClanActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
+        /**
+         * Leaves current clan
+         */
         LeaveClan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,7 +142,9 @@ public class ClanActivity extends AppCompatActivity {
                 logIntoCurrentClan();
             }
         });
-
+        /**
+         * Goes to CreateClanActivity
+         */
         CreateClan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,7 +154,9 @@ public class ClanActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
+        /**
+         * Goes to JoinClanActivity
+         */
         JoinClan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -154,7 +166,9 @@ public class ClanActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
+        /**
+         * Goes to clan chat
+         */
         ClanChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,11 +180,11 @@ public class ClanActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(JSONObject response) {
                                 try {
-                                    String serverUrl = "ws://coms-309-048.class.las.iastate.edu:8080/chat/clan/" + response.getString("userName");
+                                    String serverUrl = "ws://coms-309-048.class.las.iastate.edu:8080/chat/clan/" + response.getString("userName"); //Get url to join server
                                     Log.d("URL", serverUrl);
 
                                     // Establish WebSocket connection and set listener
-                                    ClanChatManager.getInstance().connectWebSocket(serverUrl);
+                                    ClanChatManager.getInstance().connectWebSocket(serverUrl); //Connects to the clan chat server
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                     Toast.makeText(ClanActivity.this, "Error parsing JSON response", Toast.LENGTH_SHORT).show();
@@ -205,11 +219,13 @@ public class ClanActivity extends AppCompatActivity {
         });
     }
 
-
+    /**
+     * Gets players current clan
+     */
     private void logIntoCurrentClan(){
         String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getall";
 
-        // make a StringRequest to get the users from the server. Converts JSONArray into StringBuilder.
+        // make a StringRequest to get the user from the server. Converts JSONArray into StringBuilder.
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -218,8 +234,8 @@ public class ClanActivity extends AppCompatActivity {
                         try {
                             JSONArray jsonArray = new JSONArray(response);
                             JSONObject playerObject = jsonArray.getJSONObject(userID - 1);
-                            clanID = playerObject.getInt("clanMembershipID");
-                            ClanName.setText("Clan ID: " + Integer.toString(clanID));
+                            clanID = playerObject.getInt("clanMembershipID"); //Put players clan into clan ID
+                            ClanName.setText("Clan ID: " + Integer.toString(clanID)); //Set clanname
                             }
                          catch (JSONException e) {
                             e.printStackTrace();
