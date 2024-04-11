@@ -29,7 +29,7 @@ public class BuildingManager {
     private Integer playerId;
 
     @OneToMany
-    private List<Building> buildingManager;
+    public List<Building> buildingManager;
 
     public BuildingManager(Integer playerId)
     {

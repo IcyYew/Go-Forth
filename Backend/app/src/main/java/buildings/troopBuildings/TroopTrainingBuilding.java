@@ -2,11 +2,13 @@ package buildings.troopBuildings;
 
 import buildings.BuildingManager;
 import buildings.BuildingTypes;
+import troops.TroopTypes;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class TroopTrainingBuilding extends buildings.Building {
+    protected TroopTypes trainsWhat;
     protected double trainingTime; // seconds
     protected int trainingCapacity;
     protected double trainingTimeTotal;

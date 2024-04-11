@@ -1,9 +1,8 @@
 package player;
 
-import buildings.troopBuildings.ArcheryRange;
-import buildings.troopBuildings.MageTower;
-import buildings.troopBuildings.Stables;
-import buildings.troopBuildings.WarriorSchool;
+import buildings.Building;
+import buildings.BuildingManager;
+import buildings.troopBuildings.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import resources.ResourceManager;
@@ -126,8 +125,7 @@ public class PlayerController {
         if (player != null)
         {
             String formattedTime;
-            switch (troopRequest.getTroopType())
-            {
+            switch (troopRequest.getTroopType()) {
                 case ARCHER:
                     formattedTime = a.trainBatch(troopRequest.getQuantity());
                     player.setArcherFinalDate(formattedTime);
