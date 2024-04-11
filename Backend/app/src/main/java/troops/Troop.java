@@ -195,4 +195,5 @@ public abstract class Troop {
             return 1.0;
         }
     }
+
 }

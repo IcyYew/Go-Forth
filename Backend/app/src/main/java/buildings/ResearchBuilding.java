@@ -1,9 +1,19 @@
 package buildings;
 
+import buildings.resourcebuildings.ResourceBuilding;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
 /**
  * Class for the research building.
  */
-public class ResearchBuilding {
-    private int resourceNeededStone;
-    private int resourceNeededWood;
+@Entity
+@DiscriminatorValue("RESEARCHBUILDING")
+public class ResearchBuilding extends Building{
+
+    public ResearchBuilding(BuildingManager buildingManager, int level)
+    {
+        super(BuildingTypes.RESEARCHBUILDING, level, buildingManager);
+    }
+
 }

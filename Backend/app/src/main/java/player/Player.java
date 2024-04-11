@@ -42,6 +42,9 @@ public class Player {
     @ManyToOne(cascade = CascadeType.ALL)
     TroopManager troops;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    BuildingManager buildings;
+
     @Column(name="clan-permissions-level")
     private Integer clanPermissions = 0;
 
@@ -159,9 +162,10 @@ public class Player {
      * @param userName
      * @param password
      */
-    public Player(ResourceManager resources, TroopManager troops, int playerID, double power, String userName, String password, int locationX, int locationY) {
+    public Player(ResourceManager resources, TroopManager troops, BuildingManager buildings, int playerID, double power, String userName, String password, int locationX, int locationY) {
         setResources(resources);
         setTroops(troops);
+        setBuildings(buildings);
         //this.buildings = buildings;
         setPlayerID(playerID);
         setPower(power);
@@ -291,6 +295,14 @@ public class Player {
         this.warriorFinalDate = warriorFinalDate;
     }
 
+    public BuildingManager getBuildings() {
+        return buildings;
+    }
+
+    public void setBuildings(BuildingManager buildings) {
+        this.buildings = buildings;
+    }
+
     /**
      * Returns a string of player info
      * @return A string of the player's info
@@ -304,6 +316,7 @@ public class Player {
                 "password" + password +
                 "resources=" + resources +
                 "troops=" + troops +
+                "buildings=" + buildings +
                 ", playerID=" + playerID +
                 ", power=" + power +
                 '}';

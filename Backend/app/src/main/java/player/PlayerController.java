@@ -129,22 +129,18 @@ public class PlayerController {
             switch (troopRequest.getTroopType())
             {
                 case ARCHER:
-                    ArcheryRange a = new ArcheryRange(1);
                     formattedTime = a.trainBatch(troopRequest.getQuantity());
                     player.setArcherFinalDate(formattedTime);
                     return formattedTime;
                 case MAGE:
-                    MageTower m = new MageTower(1);
                     formattedTime = m.trainBatch(troopRequest.getQuantity());
                     player.setMageFinalDate(formattedTime);
                     return formattedTime;
                 case CAVALRY:
-                    Stables s = new Stables(1);
                     formattedTime = s.trainBatch(troopRequest.getQuantity());
                     player.setCavalryFinalDate(formattedTime);
                     return formattedTime;
                 case WARRIOR:
-                    WarriorSchool w = new WarriorSchool(1);
                     formattedTime = w.trainBatch(troopRequest.getQuantity());
                     player.setCavalryFinalDate(formattedTime);
                     return formattedTime;
