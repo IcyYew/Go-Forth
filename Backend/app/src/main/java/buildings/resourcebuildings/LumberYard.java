@@ -13,9 +13,9 @@ import jakarta.persistence.Entity;
 @DiscriminatorValue("LUMBERYARD")
 public class LumberYard extends ResourceBuilding{
 
-    public LumberYard(BuildingManager buildingManager, int level)
+    public LumberYard(int level, ResourceBuildingManager resourceBuildingManager)
     {
-        super(BuildingTypes.LUMBERYARD, level, buildingManager);
-    }
+        super(BuildingTypes.LUMBERYARD, level, resourceBuildingManager);
 
+    }
 }

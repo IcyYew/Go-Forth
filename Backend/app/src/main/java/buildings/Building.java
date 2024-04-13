@@ -1,5 +1,7 @@
 package buildings;
 
+import buildings.resourcebuildings.ResourceBuildingManager;
+import buildings.troopBuildings.TroopBuildingManager;
 import jakarta.persistence.*;
 
 /**
@@ -24,7 +26,7 @@ public abstract class Building {
     protected int power;
 
     @ManyToOne
-    @JoinColumn(name = "building_manager_id")
+    @JoinColumn(name = "building_manager")
     private BuildingManager buildingManager;
 
     /**
@@ -36,6 +38,18 @@ public abstract class Building {
         this.buildingType = buildingType;
         this.level = level;
         this.buildingManager = buildingManager;
+    }
+
+    public Building(BuildingTypes buildingType, int level, TroopBuildingManager troopBuildingManager) {
+        this.buildingType = buildingType;
+        this.level = level;
+        this.troopBuildingManager = troopBuildingManager;
+    }
+
+    public Building(BuildingTypes buildingType, int level, ResourceBuildingManager resourceBuildingManager) {
+        this.buildingType = buildingType;
+        this.level = level;
+        this.resourceBuildingManager = resourceBuildingManager;
     }
 
     public Building()

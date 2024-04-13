@@ -12,8 +12,9 @@ import jakarta.persistence.Entity;
 @DiscriminatorValue("QUARRY")
 public class Quarry extends ResourceBuilding{
 
-    public Quarry(BuildingManager buildingManager, int level)
+    public Quarry(int level, ResourceBuildingManager resourceBuildingManager)
     {
-        super(BuildingTypes.QUARRY, level, buildingManager);
+        super(BuildingTypes.QUARRY, level, resourceBuildingManager);
+
     }
 }

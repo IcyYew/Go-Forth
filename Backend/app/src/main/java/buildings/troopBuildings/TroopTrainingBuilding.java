@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class TroopTrainingBuilding extends buildings.Building {
-    protected TroopTypes trainsWhat;
     protected double trainingTime; // seconds
     protected int trainingCapacity;
     protected double trainingTimeTotal;
@@ -17,9 +16,11 @@ public class TroopTrainingBuilding extends buildings.Building {
     protected LocalDateTime trainingTimeStarted;
     protected LocalDateTime trainingTimeFinished;
 
-    public TroopTrainingBuilding(BuildingTypes buildingTypes, int level, BuildingManager buildingManager) {
-
+    public TroopTrainingBuilding(BuildingTypes buildingTypes, int level, TroopBuildingManager troopBuildingManager)
+    {
+        super(buildingTypes, level, troopBuildingManager);
     }
+
     public String trainBatch(int quantity) {
         trainingTimeTotal = calculateTrainingTime(quantity);
         this.trainingTimeStarted = LocalDateTime.now();

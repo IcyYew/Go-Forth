@@ -3,6 +3,7 @@ package buildings.resourcebuildings;
 import buildings.Building;
 import buildings.BuildingManager;
 import buildings.BuildingTypes;
+import buildings.troopBuildings.TroopBuildingManager;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
@@ -16,9 +17,9 @@ import jakarta.persistence.Entity;
 @DiscriminatorValue("FARM")
 public class Farm extends ResourceBuilding {
 
-    public Farm(BuildingManager buildingManager, int level)
+    public Farm(int level, ResourceBuildingManager resourceBuildingManager)
     {
-        super(BuildingTypes.FARM, level, buildingManager);
-    }
+        super(BuildingTypes.FARM, level, resourceBuildingManager);
 
+    }
 }

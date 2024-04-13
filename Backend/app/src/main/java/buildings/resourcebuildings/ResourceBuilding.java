@@ -3,14 +3,16 @@ package buildings.resourcebuildings;
 import buildings.Building;
 import buildings.BuildingManager;
 import buildings.BuildingTypes;
+import buildings.troopBuildings.TroopBuildingManager;
+import resources.Resource;
 
 public abstract class ResourceBuilding extends Building
 {
     protected int resourceProductionRate;
 
-    public ResourceBuilding(BuildingTypes buildingTypes, int level, BuildingManager buildingManager)
+    public ResourceBuilding(BuildingTypes buildingTypes, int level, ResourceBuildingManager resourceBuildingManager)
     {
-
+        super(buildingTypes, level, resourceBuildingManager);
     }
 
     @Override

@@ -15,16 +15,14 @@ import static troops.TroopTypes.CAVALRY;
 @Entity
 @DiscriminatorValue("STABLES")
 public class Stables extends TroopTrainingBuilding{
-
-    private TroopTypes trainsWhat = CAVALRY;
     private int trainingCapacity = 50;
     private double trainingTime = 20.0; // in seconds
     private int stoneTrainingCost = 30;
     private int woodTrainingCost = 40;
 
-    public Stables(BuildingManager buildingManager, int level)
+    public Stables(int level, TroopBuildingManager troopBuildingManager)
     {
-        super(BuildingTypes.STABLES, level, buildingManager);
-    }
+        super(BuildingTypes.STABLES, level, troopBuildingManager);
 
+    }
 }

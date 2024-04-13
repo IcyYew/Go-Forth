@@ -1,6 +1,5 @@
 package buildings.resourcebuildings;
 
-import buildings.BuildingManager;
 import buildings.BuildingTypes;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -12,8 +11,9 @@ import jakarta.persistence.Entity;
 @DiscriminatorValue("PLATINUMMINE")
 public class PlatinumMine extends ResourceBuilding{
 
-    public PlatinumMine(BuildingManager buildingManager, int level)
+    public PlatinumMine(int level, ResourceBuildingManager resourceBuildingManager)
     {
-        super(BuildingTypes.PLATINUMMINE, level, buildingManager);
+        super(BuildingTypes.PLATINUMMINE, level, resourceBuildingManager);
+
     }
 }

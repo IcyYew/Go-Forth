@@ -2,6 +2,7 @@ package player;
 
 import buildings.Building;
 import buildings.BuildingManager;
+import buildings.BuildingTypes;
 import buildings.troopBuildings.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -125,21 +126,22 @@ public class PlayerController {
         if (player != null)
         {
             String formattedTime;
-            switch (troopRequest.getTroopType()) {
+            switch (troopRequest.getTroopType())
+            {
                 case ARCHER:
-                    formattedTime = a.trainBatch(troopRequest.getQuantity());
+                    formattedTime = player.troopBuildings.trainTroops(BuildingTypes.ARCHERYRANGE, troopRequest.getQuantity());
                     player.setArcherFinalDate(formattedTime);
                     return formattedTime;
                 case MAGE:
-                    formattedTime = m.trainBatch(troopRequest.getQuantity());
+                    formattedTime = player.troopBuildings.trainTroops(BuildingTypes.MAGETOWER, troopRequest.getQuantity());
                     player.setMageFinalDate(formattedTime);
                     return formattedTime;
                 case CAVALRY:
-                    formattedTime = s.trainBatch(troopRequest.getQuantity());
+                    formattedTime = player.troopBuildings.trainTroops(BuildingTypes.STABLES, troopRequest.getQuantity());
                     player.setCavalryFinalDate(formattedTime);
                     return formattedTime;
                 case WARRIOR:
-                    formattedTime = w.trainBatch(troopRequest.getQuantity());
+                    formattedTime = player.troopBuildings.trainTroops(BuildingTypes.WARRIORSCHOOL, troopRequest.getQuantity());
                     player.setCavalryFinalDate(formattedTime);
                     return formattedTime;
             }

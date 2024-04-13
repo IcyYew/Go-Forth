@@ -40,14 +40,6 @@ public class BuildingManager {
 
     private void initializeBuildings()
     {
-        buildingManager.add(new Farm(this, 1));
-        buildingManager.add(new LumberYard(this, 1));
-        buildingManager.add(new PlatinumMine(this, 1));
-        buildingManager.add(new Quarry(this, 1));
-        buildingManager.add(new ArcheryRange(this, 1));
-        buildingManager.add(new MageTower(this, 1));
-        buildingManager.add(new Stables(this, 1));
-        buildingManager.add(new WarriorSchool(this, 1));
         buildingManager.add(new MainBuilding(this, 1));
         buildingManager.add(new ResearchBuilding(this, 1));
     }
