@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Toast toast = Toast.makeText(MainActivity.this, "Login Pressed", Toast.LENGTH_SHORT);
-                //toast.show();
+                //toast.show(); .
 
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 intent.putExtra("ID", userID);
