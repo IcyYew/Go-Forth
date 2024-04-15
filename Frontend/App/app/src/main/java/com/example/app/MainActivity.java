@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
             UID.setText("User ID: " + number);
         }
 
-        //Login button pressed
+        //Login button pressed.
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
