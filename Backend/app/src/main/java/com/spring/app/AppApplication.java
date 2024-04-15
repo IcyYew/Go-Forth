@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class AppApplication {
 
 	/**
-	 * Runs the application.
+	 * Runs the application..
 	 * @param args
 	 */
 	public static void main(String[] args)  {
