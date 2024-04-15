@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * Application Class.
- * @author Michael Geltz
+ * @author Michael Geltz.
  */
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.spring.app", "player", "clans", "Websockets"})
