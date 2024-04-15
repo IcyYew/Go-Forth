@@ -129,7 +129,7 @@ public class Player {
         this.userName = userName;
     }
 
-    // ... further developments will take more setters/getters/etc
+    // ... further developments will take more setters/getters/etc.
 
 
     /**
