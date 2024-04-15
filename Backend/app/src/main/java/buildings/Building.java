@@ -29,6 +29,10 @@ public abstract class Building {
     @JoinColumn(name = "building_manager")
     private BuildingManager buildingManager;
 
+    private TroopBuildingManager troopBuildingManager;
+
+    private ResourceBuildingManager resourceBuildingManager;
+
     /**
      * Constructor for a building.
      * Takes a level value and a power value.
