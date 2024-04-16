@@ -1,6 +1,8 @@
 package player;
 
 import buildings.BuildingManager;
+import buildings.resourcebuildings.ResourceBuildingManager;
+import buildings.troopBuildings.TroopBuildingManager;
 import jakarta.persistence.*;
 import resources.ResourceManager;
 import troops.TroopManager;
@@ -41,6 +43,15 @@ public class Player {
      */
     @ManyToOne(cascade = CascadeType.ALL)
     TroopManager troops;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    BuildingManager buildings;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    TroopBuildingManager troopBuildings;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    ResourceBuildingManager resourceBuildings;
 
     @Column(name="clan-permissions-level")
     private Integer clanPermissions = 0;
@@ -159,10 +170,14 @@ public class Player {
      * @param userName
      * @param password
      */
-    public Player(ResourceManager resources, TroopManager troops, int playerID, double power, String userName, String password, int locationX, int locationY) {
+    public Player(ResourceManager resources, TroopManager troops, BuildingManager buildings,
+                  TroopBuildingManager troopBuildings, ResourceBuildingManager resourceBuildings,
+                  int playerID, double power, String userName, String password, int locationX, int locationY) {
         setResources(resources);
         setTroops(troops);
-        //this.buildings = buildings;
+        setBuildings(buildings);
+        setTroopBuildings(troopBuildings);
+        setResourceBuildings(resourceBuildings);
         setPlayerID(playerID);
         setPower(power);
         setUserName(userName);
@@ -291,6 +306,30 @@ public class Player {
         this.warriorFinalDate = warriorFinalDate;
     }
 
+    public BuildingManager getBuildings() {
+        return buildings;
+    }
+
+    public void setBuildings(BuildingManager buildings) {
+        this.buildings = buildings;
+    }
+
+    public TroopBuildingManager getTroopBuildings() {
+        return troopBuildings;
+    }
+
+    public void setTroopBuildings(TroopBuildingManager troopBuildings) {
+        this.troopBuildings = troopBuildings;
+    }
+
+    public ResourceBuildingManager getResourceBuildings() {
+        return resourceBuildings;
+    }
+
+    public void setResourceBuildings(ResourceBuildingManager resourceBuildings) {
+        this.resourceBuildings = resourceBuildings;
+    }
+
     /**
      * Returns a string of player info
      * @return A string of the player's info
@@ -304,6 +343,7 @@ public class Player {
                 "password" + password +
                 "resources=" + resources +
                 "troops=" + troops +
+                "buildings=" + buildings +
                 ", playerID=" + playerID +
                 ", power=" + power +
                 '}';
