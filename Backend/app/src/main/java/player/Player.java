@@ -1,6 +1,7 @@
 package player;
 
 import buildings.BuildingManager;
+import buildings.Research.ResearchManager;
 import buildings.resourcebuildings.ResourceBuildingManager;
 import buildings.troopBuildings.TroopBuildingManager;
 import jakarta.persistence.*;
@@ -45,13 +46,28 @@ public class Player {
     TroopManager troops;
 
     @ManyToOne(cascade = CascadeType.ALL)
+    ResearchManager research;
+
+    @ManyToOne(cascade = CascadeType.ALL)
     BuildingManager buildings;
+
+
 
     @ManyToOne(cascade = CascadeType.ALL)
     TroopBuildingManager troopBuildings;
 
     @ManyToOne(cascade = CascadeType.ALL)
     ResourceBuildingManager resourceBuildings;
+
+
+
+    public ResearchManager getResearchManager() {
+        return research;
+    }
+
+    public void setResearchManager(ResearchManager researchManager) {
+        this.research= researchManager;
+    }
 
     @Column(name="clan-permissions-level")
     private Integer clanPermissions = 0;
@@ -171,13 +187,14 @@ public class Player {
      * @param password
      */
     public Player(ResourceManager resources, TroopManager troops, BuildingManager buildings,
-                  TroopBuildingManager troopBuildings, ResourceBuildingManager resourceBuildings,
+                  TroopBuildingManager troopBuildings, ResourceBuildingManager resourceBuildings, ResearchManager researchManager,
                   int playerID, double power, String userName, String password, int locationX, int locationY) {
         setResources(resources);
         setTroops(troops);
         setBuildings(buildings);
         setTroopBuildings(troopBuildings);
         setResourceBuildings(resourceBuildings);
+        setResearchManager(researchManager);
         setPlayerID(playerID);
         setPower(power);
         setUserName(userName);
@@ -346,6 +363,7 @@ public class Player {
                 "buildings=" + buildings +
                 ", playerID=" + playerID +
                 ", power=" + power +
+                ", research=" + research +
                 '}';
     }
 }

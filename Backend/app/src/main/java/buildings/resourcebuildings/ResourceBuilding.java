@@ -4,8 +4,10 @@ import buildings.Building;
 import buildings.BuildingManager;
 import buildings.BuildingTypes;
 import buildings.troopBuildings.TroopBuildingManager;
+import jakarta.persistence.Entity;
 import resources.Resource;
 
+@Entity
 public abstract class ResourceBuilding extends Building
 {
     protected int resourceProductionRate;
@@ -13,6 +15,10 @@ public abstract class ResourceBuilding extends Building
     public ResourceBuilding(BuildingTypes buildingTypes, int level, ResourceBuildingManager resourceBuildingManager)
     {
         super(buildingTypes, level, resourceBuildingManager);
+    }
+
+    public ResourceBuilding() {
+
     }
 
     @Override

@@ -2,7 +2,8 @@ package buildings.Research;
 
 import jakarta.persistence.*;
 
-@Entity
+@Entity(name = "researches")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Research {
 
 
@@ -12,7 +13,7 @@ public class Research {
     private Integer researchId;
 
     @Column(name = "power")
-    private int power;
+    private double power;
 
     @Column(name = "tier")
     private int tier;
@@ -24,17 +25,36 @@ public class Research {
     private int level;
 
     @Column(name = "platinum-cost")
-    private int platinumCost = 1;
+    private double platinumCost = 1;
+
+    @ManyToOne
+    @JoinColumn(name = "research_manager_id")
+    private ResearchManager researchManager;
 
 
-    public Research(String researchName, int level, int tier) {
-        this.researchName = researchName;
-        this.tier = tier;
-        
+    public Research(String researchName, int level, int tier, ResearchManager researchManager) {
+        setResearchName(researchName);
+        setResearchManager(researchManager);
+        setTier(tier);
+        setLevel(level);
+        initializeValues();
+    }
+
+    public void initializeValues() {
+        setPower(100 + (this.level * 500) + (this.tier * 750));
+        setPlatinumCost(50 + (this.level * 200) + (this.tier * 500));
     }
 
     public Research() {
 
+    }
+
+    public ResearchManager getResearchManager() {
+        return researchManager;
+    }
+
+    public void setResearchManager(ResearchManager researchManager) {
+        this.researchManager = researchManager;
     }
 
     public Integer getResearchId() {
@@ -45,11 +65,11 @@ public class Research {
         this.researchId = researchId;
     }
 
-    public int getPower() {
+    public double getPower() {
         return power;
     }
 
-    public void setPower(int power) {
+    public void setPower(double power) {
         this.power = power;
     }
 
@@ -77,11 +97,11 @@ public class Research {
         this.level = level;
     }
 
-    public int getPlatinumCost() {
+    public double getPlatinumCost() {
         return platinumCost;
     }
 
-    public void setPlatinumCost(int platinumCost) {
+    public void setPlatinumCost(double platinumCost) {
         this.platinumCost = platinumCost;
     }
 }

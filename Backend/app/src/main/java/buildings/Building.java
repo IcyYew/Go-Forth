@@ -29,8 +29,10 @@ public abstract class Building {
     @JoinColumn(name = "building_manager")
     private BuildingManager buildingManager;
 
+    @ManyToOne
     private TroopBuildingManager troopBuildingManager;
 
+    @ManyToOne
     private ResourceBuildingManager resourceBuildingManager;
 
     /**
@@ -99,6 +101,8 @@ public abstract class Building {
             throw new Exception("Main building level requirement not met");
         }
     }
+
+
 
     public int getStoneUpgradeCost() {
         return stoneUpgradeCost;

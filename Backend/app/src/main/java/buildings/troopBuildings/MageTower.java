@@ -24,4 +24,7 @@ public class MageTower extends TroopTrainingBuilding{
         setStoneTrainingCost(20);
         setWoodTrainingCost(50);
     }
+
+    public MageTower() {
+    }
 }

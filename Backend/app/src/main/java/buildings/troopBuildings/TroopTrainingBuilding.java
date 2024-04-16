@@ -1,24 +1,30 @@
 package buildings.troopBuildings;
 
 import buildings.BuildingTypes;
+import jakarta.persistence.Entity;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class TroopTrainingBuilding extends buildings.Building {
+@Entity
+public abstract class TroopTrainingBuilding extends buildings.Building {
 
-    protected double trainingTime;
-    protected int trainingCapacity;
-    protected double trainingTimeTotal;
-    protected int stoneTrainingCost;
-    protected int woodTrainingCost;
-    protected LocalDateTime trainingTimeStarted;
-    protected LocalDateTime trainingTimeFinished;
-    protected TroopBuildingManager troopBuildingManager;
+    private double trainingTime;
+    private int trainingCapacity;
+    private double trainingTimeTotal;
+    private int stoneTrainingCost;
+    private int woodTrainingCost;
+    private LocalDateTime trainingTimeStarted;
+    private LocalDateTime trainingTimeFinished;
+    private TroopBuildingManager troopBuildingManager;
 
     public TroopTrainingBuilding(BuildingTypes buildingTypes, int level, TroopBuildingManager troopBuildingManager)
     {
         super(buildingTypes, level, troopBuildingManager);
+    }
+
+    public TroopTrainingBuilding() {
+
     }
 
     public String trainBatch(int quantity) {

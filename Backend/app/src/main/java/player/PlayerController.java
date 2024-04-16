@@ -1,18 +1,14 @@
 package player;
 
-import buildings.Building;
-import buildings.BuildingManager;
 import buildings.BuildingTypes;
-import buildings.troopBuildings.*;
+import buildings.Research.ResearchManager;
+import buildings.Research.ResearchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import resources.ResourceManager;
-import resources.ResourceRepository;
 import resources.ResourceType;
 import troops.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -28,6 +24,7 @@ public class PlayerController {
 
     @Autowired
     private PlayerRepository playerRepository;
+
 
 
     // Returns all currently existing players and their info
@@ -68,15 +65,18 @@ public class PlayerController {
         // Create empty player and store username and password to generate a player ID used in the managers
         Player player = new Player();
         Random rand = new Random();
+
         player.setUserName(created.getUserName());
         player.setPassword(created.getPassword());
         // Save "empty" player to generate ID
         player = playerRepository.save(player);
         player.setTroops(new TroopManager(player.getPlayerID()));
         player.setResources(new ResourceManager(player.getPlayerID()));
+        player.setResearchManager(new ResearchManager(player.getPlayerID()));
         player.setLocationX(rand.nextInt(20));
         player.setLocationY(rand.nextInt(20));
         //Save fully created player into database
+        //researchRepository.save(player.getResearch);
         playerRepository.save(player);
         // Return id of created player
         return "New player of ID: " + player.getPlayerID();

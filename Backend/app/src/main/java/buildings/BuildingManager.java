@@ -4,10 +4,7 @@ import buildings.resourcebuildings.Farm;
 import buildings.resourcebuildings.LumberYard;
 import buildings.resourcebuildings.PlatinumMine;
 import buildings.resourcebuildings.Quarry;
-import buildings.troopBuildings.ArcheryRange;
-import buildings.troopBuildings.MageTower;
-import buildings.troopBuildings.Stables;
-import buildings.troopBuildings.WarriorSchool;
+import buildings.troopBuildings.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -48,6 +45,7 @@ public class BuildingManager {
     {
 
     }
+
 
     public long getPlayerId()
     {

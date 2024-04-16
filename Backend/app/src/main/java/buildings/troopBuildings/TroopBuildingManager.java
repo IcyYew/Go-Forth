@@ -61,6 +61,15 @@ public class TroopBuildingManager
         }
     }
 
+    public TroopTrainingBuilding getTroopTrainingBuilding(BuildingTypes buildingType) {
+        for (TroopTrainingBuilding building : troopBuildingManager) {
+            if (building.getBuildingType() == buildingType) {
+                return building;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString()
     {
