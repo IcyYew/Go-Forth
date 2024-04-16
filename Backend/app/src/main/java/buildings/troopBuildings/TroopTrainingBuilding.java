@@ -1,10 +1,14 @@
 package buildings.troopBuildings;
 
 import buildings.BuildingTypes;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Entity
+@DiscriminatorValue("TROOPBUILDING")
 public class TroopTrainingBuilding extends buildings.Building {
 
     protected double trainingTime;

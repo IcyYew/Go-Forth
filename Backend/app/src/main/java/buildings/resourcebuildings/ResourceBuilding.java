@@ -4,8 +4,12 @@ import buildings.Building;
 import buildings.BuildingManager;
 import buildings.BuildingTypes;
 import buildings.troopBuildings.TroopBuildingManager;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import resources.Resource;
 
+@Entity
+@DiscriminatorValue("RESOURCEBUILDING")
 public abstract class ResourceBuilding extends Building
 {
     protected int resourceProductionRate;

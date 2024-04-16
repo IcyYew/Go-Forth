@@ -21,16 +21,23 @@ public abstract class Building {
     private BuildingTypes buildingType;
 
     protected int level;
+
     protected int stoneUpgradeCost;
+
     protected int woodUpgradeCost;
+
     protected int power;
 
     @ManyToOne
     @JoinColumn(name = "building_manager")
     private BuildingManager buildingManager;
 
+    @ManyToOne
+    @JoinColumn(name = "troop_building_manager")
     private TroopBuildingManager troopBuildingManager;
 
+    @ManyToOne
+    @JoinColumn(name = "resource_building_manager")
     private ResourceBuildingManager resourceBuildingManager;
 
     /**
