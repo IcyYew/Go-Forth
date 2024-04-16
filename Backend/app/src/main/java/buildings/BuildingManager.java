@@ -9,10 +9,7 @@ import buildings.troopBuildings.MageTower;
 import buildings.troopBuildings.Stables;
 import buildings.troopBuildings.WarriorSchool;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,15 +17,15 @@ import java.util.List;
 /**
  * Class for the Building Manager.
  */
-@JsonSerialize
+
 @Entity
 public class BuildingManager {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer playerId;
 
-    @OneToMany
+    @OneToMany(mappedBy = "buildingManager", cascade = CascadeType.ALL)
     public List<Building> buildingManager;
 
     public BuildingManager(Integer playerId)
