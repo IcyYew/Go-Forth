@@ -20,6 +20,6 @@ public class Farm extends ResourceBuilding {
     public Farm(int level, ResourceBuildingManager resourceBuildingManager)
     {
         super(BuildingTypes.FARM, level, resourceBuildingManager);
-
+        setResourceProductionRate(10);
     }
 }

@@ -1,20 +1,35 @@
 package buildings.troopBuildings;
 
-import buildings.BuildingManager;
 import buildings.BuildingTypes;
-import troops.TroopTypes;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class TroopTrainingBuilding extends buildings.Building {
-    protected double trainingTime; // seconds
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column
+    protected double trainingTime;
+    @Column
     protected int trainingCapacity;
+    @Column
     protected double trainingTimeTotal;
+    @Column
     protected int stoneTrainingCost;
+    @Column
     protected int woodTrainingCost;
+    @Column
     protected LocalDateTime trainingTimeStarted;
+    @Column
     protected LocalDateTime trainingTimeFinished;
+
+    protected TroopBuildingManager troopBuildingManager;
 
     public TroopTrainingBuilding(BuildingTypes buildingTypes, int level, TroopBuildingManager troopBuildingManager)
     {
@@ -33,6 +48,7 @@ public class TroopTrainingBuilding extends buildings.Building {
     public void upgrade() throws Exception {
         if (this.level <= 5) {
             this.level++;
+            setTrainingCapacity(level);
             setTrainingTime(level);
             setStoneUpgradeCost(level);
             setWoodUpgradeCost(level);

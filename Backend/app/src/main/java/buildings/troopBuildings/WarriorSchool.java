@@ -15,14 +15,13 @@ import static troops.TroopTypes.WARRIOR;
 @Entity
 @DiscriminatorValue("WARRIORSCHOOL")
 public class WarriorSchool extends TroopTrainingBuilding{
-    private int trainingCapacity = 50;
-    private double trainingTime = 15.0; // in seconds
-    private int stoneTrainingCost = 30;
-    private int woodTrainingCost = 40;
 
     public WarriorSchool(int level, TroopBuildingManager troopBuildingManager)
     {
         super(BuildingTypes.WARRIORSCHOOL, level, troopBuildingManager);
-
+        setTrainingCapacity(50);
+        setTrainingTime(40);
+        setStoneTrainingCost(50);
+        setWoodTrainingCost(20);
     }
 }

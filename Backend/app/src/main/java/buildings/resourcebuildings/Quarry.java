@@ -15,6 +15,6 @@ public class Quarry extends ResourceBuilding{
     public Quarry(int level, ResourceBuildingManager resourceBuildingManager)
     {
         super(BuildingTypes.QUARRY, level, resourceBuildingManager);
-
+        setResourceProductionRate(10);
     }
 }

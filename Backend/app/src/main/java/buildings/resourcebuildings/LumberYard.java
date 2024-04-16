@@ -16,6 +16,6 @@ public class LumberYard extends ResourceBuilding{
     public LumberYard(int level, ResourceBuildingManager resourceBuildingManager)
     {
         super(BuildingTypes.LUMBERYARD, level, resourceBuildingManager);
-
+        setResourceProductionRate(10);
     }
 }

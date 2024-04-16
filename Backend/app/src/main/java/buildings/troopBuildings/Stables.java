@@ -15,14 +15,13 @@ import static troops.TroopTypes.CAVALRY;
 @Entity
 @DiscriminatorValue("STABLES")
 public class Stables extends TroopTrainingBuilding{
-    private int trainingCapacity = 50;
-    private double trainingTime = 20.0; // in seconds
-    private int stoneTrainingCost = 30;
-    private int woodTrainingCost = 40;
 
     public Stables(int level, TroopBuildingManager troopBuildingManager)
     {
         super(BuildingTypes.STABLES, level, troopBuildingManager);
-
+        setTrainingCapacity(50);
+        setTrainingTime(30);
+        setStoneTrainingCost(40);
+        setWoodTrainingCost(30);
     }
 }

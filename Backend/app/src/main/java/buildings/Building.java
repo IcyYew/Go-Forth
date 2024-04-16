@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 
 /**
  * Abstract class for buildings.
- * @author Michael Geltz
+ * @author Ryan Johnson
  */
 
 @Entity
@@ -15,7 +15,7 @@ public abstract class Building {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer buildingID;
+    private Integer id;
 
     @Enumerated(EnumType.STRING)
     private BuildingTypes buildingType;

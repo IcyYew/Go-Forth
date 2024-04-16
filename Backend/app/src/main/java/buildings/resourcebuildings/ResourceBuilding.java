@@ -19,7 +19,7 @@ public abstract class ResourceBuilding extends Building
     public void upgrade() throws Exception {
         if (this.level <= 5) {
             this.level++;
-            setResourceProductionRate(level);
+            resourceProductionRate += 10;
             setStoneUpgradeCost(level);
             setWoodUpgradeCost(level);
         }
