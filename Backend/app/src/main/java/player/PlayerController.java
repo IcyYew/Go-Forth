@@ -1,9 +1,9 @@
 package player;
 
-import buildings.troopBuildings.ArcheryRange;
-import buildings.troopBuildings.MageTower;
-import buildings.troopBuildings.Stables;
-import buildings.troopBuildings.WarriorSchool;
+import buildings.Building;
+import buildings.BuildingManager;
+import buildings.BuildingTypes;
+import buildings.troopBuildings.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import resources.ResourceManager;
@@ -129,23 +129,19 @@ public class PlayerController {
             switch (troopRequest.getTroopType())
             {
                 case ARCHER:
-                    ArcheryRange a = new ArcheryRange(1);
-                    formattedTime = a.trainBatch(troopRequest.getQuantity());
+                    formattedTime = player.troopBuildings.trainTroops(BuildingTypes.ARCHERYRANGE, troopRequest.getQuantity());
                     player.setArcherFinalDate(formattedTime);
                     return formattedTime;
                 case MAGE:
-                    MageTower m = new MageTower(1);
-                    formattedTime = m.trainBatch(troopRequest.getQuantity());
+                    formattedTime = player.troopBuildings.trainTroops(BuildingTypes.MAGETOWER, troopRequest.getQuantity());
                     player.setMageFinalDate(formattedTime);
                     return formattedTime;
                 case CAVALRY:
-                    Stables s = new Stables(1);
-                    formattedTime = s.trainBatch(troopRequest.getQuantity());
+                    formattedTime = player.troopBuildings.trainTroops(BuildingTypes.STABLES, troopRequest.getQuantity());
                     player.setCavalryFinalDate(formattedTime);
                     return formattedTime;
                 case WARRIOR:
-                    WarriorSchool w = new WarriorSchool(1);
-                    formattedTime = w.trainBatch(troopRequest.getQuantity());
+                    formattedTime = player.troopBuildings.trainTroops(BuildingTypes.WARRIORSCHOOL, troopRequest.getQuantity());
                     player.setCavalryFinalDate(formattedTime);
                     return formattedTime;
             }
