@@ -32,27 +32,23 @@ public class ResourceActivity extends AppCompatActivity {
 
     //Food UI
     private TextView foodHeld;
+    private TextView foodCollect;
     private Button addFood;
-    private Button removeFood;
-    private EditText foodPrompt;
 
     //Wood UI
     private TextView woodHeld;
+    private TextView woodCollect;
     private Button addWood;
-    private Button removeWood;
-    private EditText woodPrompt;
 
     //Stone UI
     private TextView stoneHeld;
+    private TextView stoneCollect;
     private Button addStone;
-    private Button removeStone;
-    private EditText stonePrompt;
 
     //Platinum UI
     private TextView platinumHeld;
+    private TextView platinumCollect;
     private Button addPlatinum;
-    private Button removePlatinum;
-    private EditText platinumPrompt;
 
     /**
      * On the creation of this activity, TextViews and Buttons are initialized.
@@ -77,25 +73,21 @@ public class ResourceActivity extends AppCompatActivity {
         //Initialize buttons
         Back = findViewById(R.id.Back);
 
-        foodHeld = findViewById(R.id.FoodAmount);
-        addFood = findViewById(R.id.FoodPlus);
-        removeFood = findViewById(R.id.FoodMinus);
-        foodPrompt = findViewById(R.id.FoodPrompt);
+        foodHeld = findViewById(R.id.foodAmount);
+        foodCollect = findViewById(R.id.foodCollect);
+        addFood = findViewById(R.id.foodCollectButton);
 
-        woodHeld = findViewById(R.id.WoodAmount);
-        addWood = findViewById(R.id.WoodPlus);
-        removeWood = findViewById(R.id.WoodMinus);
-        woodPrompt = findViewById(R.id.WoodPrompt);
+        woodHeld = findViewById(R.id.woodAmount);
+        woodCollect = findViewById(R.id.woodCollect);
+        addWood = findViewById(R.id.woodCollectButton);
 
-        stoneHeld = findViewById(R.id.StoneAmount);
-        addStone = findViewById(R.id.StonePlus);
-        removeStone = findViewById(R.id.StoneMinus);
-        stonePrompt = findViewById(R.id.StonePrompt);
+        stoneHeld = findViewById(R.id.stoneAmount);
+        stoneCollect = findViewById(R.id.stoneCollect);
+        addStone = findViewById(R.id.stoneCollectButton);
 
-        platinumHeld = findViewById(R.id.PlatinumAmount);
-        addPlatinum = findViewById(R.id.PlatinumPlus);
-        removePlatinum = findViewById(R.id.PlatinumMinus);
-        platinumPrompt = findViewById(R.id.PlatinumPrompt);
+        platinumHeld = findViewById(R.id.platinumAmount);
+        stoneCollect = findViewById(R.id.platCollect);
+        addPlatinum = findViewById(R.id.platCollectButton);
 
         Back = findViewById(R.id.Back);
         updateAmount();
@@ -104,6 +96,7 @@ public class ResourceActivity extends AppCompatActivity {
             //Back button clicked
             @Override
             public void onClick(View v) {
+                //eventually use new collect function
                 Intent intent = new Intent(ResourceActivity.this, MainActivity.class);
                 intent.putExtra("ID", String.valueOf(userID));
                 startActivity(intent);
@@ -114,30 +107,17 @@ public class ResourceActivity extends AppCompatActivity {
             //Back add food clicked
             @Override
             public void onClick(View v) {
-                addResource(Integer.parseInt(foodPrompt.getText().toString()), "FOOD");
+                //eventually use new collect function
+                addResource(Integer.parseInt(foodCollect.getText().toString()), "FOOD");
             }
         });
 
-        removeFood.setOnClickListener(new View.OnClickListener() {
-            //Remove food clicked
-            @Override
-            public void onClick(View v) {
-                removeResource(Integer.parseInt(foodPrompt.getText().toString()), "FOOD");
-            }
-        });
         addWood.setOnClickListener(new View.OnClickListener() {
             //Add wood clicked
             @Override
             public void onClick(View v) {
-                addResource(Integer.parseInt(woodPrompt.getText().toString()), "WOOD");
-            }
-        });
-
-        removeWood.setOnClickListener(new View.OnClickListener() {
-            //Remove wood clicked
-            @Override
-            public void onClick(View v) {
-                removeResource(Integer.parseInt(woodPrompt.getText().toString()), "WOOD");
+                //eventually use new collect function
+                addResource(Integer.parseInt(woodCollect.getText().toString()), "WOOD");
             }
         });
 
@@ -145,30 +125,16 @@ public class ResourceActivity extends AppCompatActivity {
             //Add stone clicked
             @Override
             public void onClick(View v) {
-                addResource(Integer.parseInt(stonePrompt.getText().toString()), "STONE");
+                //eventually use new collect function
+                addResource(Integer.parseInt(stoneCollect.getText().toString()), "STONE");
             }
         });
 
-        removeStone.setOnClickListener(new View.OnClickListener() {
-            //Remove stone clicked
-            @Override
-            public void onClick(View v) {
-                removeResource(Integer.parseInt(stonePrompt.getText().toString()), "STONE");
-            }
-        });
         addPlatinum.setOnClickListener(new View.OnClickListener() {
             //Add platinum clicked
             @Override
             public void onClick(View v) {
-                addResource(Integer.parseInt(platinumPrompt.getText().toString()), "PLATINUM");
-            }
-        });
-
-        removePlatinum.setOnClickListener(new View.OnClickListener() {
-            //Remove platinum clicked
-            @Override
-            public void onClick(View v) {
-                removeResource(Integer.parseInt(platinumPrompt.getText().toString()), "PLATINUM");
+                addResource(Integer.parseInt(platinumCollect.getText().toString()), "PLATINUM");
             }
         });
 
