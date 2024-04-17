@@ -67,6 +67,9 @@
             android:name=".OverworldActivity"
             android:exported="false" />
         <activity
+            android:name=".ResearchActivity"
+            android:exported="false" />
+        <activity
             android:name=".ChatActivity1"
             android:exported="false" />
     </application>

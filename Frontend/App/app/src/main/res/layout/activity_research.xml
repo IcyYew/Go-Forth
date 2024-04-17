@@ -1,0 +1,101 @@
+<!-- res/layout/research_activity.xml -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Back Button -->
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Back" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
+
+    <!-- Troop Training ImageView -->
+    <ImageView
+        android:id="@+id/troopTrainingImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/troop_training"
+        android:clickable="true" />
+
+    <!-- Resource Gathering ImageView -->
+    <ImageView
+        android:id="@+id/resourceGatheringImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/troopTrainingBonusTextView"
+        android:layout_marginTop="32dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/resource_gathering"
+        android:clickable="true" />
+
+    <!-- Upgrade Button -->
+    <Button
+        android:id="@+id/upgradeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/resourceGatheringBonusTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="Upgrade" />
+
+    <!-- Troop Training Level TextView -->
+    <TextView
+        android:id="@+id/troopTrainingLevelTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="270dp"
+        android:text="Troop Training Speed Level: 0"
+        android:textAppearance="?android:textAppearanceMedium" />
+
+    <!-- Troop Training Bonus TextView -->
+    <TextView
+        android:id="@+id/troopTrainingBonusTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/troopTrainingLevelTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:text="Troop Training Speed Bonus: 0.0%"
+        android:textAppearance="?android:textAppearanceMedium" />
+
+    <!-- Resource Gathering Level TextView -->
+    <TextView
+        android:id="@+id/resourceGatheringLevelTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/resourceGatheringImageView"
+        android:layout_marginTop="8dp"
+        android:layout_centerHorizontal="true"
+        android:text="Resource Gathering Speed Level: 0"
+        android:textAppearance="?android:textAppearanceMedium" />
+
+    <!-- Resource Gathering Bonus TextView -->
+    <TextView
+        android:id="@+id/resourceGatheringBonusTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/resourceGatheringLevelTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:text="Resource Gathering Speed Bonus: 0.0%"
+        android:textAppearance="?android:textAppearanceMedium" />
+
+</RelativeLayout>

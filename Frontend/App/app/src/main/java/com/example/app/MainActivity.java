@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private Button overworldButton;
     private Button globalChatButton;
     private Button clanButton;
+    private Button researchButton;
     private int userID;
     private TextView UID;
     private String username;
@@ -71,8 +72,9 @@ public class MainActivity extends AppCompatActivity {
 
         overworldButton = findViewById(R.id.OverworldButton);
 
-        UID = findViewById(R.id.ID);
+        researchButton = findViewById(R.id.ResearchButton);
 
+        UID = findViewById(R.id.ID);
 
         // gets extras and sets userID to whatever we got from the extras. IF there were no extras, empty userID
         Bundle extras = getIntent().getExtras();
@@ -166,6 +168,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, OverworldActivity.class);
+                intent.putExtra("ID", userID);
+                startActivity(intent);
+            }
+        });
+
+        researchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ResearchActivity.class);
                 intent.putExtra("ID", userID);
                 startActivity(intent);
             }
