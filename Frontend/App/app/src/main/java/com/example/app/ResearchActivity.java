@@ -13,6 +13,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+/**
+ * Activity used for research functionality.
+ */
 public class ResearchActivity extends AppCompatActivity {
     private int userID;
     private ImageView troopTrainingImageView;
