@@ -1,14 +1,6 @@
 package buildings;
 
-import buildings.resourcebuildings.Farm;
-import buildings.resourcebuildings.LumberYard;
-import buildings.resourcebuildings.PlatinumMine;
-import buildings.resourcebuildings.Quarry;
-import buildings.troopBuildings.ArcheryRange;
-import buildings.troopBuildings.MageTower;
-import buildings.troopBuildings.Stables;
-import buildings.troopBuildings.WarriorSchool;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import buildings.resourcebuildings.ResourceBuilding;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -61,6 +53,17 @@ public class BuildingManager {
             }
         }
         return 0;
+    }
+
+    public void upgradeBuilding(BuildingTypes buildingType) throws Exception
+    {
+        for (Building building : buildingManager)
+        {
+            if (building.getBuildingType() == buildingType)
+            {
+                building.upgrade();
+            }
+        }
     }
 
     @Override

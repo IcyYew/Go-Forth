@@ -35,7 +35,7 @@ public class Player {
      * Represents a player's resources
      */
     @ManyToOne(cascade = CascadeType.ALL)
-    ResourceManager resources;
+    public ResourceManager resources;
 
     //Troop manager storing and managing a players troops
     /**
