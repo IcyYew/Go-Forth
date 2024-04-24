@@ -22,6 +22,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+
 /**
  * Shows all clans and their corresponding IDS
  */
@@ -32,6 +35,9 @@ public class ClanDisplay extends AppCompatActivity {
     private Button Back;
 
     private TextView Text;
+
+    private ArrayList<Clan> List;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +54,9 @@ public class ClanDisplay extends AppCompatActivity {
 
         Text = findViewById(R.id.Text);
 
-        displayClans();
+        List = new ArrayList<>();
+
+        getClans();
 
         /**
          * Goes back to ClanActivity
@@ -69,7 +77,7 @@ public class ClanDisplay extends AppCompatActivity {
     /**
      * Displays all clans
      */
-    private void displayClans() {
+    private void getClans() {
         // use getallclans endpoint URL
         String url = "http://coms-309-048.class.las.iastate.edu:8080/clan/getallclans";
 
@@ -82,17 +90,20 @@ public class ClanDisplay extends AppCompatActivity {
                         try {
                             JSONArray jsonArray = new JSONArray(response);
 
-                            StringBuilder clansString = new StringBuilder();
+                            //StringBuilder clansString = new StringBuilder();
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 //Prints clan ID and clan name
                                 JSONObject playerObject = jsonArray.getJSONObject(i);
+                                List.add(new Clan(playerObject.getInt("clanID"), (int) playerObject.getDouble("totalClanPower"), playerObject.getString("clanName")));
+                                /*
                                 clansString.append("Clan ID: ").append(playerObject.getInt("clanID")).append("\n");
                                 clansString.append("Clan name: ").append(playerObject.getString("clanName")).append("\n");
                                 //clansString.append("Clan power: ").append(Double.toString(playerObject.getDouble("totalClanPower"))).append("\n");
                                 clansString.append("\n");
+                                 */
                             }
 
-                            Text.setText(clansString.toString()); //Sets text onscreen
+                            //Text.setText(clansString.toString()); //Sets text onscreen
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -107,5 +118,39 @@ public class ClanDisplay extends AppCompatActivity {
 
         // add to the request queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request); //Add to queue
+    }
+    /**
+     * Class to store user data
+     */
+    private class Clan {
+
+        private int clanID;
+
+        private int clanPower;
+
+        private String name;
+
+        Clan(int clanID, int clanPower, String name) {
+            this.clanID = clanID;
+            this.clanPower = clanPower;
+            this.name = name;
+        }
+
+    }
+
+    private class sortByPower implements Comparator<Clan> {
+        public int compare(Clan a, Clan b) {
+            return b.clanPower - a.clanPower;
+        }
+    }
+
+    private void displayClans(){
+        StringBuilder playersString = new StringBuilder();
+        for(int i = 0; i < List.size(); i++){
+            playersString.append("Rank: ").append(i);
+            playersString.append(" Clan: ").append(List.get(i).name).append(" ID: ").append(List.get(i).clanID).append(" Power: ").append(List.get(i).clanPower);
+            playersString.append("\n");
+        }
+        Text.setText(playersString.toString());
     }
 }
