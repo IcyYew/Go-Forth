@@ -95,12 +95,13 @@ public class ResourceActivity extends AppCompatActivity {
         addStone = findViewById(R.id.stoneCollectButton);
 
         platinumHeld = findViewById(R.id.platinumAmount);
-        stoneCollect = findViewById(R.id.platCollect);
+        platinumCollect = findViewById(R.id.platCollect);
         addPlatinum = findViewById(R.id.platCollectButton);
 
         Back = findViewById(R.id.Back);
         fillList();
         updateAmount();
+        updateToCollect();
 
         Back.setOnClickListener(new View.OnClickListener() {
             //Back button clicked
@@ -180,6 +181,7 @@ public class ResourceActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         updateAmount(); //update screen when backend is done updating
+                        updateToCollect();
                     }
                 },
                 new Response.ErrorListener() {
@@ -297,6 +299,23 @@ public class ResourceActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    void updateToCollect(){
+        int woodTotal = 0;
+        int foodTotal = 0;
+        int stoneTotal = 0;
+        int platinumTotal = 0;
+        for(int i = 0; i < List.size(); i++){
+            if(List.get(i).Resource == "WOOD") woodTotal++;
+            if(List.get(i).Resource == "FOOD") foodTotal++;
+            if(List.get(i).Resource == "STONE") stoneTotal++;
+            if(List.get(i).Resource == "PLATINUM") platinumTotal++;
+        }
+        foodCollect.setText(String.valueOf(foodTotal));
+        woodCollect.setText(String.valueOf(woodTotal));
+        stoneCollect.setText(String.valueOf(stoneTotal));
+        platinumCollect.setText(String.valueOf(platinumTotal));
+    }
     private class Building{
 
         private int ID;
@@ -308,4 +327,18 @@ public class ResourceActivity extends AppCompatActivity {
             this.Resource = Resource;
         }
     }
+    
+    class UpdateThread implements Runnable {
+    public void run()
+    {
+        try {
+            updateToCollect();
+            updateAmount();
+        }
+        catch (Exception e) {
+            // Throwing an exception
+            System.out.println("Exception");
+        }
+    }
+}
 }
