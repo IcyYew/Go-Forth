@@ -51,6 +51,8 @@ public class DisplayActivity extends AppCompatActivity {
 
     private Button ID;
 
+    private boolean power;
+
     /**
      * On the creation of this activity, TextViews and Buttons are initialized.
      * Extras are received and put in userID variable (for carrying across activities)
@@ -62,6 +64,8 @@ public class DisplayActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_users);
+
+        power = true;
 
         // getting the extras so ID tracks across activities
         Bundle extras = getIntent().getExtras();
@@ -185,18 +189,21 @@ public class DisplayActivity extends AppCompatActivity {
 
     private class sortByPower implements Comparator<User> {
         public int compare(User a, User b) {
+            power = true;
             return b.userPower - a.userPower;
         }
     }
 
     private class sortByName implements Comparator<User> {
         public int compare(User a, User b) {
+            power = false;
             return a.name.compareTo(b.name);
         }
     }
 
     private class sortByID implements Comparator<User> {
         public int compare(User a, User b) {
+            power = false;
             return a.userID - b.userID;
         }
     }
@@ -204,7 +211,8 @@ public class DisplayActivity extends AppCompatActivity {
     private void displayUsers(){
         StringBuilder playersString = new StringBuilder();
         for(int i = 0; i < List.size(); i++){
-            playersString.append("Rank: ").append(i);
+            if(power) playersString.append("Rank: ").append(i + 1);
+            else playersString.append(i + 1).append(":");
             playersString.append(" User: ").append(List.get(i).name).append(" ID: ").append(List.get(i).userID).append(" Power: ").append(List.get(i).userPower);
             playersString.append("\n");
         }

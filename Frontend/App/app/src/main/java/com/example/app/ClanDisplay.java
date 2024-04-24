@@ -45,6 +45,8 @@ public class ClanDisplay extends AppCompatActivity {
 
     private ArrayList<Clan> List;
 
+    private boolean power;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,18 +181,21 @@ public class ClanDisplay extends AppCompatActivity {
 
     private class sortByPower implements Comparator<Clan> {
         public int compare(Clan a, Clan b) {
+            power = true;
             return b.clanPower - a.clanPower;
         }
     }
 
     private class sortByName implements Comparator<Clan> {
         public int compare(Clan a, Clan b) {
+            power = false;
             return a.name.compareTo(b.name);
         }
     }
 
     private class sortByID implements Comparator<Clan> {
         public int compare(Clan a, Clan b) {
+            power = false;
             return a.clanID - b.clanID;
         }
     }
@@ -198,7 +203,8 @@ public class ClanDisplay extends AppCompatActivity {
     private void displayClans(){
         StringBuilder playersString = new StringBuilder();
         for(int i = 0; i < List.size(); i++){
-            playersString.append("Rank: ").append(i);
+            if(power) playersString.append("Rank: ").append(i + 1);
+            else playersString.append(i + 1).append(":");
             playersString.append(" Clan: ").append(List.get(i).name).append(" ID: ").append(List.get(i).clanID).append(" Power: ").append(List.get(i).clanPower);
             playersString.append("\n");
         }
