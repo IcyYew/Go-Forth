@@ -137,7 +137,7 @@ public class ResourceActivity extends AppCompatActivity {
             public void onClick(View v) {
                 for(int i = 0; i < List.size(); i++) {
                     if(List.get(i).Resource == "FOOD")
-                    addResource(List.get(i).ID, "FOOD");
+                        addResource(List.get(i).ID, "FOOD");
                 }
             }
         });
@@ -290,7 +290,7 @@ public class ResourceActivity extends AppCompatActivity {
 
     private void fillListAndCollect(boolean onlyUpdateToCollect) {
         // use getall endpoint URL
-        String url = "http://coms-309-048.class.las.iastate.edu:8080/clans/memberlist/" + Integer.toString(userID);
+        String url = "http://coms-309-048.class.las.iastate.edu:8080/buildings/getResourceBuildings/" + Integer.toString(userID);
         if(!onlyUpdateToCollect) List.clear();
         // make a StringRequest to get the users from the server. Converts JSONArray into StringBuilder.
         StringRequest request = new StringRequest(Request.Method.GET, url,
@@ -351,8 +351,11 @@ public class ResourceActivity extends AppCompatActivity {
             }
         }
         catch (Exception e) {
-            if (Thread.interrupted())  // Clears interrupted status!
-                throw new InterruptedException(e);
+            if (Thread.interrupted()) try {
+                throw new InterruptedException();
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 }
