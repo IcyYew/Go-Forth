@@ -1,5 +1,7 @@
 package com.example.app;
 
+import static java.lang.Thread.sleep;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -57,6 +59,10 @@ public class ResourceActivity extends AppCompatActivity {
 
     private ArrayList<Building> List;
 
+    private Thread updateThread;
+
+    private boolean stopThread;
+
     /**
      * On the creation of this activity, TextViews and Buttons are initialized.
      * Extras are received and put in userID variable (for carrying across activities)
@@ -99,15 +105,26 @@ public class ResourceActivity extends AppCompatActivity {
         addPlatinum = findViewById(R.id.platCollectButton);
 
         Back = findViewById(R.id.Back);
-        fillList();
+        fillListAndCollect(false);
         updateAmount();
-        updateToCollect();
+
+        stopThread = false;
+
+        updateThread = new Thread(new UpdateThread());
+        updateThread.start();
 
         Back.setOnClickListener(new View.OnClickListener() {
             //Back button clicked
             @Override
             public void onClick(View v) {
                 //eventually use new collect function
+                stopThread = true;
+                updateThread.interrupt();
+                try {
+                    updateThread.join();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 Intent intent = new Intent(ResourceActivity.this, MainActivity.class);
                 intent.putExtra("ID", String.valueOf(userID));
                 startActivity(intent);
@@ -181,7 +198,7 @@ public class ResourceActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         updateAmount(); //update screen when backend is done updating
-                        updateToCollect();
+                        fillListAndCollect(true);
                     }
                 },
                 new Response.ErrorListener() {
@@ -271,22 +288,34 @@ public class ResourceActivity extends AppCompatActivity {
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 
-    private void fillList() {
+    private void fillListAndCollect(boolean onlyUpdateToCollect) {
         // use getall endpoint URL
         String url = "http://coms-309-048.class.las.iastate.edu:8080/clans/memberlist/" + Integer.toString(userID);
-        List.clear();
+        if(!onlyUpdateToCollect) List.clear();
         // make a StringRequest to get the users from the server. Converts JSONArray into StringBuilder.
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        int woodTotal = 0;
+                        int foodTotal = 0;
+                        int stoneTotal = 0;
+                        int platinumTotal = 0;
                         Log.d("Display response", response);
                         try {
                             JSONArray jsonArray = new JSONArray(response);
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject buildingObject = jsonArray.getJSONObject(i);
-                                List.add(new Building(buildingObject.getInt("buildingID"), buildingObject.getString("buildingType"))); //Add new building
+                                if(!onlyUpdateToCollect) List.add(new Building(buildingObject.getInt("buildingID"), buildingObject.getString("buildingType"))); //Add new building
+                                if(List.get(i).Resource == "WOOD") woodTotal += buildingObject.getInt("resources");
+                                if(List.get(i).Resource == "FOOD") foodTotal += buildingObject.getInt("resources");
+                                if(List.get(i).Resource == "STONE") stoneTotal += buildingObject.getInt("resources");
+                                if(List.get(i).Resource == "PLATINUM") platinumTotal += buildingObject.getInt("resources");
                             }
+                            foodCollect.setText(String.valueOf(foodTotal));
+                            woodCollect.setText(String.valueOf(woodTotal));
+                            stoneCollect.setText(String.valueOf(stoneTotal));
+                            platinumCollect.setText(String.valueOf(platinumTotal));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -298,23 +327,6 @@ public class ResourceActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Error fetching clans: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
-    }
-
-    void updateToCollect(){
-        int woodTotal = 0;
-        int foodTotal = 0;
-        int stoneTotal = 0;
-        int platinumTotal = 0;
-        for(int i = 0; i < List.size(); i++){
-            if(List.get(i).Resource == "WOOD") woodTotal++;
-            if(List.get(i).Resource == "FOOD") foodTotal++;
-            if(List.get(i).Resource == "STONE") stoneTotal++;
-            if(List.get(i).Resource == "PLATINUM") platinumTotal++;
-        }
-        foodCollect.setText(String.valueOf(foodTotal));
-        woodCollect.setText(String.valueOf(woodTotal));
-        stoneCollect.setText(String.valueOf(stoneTotal));
-        platinumCollect.setText(String.valueOf(platinumTotal));
     }
     private class Building{
 
@@ -332,12 +344,15 @@ public class ResourceActivity extends AppCompatActivity {
     public void run()
     {
         try {
-            updateToCollect();
-            updateAmount();
+            while(!stopThread) {
+                updateThread.sleep(1000);
+                fillListAndCollect(true);
+                updateAmount();
+            }
         }
         catch (Exception e) {
-            // Throwing an exception
-            System.out.println("Exception");
+            if (Thread.interrupted())  // Clears interrupted status!
+                throw new InterruptedException(e);
         }
     }
 }
