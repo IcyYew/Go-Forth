@@ -119,6 +119,24 @@ public class PlayerController {
         }
     }
 
+    @PostMapping("/players/changePlayerLocation/{playerID}")
+    public Player changePlayerLocation(@PathVariable int playerID, @RequestBody LocationRequest locationRequest)
+    {
+        Player player = playerRepository.findById(playerID).orElse(null);
+        if (player != null)
+        {
+            player.setLocationX(locationRequest.getLocationX());
+            player.setLocationY(locationRequest.getLocationY());
+            return playerRepository.save(player);
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+
+
     @GetMapping("/players/calculateTrainingTime/{playerID}")
     public String calculateTrainingTime(@PathVariable int playerID, @RequestBody TroopRequest troopRequest)
     {
@@ -262,6 +280,32 @@ public class PlayerController {
         }
     }
 
+    public static class LocationRequest {
+        private int locationX;
+        private int locationY;
+
+        public LocationRequest(int locationX, int locationY)
+        {
+            setLocationX(locationX);
+            setLocationY(locationY);
+        }
+
+        public int getLocationX() {
+            return locationX;
+        }
+
+        public void setLocationX(int locationX) {
+            this.locationX = locationX;
+        }
+
+        public int getLocationY() {
+            return locationY;
+        }
+
+        public void setLocationY(int locationY) {
+            this.locationY = locationY;
+        }
+    }
     // Class used for managing resource requests
 
     /**
