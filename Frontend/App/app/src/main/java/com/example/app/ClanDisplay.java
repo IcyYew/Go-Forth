@@ -23,6 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 
 /**
@@ -33,6 +34,12 @@ public class ClanDisplay extends AppCompatActivity {
     private int userID;
 
     private Button Back;
+
+    private Button Power;
+
+    private Button Name;
+
+    private Button ID;
 
     private TextView Text;
 
@@ -52,6 +59,12 @@ public class ClanDisplay extends AppCompatActivity {
 
         Back = findViewById(R.id.Back);
 
+        Power = findViewById(R.id.Power);
+
+        Name = findViewById(R.id.Name);
+
+        ID = findViewById(R.id.ID);
+
         Text = findViewById(R.id.Text);
 
         List = new ArrayList<>();
@@ -69,6 +82,30 @@ public class ClanDisplay extends AppCompatActivity {
                 Intent intent = new Intent(ClanDisplay.this, ClanActivity.class);
                 intent.putExtra("ID", String.valueOf(userID));
                 startActivity(intent);
+            }
+        });
+
+        Power.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Collections.sort(List, new sortByPower());
+                displayClans();
+            }
+        });
+
+        Name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Collections.sort(List, new sortByName());
+                displayClans();
+            }
+        });
+
+        ID.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Collections.sort(List, new sortByID());
+                displayClans();
             }
         });
 
@@ -102,6 +139,8 @@ public class ClanDisplay extends AppCompatActivity {
                                 clansString.append("\n");
                                  */
                             }
+                            Collections.sort(List, new sortByPower());
+                            displayClans();
 
                             //Text.setText(clansString.toString()); //Sets text onscreen
                         } catch (JSONException e) {
@@ -141,6 +180,18 @@ public class ClanDisplay extends AppCompatActivity {
     private class sortByPower implements Comparator<Clan> {
         public int compare(Clan a, Clan b) {
             return b.clanPower - a.clanPower;
+        }
+    }
+
+    private class sortByName implements Comparator<Clan> {
+        public int compare(Clan a, Clan b) {
+            return a.name.compareTo(b.name);
+        }
+    }
+
+    private class sortByID implements Comparator<Clan> {
+        public int compare(Clan a, Clan b) {
+            return a.clanID - b.clanID;
         }
     }
 

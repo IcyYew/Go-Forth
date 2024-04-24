@@ -45,6 +45,12 @@ public class DisplayActivity extends AppCompatActivity {
     // tracks user ID so it can track across activities
     private int userID;
 
+    private Button Power;
+
+    private Button Name;
+
+    private Button ID;
+
     /**
      * On the creation of this activity, TextViews and Buttons are initialized.
      * Extras are received and put in userID variable (for carrying across activities)
@@ -66,7 +72,14 @@ public class DisplayActivity extends AppCompatActivity {
         List = new ArrayList<>();
 
         users = findViewById(R.id.msgResponse);
+
         back = findViewById(R.id.back);
+
+        Power = findViewById(R.id.Power);
+
+        Name = findViewById(R.id.Name);
+
+        ID = findViewById(R.id.ID);
 
         fillList();
 
@@ -76,6 +89,30 @@ public class DisplayActivity extends AppCompatActivity {
                 Intent intent = new Intent(DisplayActivity.this, MainActivity.class);
                 intent.putExtra("ID", String.valueOf(userID));
                 startActivity(intent);
+            }
+        });
+
+        Power.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Collections.sort(List, new sortByPower());
+                displayUsers();
+            }
+        });
+
+        Name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Collections.sort(List, new sortByName());
+                displayUsers();
+            }
+        });
+
+        ID.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Collections.sort(List, new sortByID());
+                displayUsers();
             }
         });
     }
@@ -110,6 +147,7 @@ public class DisplayActivity extends AppCompatActivity {
 
                             //users.setText(playersString.toString());
                             Collections.sort(List, new sortByPower());
+                            displayUsers();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -148,6 +186,18 @@ public class DisplayActivity extends AppCompatActivity {
     private class sortByPower implements Comparator<User> {
         public int compare(User a, User b) {
             return b.userPower - a.userPower;
+        }
+    }
+
+    private class sortByName implements Comparator<User> {
+        public int compare(User a, User b) {
+            return a.name.compareTo(b.name);
+        }
+    }
+
+    private class sortByID implements Comparator<User> {
+        public int compare(User a, User b) {
+            return a.userID - b.userID;
         }
     }
 
