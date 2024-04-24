@@ -1,6 +1,7 @@
 package com.example.app;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,9 +15,13 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * This activity is respnsible for resource management.
@@ -50,6 +55,8 @@ public class ResourceActivity extends AppCompatActivity {
     private TextView platinumCollect;
     private Button addPlatinum;
 
+    private ArrayList<Building> List;
+
     /**
      * On the creation of this activity, TextViews and Buttons are initialized.
      * Extras are received and put in userID variable (for carrying across activities)
@@ -69,6 +76,8 @@ public class ResourceActivity extends AppCompatActivity {
         if (extras != null) {
             userID = extras.getInt("ID");
         }
+
+        List = new ArrayList<>();
 
         //Initialize buttons
         Back = findViewById(R.id.Back);
@@ -90,6 +99,7 @@ public class ResourceActivity extends AppCompatActivity {
         addPlatinum = findViewById(R.id.platCollectButton);
 
         Back = findViewById(R.id.Back);
+        fillList();
         updateAmount();
 
         Back.setOnClickListener(new View.OnClickListener() {
@@ -107,8 +117,10 @@ public class ResourceActivity extends AppCompatActivity {
             //Back add food clicked
             @Override
             public void onClick(View v) {
-                //eventually use new collect function
-                addResource(Integer.parseInt(foodCollect.getText().toString()), "FOOD");
+                for(int i = 0; i < List.size(); i++) {
+                    if(List.get(i).Resource == "FOOD")
+                    addResource(List.get(i).ID, "FOOD");
+                }
             }
         });
 
@@ -116,8 +128,10 @@ public class ResourceActivity extends AppCompatActivity {
             //Add wood clicked
             @Override
             public void onClick(View v) {
-                //eventually use new collect function
-                addResource(Integer.parseInt(woodCollect.getText().toString()), "WOOD");
+                for(int i = 0; i < List.size(); i++) {
+                    if(List.get(i).Resource == "WOOD")
+                        addResource(List.get(i).ID, "WOOD");
+                }
             }
         });
 
@@ -125,8 +139,10 @@ public class ResourceActivity extends AppCompatActivity {
             //Add stone clicked
             @Override
             public void onClick(View v) {
-                //eventually use new collect function
-                addResource(Integer.parseInt(stoneCollect.getText().toString()), "STONE");
+                for(int i = 0; i < List.size(); i++) {
+                    if(List.get(i).Resource == "STONE")
+                        addResource(List.get(i).ID, "STONE");
+                }
             }
         });
 
@@ -134,7 +150,10 @@ public class ResourceActivity extends AppCompatActivity {
             //Add platinum clicked
             @Override
             public void onClick(View v) {
-                addResource(Integer.parseInt(platinumCollect.getText().toString()), "PLATINUM");
+                for(int i = 0; i < List.size(); i++) {
+                    if(List.get(i).Resource == "PLATINUM")
+                        addResource(List.get(i).ID, "PLATINUM");
+                }
             }
         });
 
@@ -143,18 +162,19 @@ public class ResourceActivity extends AppCompatActivity {
     /**
      * Adds resources to the backend then updates the current count shown onscreen.
      *
-     * @param amount Amount of resources to add
+     * @param buildingID ID of building collected from
      * @param resourceName Name of the resource to add
      */
-    private void addResource(int amount, String resourceName){
+    private void addResource(int buildingID, String resourceName){
         JSONObject jsonObject = new JSONObject(); //Initialize input JSON
         try {
-            jsonObject.put("resourceType", resourceName);
-            jsonObject.put("quantity", amount);
+            jsonObject.put("buildingType", resourceName);
+            jsonObject.put("buildingID", buildingID);
+            jsonObject.put("playerID", userID);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        String url = "http://coms-309-048.class.las.iastate.edu:8080/players/addresource/" + userID;
+        String url = "http://coms-309-048.class.las.iastate.edu:8080/buildings/collectResources/" + userID;
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonObject,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -173,11 +193,12 @@ public class ResourceActivity extends AppCompatActivity {
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 
-    /** Adds resources to the backend then updates the current count shown onscreen.
-     *
-     * @param amount Amount of resources to remove
-     * @param resourceName Name of resource to remove
-     */
+    /*
+     Adds resources to the backend then updates the current count shown onscreen.
+
+      @param amount Amount of resources to remove
+      @param resourceName Name of resource to remove
+
     private void removeResource(int amount, String resourceName){
         JSONObject jsonObject = new JSONObject(); //Initialize input JSON
         try {
@@ -204,6 +225,7 @@ public class ResourceActivity extends AppCompatActivity {
         // add to volley queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
+    */
 
     /**
      * This method gets the newly updated resource amount from the database.
@@ -245,5 +267,45 @@ public class ResourceActivity extends AppCompatActivity {
 
         // add to volley queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+    }
+
+    private void fillList() {
+        // use getall endpoint URL
+        String url = "http://coms-309-048.class.las.iastate.edu:8080/clans/memberlist/" + Integer.toString(userID);
+        List.clear();
+        // make a StringRequest to get the users from the server. Converts JSONArray into StringBuilder.
+        StringRequest request = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("Display response", response);
+                        try {
+                            JSONArray jsonArray = new JSONArray(response);
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject buildingObject = jsonArray.getJSONObject(i);
+                                List.add(new Building(buildingObject.getInt("buildingID"), buildingObject.getString("buildingType"))); //Add new building
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), "Error fetching clans: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+    private class Building{
+
+        private int ID;
+
+        private String Resource;
+
+        Building(int ID, String Resource){
+            this.ID = ID;
+            this.Resource = Resource;
+        }
     }
 }
