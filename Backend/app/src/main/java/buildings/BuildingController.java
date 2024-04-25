@@ -28,8 +28,8 @@ public class BuildingController {
        ResearchManager researchManager = playerRepository.getById(researchLevelRequest.getPlayerID()).getResearchManager();
        String researchName = researchLevelRequest.getResearchName();
        Research research = researchManager.getResearch(researchName);
-       Player player = researchManager.researchLevel(research, playerRepository.getById(researchLevelRequest.getPlayerID()));
-       playerRepository.save(player);
+       researchManager.researchLevel(research, playerRepository.getById(researchLevelRequest.getPlayerID()));
+       playerRepository.save(playerRepository.getById(researchLevelRequest.getPlayerID()));
        return playerRepository.getById(researchLevelRequest.getPlayerID()).getResearchManager().getResearch(researchName);
     }
 

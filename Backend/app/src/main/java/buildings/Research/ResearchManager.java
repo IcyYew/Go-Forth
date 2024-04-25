@@ -8,7 +8,9 @@ import jakarta.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import player.Player;
 import player.PlayerRepository;
+import troops.Archer;
 import troops.Troop;
+import troops.TroopTypes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +40,7 @@ public class ResearchManager {
     public ResearchManager() {
 
     }
-    
+
 
     public Research getResearch(String researchName) {
         for (Research research : researchManager) {
@@ -75,10 +77,10 @@ public class ResearchManager {
         }
     }*/
 
-    public Player researchLevel(Research research, Player player) {
+    public void researchLevel(Research research, Player player) {
         if (research.getLevel() < 5) {
             research.setLevel(research.getLevel() + 1);
-            player = checkResearchName(research, player);
+            checkResearchName(research, player);
         }
         /*for (Research r : researchManager) {
             if (research.getResearchName().equals(researchName)) {
@@ -88,22 +90,22 @@ public class ResearchManager {
                 }
             }
         }*/
-        return player;
     }
 
 
-    public Player checkResearchName(Research research, Player player) {
+    public void checkResearchName(Research research, Player player) {
         String researchName = research.getResearchName();
         if (researchName.equals("Training Speed")) {
             trainSpeedHandler(research, player);
         }
         else if (researchName == "Research Cost") {
-            player = researchCostHandler(research, player);
+            researchCostHandler(research, player);
         }
         else if (researchName == "Building Cost") {
 
         }
         else if (researchName == "Attack Bonus") {
+            attackBonusHandler(research, player);
 
         }
         else if (researchName == "Training Capacity") {
@@ -112,10 +114,9 @@ public class ResearchManager {
         else if (researchName == "Building Speed") {
 
         }
-        return player;
     }
 
-    public Player researchCostHandler(Research research, Player player) {
+    public void researchCostHandler(Research research, Player player) {
         switch (research.getLevel()) {
             case 1:
                 research.setPlatinumCost(Math.floor(research.getPlatinumCost() * .99));
@@ -138,7 +139,45 @@ public class ResearchManager {
                 player.setResearchManager(this);
                 break;
         }
-        return player;
+    }
+
+    public void attackBonusHandler(Research research, Player player) {
+        Troop archer = player.getTroops().getTroop(TroopTypes.ARCHER);
+        Troop warrior = player.getTroops().getTroop(TroopTypes.WARRIOR);
+        Troop mage = player.getTroops().getTroop(TroopTypes.MAGE);
+        Troop cavalry = player.getTroops().getTroop(TroopTypes.CAVALRY);
+        switch(research.getLevel()) {
+            case 1:
+                player.getTroops().getTroop(TroopTypes.MAGE).setDamage(player.getTroops().getTroop(TroopTypes.MAGE).getDamage() * 1.15);
+                warrior.setDamage(Math.ceil(warrior.getDamage() * 1.15));
+                mage.setDamage(Math.ceil(mage.getDamage() * 1.15));
+                cavalry.setDamage(Math.ceil(cavalry.getDamage() * 1.15));
+                break;
+            case 2:
+                archer.setDamage(Math.ceil(archer.getDamage() * 1.15));
+                warrior.setDamage(Math.ceil(warrior.getDamage() * 1.15));
+                mage.setDamage(Math.ceil(mage.getDamage() * 1.15));
+                cavalry.setDamage(Math.ceil(cavalry.getDamage() * 1.15));
+                break;
+            case 3:
+                archer.setDamage(Math.ceil(archer.getDamage() * 1.15));
+                warrior.setDamage(Math.ceil(warrior.getDamage() * 1.15));
+                mage.setDamage(Math.ceil(mage.getDamage() * 1.15));
+                cavalry.setDamage(Math.ceil(cavalry.getDamage() * 1.15));
+                break;
+            case 4:
+                archer.setDamage(Math.ceil(archer.getDamage() * 1.15));
+                warrior.setDamage(Math.ceil(warrior.getDamage() * 1.15));
+                mage.setDamage(Math.ceil(mage.getDamage() * 1.15));
+                cavalry.setDamage(Math.ceil(cavalry.getDamage() * 1.15));
+                break;
+            case 5:
+                archer.setDamage(Math.ceil(archer.getDamage() * 1.15));
+                warrior.setDamage(Math.ceil(warrior.getDamage() * 1.15));
+                mage.setDamage(Math.ceil(mage.getDamage() * 1.15));
+                cavalry.setDamage(Math.ceil(cavalry.getDamage() * 1.15));
+                break;
+        }
     }
 
 
