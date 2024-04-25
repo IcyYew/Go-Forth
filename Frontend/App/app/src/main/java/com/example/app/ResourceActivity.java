@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.content.Intent;
 import android.widget.Toast;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -107,6 +108,7 @@ public class ResourceActivity extends AppCompatActivity {
         Back = findViewById(R.id.Back);
         fillListAndCollect(false);
         updateAmount();
+        updateBuildingAmount();
 
         stopThread = false;
 
@@ -212,39 +214,27 @@ public class ResourceActivity extends AppCompatActivity {
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 
-    /*
-     Adds resources to the backend then updates the current count shown onscreen.
+    private void updateBuildingAmount() {
+        String url = "http://coms-309-048.class.las.iastate.edu:8080/buildings/updateResources/" + String.valueOf(userID);
 
-      @param amount Amount of resources to remove
-      @param resourceName Name of resource to remove
-
-    private void removeResource(int amount, String resourceName){
-        JSONObject jsonObject = new JSONObject(); //Initialize input JSON
-        try {
-            jsonObject.put("resourceType", resourceName);
-            jsonObject.put("quantity", amount);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        String url = "http://coms-309-048.class.las.iastate.edu:8080/players/removeresource/" + userID;
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonObject,
+        // makes JsonObjectRequest to get the current player. GETs the archerNum, warriorNum, mageNum, and cavalryNum
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        updateAmount(); //update screen when backend is done updating
+
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(ResourceActivity.this, "Error updating resources: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ResourceActivity.this, "Error fetching player resources buildings: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
         // add to volley queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
-    */
 
     /**
      * This method gets the newly updated resource amount from the database.
@@ -345,7 +335,9 @@ public class ResourceActivity extends AppCompatActivity {
     {
         try {
             while(!stopThread) {
-                updateThread.sleep(1000);
+                updateThread.sleep(500);
+                updateBuildingAmount();
+                updateThread.sleep(500);
                 fillListAndCollect(true);
                 updateAmount();
             }
