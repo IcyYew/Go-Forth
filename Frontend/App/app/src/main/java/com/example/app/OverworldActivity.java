@@ -219,7 +219,13 @@ public class OverworldActivity extends AppCompatActivity {
         }
     }
 
-
+    /**
+     * Checks if a grid position is a user position
+     *
+     * @param x
+     * @param y
+     * @return true or false
+     */
     private boolean isUserPosition(int x, int y) {
         // Check if the provided coordinates match any other players' positions
         for (int i = 0; i < xCoords.size(); i++) {
