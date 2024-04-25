@@ -15,7 +15,8 @@ public abstract class Building {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "id")
+    private Integer buildingID;
 
     @Enumerated(EnumType.STRING)
     private BuildingTypes buildingType;
@@ -130,4 +131,5 @@ public abstract class Building {
     public void setPower(int power) {
         this.power = power;
     }
+
 }
