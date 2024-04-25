@@ -64,7 +64,7 @@
         android:layout_below="@id/signupButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:text="Display Users"
+        android:text="Player Leaderboard"
         android:textSize="18sp" />
 
     <Button
