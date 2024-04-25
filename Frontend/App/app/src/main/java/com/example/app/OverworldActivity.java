@@ -26,6 +26,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Activity used to do most of the game stuff
+ */
 public class OverworldActivity extends AppCompatActivity {
     private static final int GRID_SIZE = 20;
     private static final int GRID_ITEM_SIZE_DP = 75;
