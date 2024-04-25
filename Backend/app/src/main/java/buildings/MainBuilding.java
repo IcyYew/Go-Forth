@@ -17,4 +17,9 @@ public class MainBuilding extends Building {
     {
         super(BuildingTypes.MAINBUILDING, level, buildingManager);
     }
+
+    public MainBuilding()
+    {
+
+    }
 }

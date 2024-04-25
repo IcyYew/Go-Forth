@@ -22,4 +22,9 @@ public class Farm extends ResourceBuilding {
         super(BuildingTypes.FARM, level, resourceBuildingManager);
         setResourceProductionRate(10);
     }
+
+    public Farm()
+    {
+
+    }
 }

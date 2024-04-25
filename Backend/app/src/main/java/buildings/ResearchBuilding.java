@@ -16,4 +16,8 @@ public class ResearchBuilding extends Building{
         super(BuildingTypes.RESEARCHBUILDING, level, buildingManager);
     }
 
+    public ResearchBuilding()
+    {
+
+    }
 }

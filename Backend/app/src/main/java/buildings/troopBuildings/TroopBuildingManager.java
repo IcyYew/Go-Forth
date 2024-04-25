@@ -23,6 +23,11 @@ public class TroopBuildingManager
         initializeTroopBuildings();
     }
 
+    public TroopBuildingManager()
+    {
+
+    }
+
     private void initializeTroopBuildings()
     {
         troopBuildingManager.add(new ArcheryRange(1, this));

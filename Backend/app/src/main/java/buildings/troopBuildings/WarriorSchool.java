@@ -24,4 +24,9 @@ public class WarriorSchool extends TroopTrainingBuilding{
         setStoneTrainingCost(50);
         setWoodTrainingCost(20);
     }
+
+    public WarriorSchool()
+    {
+
+    }
 }

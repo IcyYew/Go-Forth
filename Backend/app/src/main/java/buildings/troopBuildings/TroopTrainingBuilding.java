@@ -25,6 +25,11 @@ public class TroopTrainingBuilding extends buildings.Building {
         super(buildingTypes, level, troopBuildingManager);
     }
 
+    public TroopTrainingBuilding()
+    {
+
+    }
+
     public String trainBatch(int quantity) {
         trainingTimeTotal = calculateTrainingTime(quantity);
         this.trainingTimeStarted = LocalDateTime.now();

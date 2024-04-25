@@ -16,4 +16,9 @@ public class PlatinumMine extends ResourceBuilding{
         super(BuildingTypes.PLATINUMMINE, level, resourceBuildingManager);
         setResourceProductionRate(10);
     }
+
+    public PlatinumMine()
+    {
+
+    }
 }

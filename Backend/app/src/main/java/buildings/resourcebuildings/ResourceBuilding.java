@@ -24,6 +24,11 @@ public abstract class ResourceBuilding extends Building
         super(buildingTypes, level, resourceBuildingManager);
     }
 
+    public ResourceBuilding()
+    {
+
+    }
+
     @Override
     public void upgrade() throws Exception {
         if (this.level <= 5) {

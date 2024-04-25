@@ -30,4 +30,9 @@ public class ArcheryRange extends TroopTrainingBuilding{
         setStoneTrainingCost(30);
         setWoodTrainingCost(40);
     }
+
+    public ArcheryRange()
+    {
+
+    }
 }
