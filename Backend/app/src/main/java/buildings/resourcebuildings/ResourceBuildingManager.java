@@ -15,7 +15,7 @@ public class ResourceBuildingManager
     private Integer playerId;
 
     @OneToMany(mappedBy = "resourceBuildingManager", cascade = CascadeType.ALL)
-    private List<ResourceBuilding> resourceBuildingManager;
+    public List<ResourceBuilding> resourceBuildingManager;
 
     public ResourceBuildingManager(Integer playerId)
     {

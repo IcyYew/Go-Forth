@@ -42,16 +42,16 @@ public class Player {
      * Represents a player's troops
      */
     @ManyToOne(cascade = CascadeType.ALL)
-    TroopManager troops;
+    public TroopManager troops;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    BuildingManager buildings;
+    public BuildingManager buildings;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    TroopBuildingManager troopBuildings;
+    public TroopBuildingManager troopBuildings;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    ResourceBuildingManager resourceBuildings;
+    public ResourceBuildingManager resourceBuildings;
 
     @Column(name="clan-permissions-level")
     private Integer clanPermissions = 0;

@@ -8,6 +8,7 @@ import player.Player;
 import player.PlayerRepository;
 import resources.ResourceType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -78,7 +79,6 @@ public class BuildingController {
     @PostMapping("/buildings/collectResources/{id}")
     public long collectResources(@PathVariable int buildingID, @RequestBody BuildingRequest buildingRequest)
     {
-
         ResourceBuilding building = resourceBuildingRepository.findById(buildingRequest.getBuildingID()).orElse(null);
         Player player = playerRepository.findById(buildingRequest.getPlayerID()).orElse(null);
         if (building != null && player != null)
@@ -98,6 +98,24 @@ public class BuildingController {
             playerRepository.save(player);
         }
         return 0;
+    }
+
+    @PostMapping("/buildings/updateResources/{id}")
+    public List<Integer> updateResources(@PathVariable int playerID, @RequestBody UpdateRequest updateRequest)
+    {
+        Player player = playerRepository.findById(updateRequest.getPlayerID()).orElse(null);
+        if (player != null)
+        {
+            List<Integer> list = new ArrayList<>();
+            for (ResourceBuilding building : player.resourceBuildings.resourceBuildingManager)
+            {
+                building.updateResources();
+                list.add(building.getResources());
+            }
+            playerRepository.save(player);
+            return list;
+        }
+        return null;
     }
 
     public static class BuildingRequest
@@ -135,6 +153,24 @@ public class BuildingController {
 
         public void setBuildingType(BuildingTypes buildingType) {
             this.buildingType = buildingType;
+        }
+    }
+
+    public static class UpdateRequest
+    {
+        private int playerID;
+
+        public UpdateRequest(int playerID)
+        {
+            setPlayerID(playerID);
+        }
+
+        public int getPlayerID() {
+            return playerID;
+        }
+
+        public void setPlayerID(int playerID) {
+            this.playerID = playerID;
         }
     }
 }
