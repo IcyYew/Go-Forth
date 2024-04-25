@@ -1,6 +1,5 @@
 package buildings;
 
-import buildings.resourcebuildings.ResourceBuilding;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;

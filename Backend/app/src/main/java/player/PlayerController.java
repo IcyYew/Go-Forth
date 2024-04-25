@@ -3,6 +3,7 @@ package player;
 import buildings.Building;
 import buildings.BuildingManager;
 import buildings.BuildingTypes;
+import buildings.resourcebuildings.ResourceBuildingManager;
 import buildings.troopBuildings.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -74,6 +75,9 @@ public class PlayerController {
         player = playerRepository.save(player);
         player.setTroops(new TroopManager(player.getPlayerID()));
         player.setResources(new ResourceManager(player.getPlayerID()));
+        player.setBuildings(new BuildingManager(player.getPlayerID()));
+        player.setTroopBuildings(new TroopBuildingManager(player.getPlayerID()));
+        player.setResourceBuildings(new ResourceBuildingManager(player.getPlayerID()));
         player.setLocationX(rand.nextInt(20));
         player.setLocationY(rand.nextInt(20));
         //Save fully created player into database

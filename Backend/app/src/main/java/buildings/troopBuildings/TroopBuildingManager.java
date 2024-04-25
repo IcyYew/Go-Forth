@@ -17,6 +17,12 @@ public class TroopBuildingManager
     @OneToMany(mappedBy = "troopBuildingManager", cascade = CascadeType.ALL)
     private List<TroopTrainingBuilding> troopBuildingManager;
 
+    public TroopBuildingManager(Integer playerId) {
+        this.playerId = playerId;
+        this.troopBuildingManager = new ArrayList<>();
+        initializeTroopBuildings();
+    }
+
     private void initializeTroopBuildings()
     {
         troopBuildingManager.add(new ArcheryRange(1, this));

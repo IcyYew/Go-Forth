@@ -21,6 +21,7 @@ public class ResourceBuildingManager
     {
         this.playerId = playerId;
         this.resourceBuildingManager = new ArrayList<>();
+        initializeResourceBuildings();
     }
 
     public ResourceBuildingManager()
