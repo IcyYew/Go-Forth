@@ -71,6 +71,9 @@ public class OverworldActivity extends AppCompatActivity {
         fetchPlayerDataAndGenerateMap();
     }
 
+    /**
+     * Get the locations of players and ensure we don't overwrite them
+     */
     private void fetchPlayerDataAndGenerateMap() {
         String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getall";
 
@@ -120,6 +123,9 @@ public class OverworldActivity extends AppCompatActivity {
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 
+    /**
+     * Generate resource positions depending on the RESOURCE_CHANCE
+     */
     private void generateResources() {
         Random random = new Random();
         // Clear any previous resource positions
@@ -148,7 +154,9 @@ public class OverworldActivity extends AppCompatActivity {
         }
     }
 
-
+    /**
+     * Generates the displayed map (slots pictures in the correct grid positions)
+     */
     private void displayMap() {
         // Clear current grid layout
         gridLayout.removeAllViews();
@@ -236,6 +244,12 @@ public class OverworldActivity extends AppCompatActivity {
         return false;
     }
 
+    /**
+     * Checks if a grid position is a resource position
+     * @param x
+     * @param y
+     * @return true or false
+     */
     private boolean isResourcePosition(int x, int y) {
         // Check if the provided coordinates match any resource positions
         for (int i = 0; i < resourceXCoords.size(); i++) {
@@ -268,6 +282,11 @@ public class OverworldActivity extends AppCompatActivity {
         movePlayer(0, 1);
     }
 
+    /**
+     * Moves the player in the desired direction
+     * @param deltaY
+     * @param deltaX
+     */
     private void movePlayer(int deltaY, int deltaX) {
         // Calculate the new position of the player
         int newRow = playerRow + deltaY;
@@ -304,6 +323,9 @@ public class OverworldActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Checks to see if we need to display collect button
+     */
     private void updateCollectButton() {
         // Check if the player is on a resource tile
         boolean isOnResourceTile = false;
@@ -326,6 +348,9 @@ public class OverworldActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Collects resource and updates map to no longer have the resource
+     */
     private void collectResource() {
         // Collect the resource from the player's current tile
         for (int i = 0; i < resourceXCoords.size(); i++) {
@@ -363,6 +388,10 @@ public class OverworldActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Back to main
+     * @param view
+     */
     public void goBack(View view) {
         // Return to the main activity
         Intent intent = new Intent(this, MainActivity.class);
