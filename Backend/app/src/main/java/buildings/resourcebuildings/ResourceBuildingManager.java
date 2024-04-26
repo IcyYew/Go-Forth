@@ -60,4 +60,23 @@ public class ResourceBuildingManager
             }
         }
     }
+
+    public long calculateTotalResourceBuildingPower()
+    {
+        long power = 0;
+        for (ResourceBuilding resourceBuilding : resourceBuildingManager)
+        {
+            power += resourceBuilding.getPower();
+        }
+        return power;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "TroopManager{" +
+                "playerId=" + playerId +
+                ", troopManager=" + resourceBuildingManager +
+                '}';
+    }
 }

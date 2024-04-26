@@ -1,5 +1,6 @@
 package buildings;
 
+import buildings.resourcebuildings.ResourceBuilding;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ public class BuildingManager {
 
     public int getLevel(BuildingTypes buildingType)
     {
-        for (Building building : buildingManager)
+        for (OtherBuilding building : buildingManager)
         {
             if (building.getBuildingType() == buildingType)
             {
@@ -76,6 +77,16 @@ public class BuildingManager {
             }
         }
         return 0;
+    }
+
+    public long calculateTotalOtherBuildingPower()
+    {
+        long power = 0;
+        for (OtherBuilding otherBuilding : buildingManager)
+        {
+            power += otherBuilding.getPower();
+        }
+        return power;
     }
 
     @Override

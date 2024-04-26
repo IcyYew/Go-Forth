@@ -248,6 +248,9 @@ public class Player {
      */
     public void updatePower() {
         this.power = troops.calculateTotalTroopPower();
+        this.power += troopBuildings.calculateTotalTroopBuildingPower();
+        this.power += resourceBuildings.calculateTotalResourceBuildingPower();
+        this.power += buildings.calculateTotalOtherBuildingPower();
     }
 
     /**

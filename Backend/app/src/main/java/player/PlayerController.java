@@ -139,10 +139,8 @@ public class PlayerController {
         }
     }
 
-
-
-    @GetMapping("/players/calculateTrainingTime/{playerID}")
-    public String calculateTrainingTime(@PathVariable int playerID, @RequestBody TroopRequest troopRequest)
+    @PostMapping("/players/calculateTrainingTime/{playerID}")
+    public Player calculateTrainingTime(@PathVariable int playerID, @RequestBody TroopRequest troopRequest)
     {
         Player player = playerRepository.findById(playerID).orElse(null);
         if (player != null)
@@ -153,19 +151,19 @@ public class PlayerController {
                 case ARCHER:
                     formattedTime = player.troopBuildings.trainTroops(BuildingTypes.ARCHERYRANGE, troopRequest.getQuantity());
                     player.setArcherFinalDate(formattedTime);
-                    return formattedTime;
+                    return playerRepository.save(player);
                 case MAGE:
                     formattedTime = player.troopBuildings.trainTroops(BuildingTypes.MAGETOWER, troopRequest.getQuantity());
                     player.setMageFinalDate(formattedTime);
-                    return formattedTime;
+                    return playerRepository.save(player);
                 case CAVALRY:
                     formattedTime = player.troopBuildings.trainTroops(BuildingTypes.STABLES, troopRequest.getQuantity());
                     player.setCavalryFinalDate(formattedTime);
-                    return formattedTime;
+                    return playerRepository.save(player);
                 case WARRIOR:
                     formattedTime = player.troopBuildings.trainTroops(BuildingTypes.WARRIORSCHOOL, troopRequest.getQuantity());
                     player.setCavalryFinalDate(formattedTime);
-                    return formattedTime;
+                    return playerRepository.save(player);
             }
         }
         return null;

@@ -65,7 +65,7 @@ public abstract class Building {
     }
 
     public void upgrade() throws Exception {
-        if (this.level < 5 && getLevel() >= this.level++) {
+        if (this.level < 5) {
             this.level++;
             this.power *= 1.5;
         }

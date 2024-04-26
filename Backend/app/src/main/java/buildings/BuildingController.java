@@ -32,31 +32,28 @@ public class BuildingController {
     @Autowired
     private OtherBuildingRepository otherBuildingRepository;
 
-    @GetMapping("/buildings/getTroopBuildings")
-    public List<TroopTrainingBuilding> getTroopBuildings()
-    {
-        return troopBuildingRepository.findAll();
-    }
-
-    @GetMapping("/buildings/getResourceBuildings")
-    public List<ResourceBuilding> getResourceBuildings()
-    {
-        return resourceBuildingRepository.findAll();
-    }
-
-    @GetMapping("/buildings/getOtherBuildings")
-    public List<OtherBuilding> getOtherBuildings()
-    {
-        return otherBuildingRepository.findAll();
-    }
-
-    @GetMapping("/buildings/{id}")
+    @GetMapping("/buildings/{buildingID}")
     public Building getBuilding(@PathVariable int buildingID)
     {
         return buildingRepository.findById(buildingID).orElse(null);
     }
 
-    @PostMapping("/buildings/upgrade/{id}")
+    @GetMapping("/buildings/getTotalBuildingPower/{playerID}")
+    public long getTotalBuildingPower(@PathVariable int playerID)
+    {
+        Player player = playerRepository.findById(playerID).orElse(null);
+        if (player != null)
+        {
+            long totalPower = 0;
+            totalPower += player.troopBuildings.calculateTotalTroopBuildingPower();
+            totalPower += player.resourceBuildings.calculateTotalResourceBuildingPower();
+            totalPower += player.buildings.calculateTotalOtherBuildingPower();
+            return totalPower;
+        }
+        return 0;
+    }
+
+    @PostMapping("/buildings/upgrade/{buildingID}")
     public String upgradeBuilding(@PathVariable int buildingID, @RequestBody BuildingRequest buildingRequest)
     {
         Player player = playerRepository.findById(buildingRequest.getPlayerID()).orElse(null);
@@ -77,7 +74,7 @@ public class BuildingController {
         return "Building not found.";
     }
 
-    @GetMapping("/buildings/getResourcesHeld/{id}")
+    @GetMapping("/buildings/getResourcesHeld/{buildingID}")
     public int getResourcesHeld(@PathVariable int buildingID)
     {
         ResourceBuilding building = resourceBuildingRepository.findById(buildingID).orElse(null);
@@ -91,7 +88,7 @@ public class BuildingController {
         }
     }
 
-    @PostMapping("/buildings/collectResources/{id}")
+    @PostMapping("/buildings/collectResources/{buildingID}")
     public long collectResources(@PathVariable int buildingID, @RequestBody BuildingRequest buildingRequest)
     {
         ResourceBuilding building = resourceBuildingRepository.findById(buildingRequest.getBuildingID()).orElse(null);
@@ -115,7 +112,7 @@ public class BuildingController {
         return 0;
     }
 
-    @PostMapping("/buildings/updateResources/{id}")
+    @PostMapping("/buildings/updateResources/{buildingID}")
     public List<Integer> updateResources(@PathVariable int playerID, @RequestBody UpdateRequest updateRequest)
     {
         Player player = playerRepository.findById(updateRequest.getPlayerID()).orElse(null);
