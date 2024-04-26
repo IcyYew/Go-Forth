@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Locale;
 
 /**
  * Shows all clans and their corresponding IDS
@@ -189,7 +190,7 @@ public class ClanDisplay extends AppCompatActivity {
     private class sortByName implements Comparator<Clan> {
         public int compare(Clan a, Clan b) {
             power = false;
-            return a.name.compareTo(b.name);
+            return (a.name.toLowerCase(Locale.ROOT)).compareTo((b.name).toLowerCase(Locale.ROOT));
         }
     }
 

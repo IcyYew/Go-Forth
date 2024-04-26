@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -197,7 +198,7 @@ public class DisplayActivity extends AppCompatActivity {
     private class sortByName implements Comparator<User> {
         public int compare(User a, User b) {
             power = false;
-            return a.name.compareTo(b.name);
+            return (a.name.toLowerCase(Locale.ROOT)).compareTo((b.name).toLowerCase(Locale.ROOT));
         }
     }
 
