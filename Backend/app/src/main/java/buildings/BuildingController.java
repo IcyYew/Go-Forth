@@ -2,12 +2,15 @@ package buildings;
 
 import buildings.resourcebuildings.ResourceBuilding;
 import buildings.resourcebuildings.ResourceBuildingRepository;
+import buildings.troopBuildings.TroopBuildingRepository;
+import buildings.troopBuildings.TroopTrainingBuilding;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import player.Player;
 import player.PlayerRepository;
 import resources.ResourceType;
 
+import javax.print.attribute.standard.MediaSize;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,25 +26,34 @@ public class BuildingController {
     @Autowired
     private ResourceBuildingRepository resourceBuildingRepository;
 
-    @GetMapping("/buildings/getall")
-    public List<Building> getAllBuildings()
-    {
-        return buildingRepository.findAll();
-    }
+    @Autowired
+    private TroopBuildingRepository troopBuildingRepository;
 
-    @GetMapping("/buildings/getResourceBuildings")
-    public List<ResourceBuilding> getResourceBuildings()
-    {
-        return resourceBuildingRepository.findAll();
-    }
+    @Autowired
+    private OtherBuildingRepository otherBuildingRepository;
 
-    @GetMapping("/buildings/{id}")
+    @GetMapping("/buildings/{buildingID}")
     public Building getBuilding(@PathVariable int buildingID)
     {
         return buildingRepository.findById(buildingID).orElse(null);
     }
 
-    @PostMapping("/buildings/upgrade/{id}")
+    @GetMapping("/buildings/getTotalBuildingPower/{playerID}")
+    public long getTotalBuildingPower(@PathVariable int playerID)
+    {
+        Player player = playerRepository.findById(playerID).orElse(null);
+        if (player != null)
+        {
+            long totalPower = 0;
+            totalPower += player.troopBuildings.calculateTotalTroopBuildingPower();
+            totalPower += player.resourceBuildings.calculateTotalResourceBuildingPower();
+            totalPower += player.buildings.calculateTotalOtherBuildingPower();
+            return totalPower;
+        }
+        return 0;
+    }
+
+    @PostMapping("/buildings/upgrade/{buildingID}")
     public String upgradeBuilding(@PathVariable int buildingID, @RequestBody BuildingRequest buildingRequest)
     {
         Player player = playerRepository.findById(buildingRequest.getPlayerID()).orElse(null);
@@ -62,7 +74,7 @@ public class BuildingController {
         return "Building not found.";
     }
 
-    @GetMapping("/buildings/getResourcesHeld/{id}")
+    @GetMapping("/buildings/getResourcesHeld/{buildingID}")
     public int getResourcesHeld(@PathVariable int buildingID)
     {
         ResourceBuilding building = resourceBuildingRepository.findById(buildingID).orElse(null);
@@ -76,7 +88,7 @@ public class BuildingController {
         }
     }
 
-    @PostMapping("/buildings/collectResources/{id}")
+    @PostMapping("/buildings/collectResources/{buildingID}")
     public long collectResources(@PathVariable int buildingID, @RequestBody BuildingRequest buildingRequest)
     {
         ResourceBuilding building = resourceBuildingRepository.findById(buildingRequest.getBuildingID()).orElse(null);
@@ -100,7 +112,7 @@ public class BuildingController {
         return 0;
     }
 
-    @PostMapping("/buildings/updateResources/{id}")
+    @PostMapping("/buildings/updateResources/{buildingID}")
     public List<Integer> updateResources(@PathVariable int playerID, @RequestBody UpdateRequest updateRequest)
     {
         Player player = playerRepository.findById(updateRequest.getPlayerID()).orElse(null);

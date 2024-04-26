@@ -2,6 +2,8 @@ package buildings;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 /**
  * Class for the Main Building.
@@ -11,11 +13,18 @@ import jakarta.persistence.Entity;
  */
 @Entity
 @DiscriminatorValue("MAINBUILDING")
-public class MainBuilding extends Building {
+public class MainBuilding extends OtherBuilding {
 
     public MainBuilding(BuildingManager buildingManager, int level)
     {
-        super(BuildingTypes.MAINBUILDING, level, buildingManager);
+        setBuildingType(BuildingTypes.MAINBUILDING);
+        setBuildingManager(buildingManager);
+        setLevel(level);
+        setPower(100);
     }
 
+    public MainBuilding()
+    {
+
+    }
 }

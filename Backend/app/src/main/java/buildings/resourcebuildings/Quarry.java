@@ -5,6 +5,8 @@ import buildings.BuildingTypes;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
+import java.time.LocalDateTime;
+
 /**
  * Class for the Stone Quarry.
  */
@@ -16,5 +18,12 @@ public class Quarry extends ResourceBuilding{
     {
         super(BuildingTypes.QUARRY, level, resourceBuildingManager);
         setResourceProductionRate(10);
+        setTimeLastCollected(LocalDateTime.now());
+        setPower(30);
+    }
+
+    public Quarry()
+    {
+
     }
 }

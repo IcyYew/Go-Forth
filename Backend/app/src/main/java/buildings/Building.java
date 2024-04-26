@@ -2,7 +2,10 @@ package buildings;
 
 import buildings.resourcebuildings.ResourceBuildingManager;
 import buildings.troopBuildings.TroopBuildingManager;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
+
+import java.util.Optional;
 
 /**
  * Abstract class for buildings.
@@ -10,7 +13,7 @@ import jakarta.persistence.*;
  */
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Building {
 
     @Id
@@ -28,41 +31,6 @@ public abstract class Building {
     protected int woodUpgradeCost;
 
     protected int power;
-
-    @ManyToOne
-    @JoinColumn(name = "building_manager")
-    private BuildingManager buildingManager;
-
-    @ManyToOne
-    @JoinColumn(name = "troop_building_manager")
-    private TroopBuildingManager troopBuildingManager;
-
-    @ManyToOne
-    @JoinColumn(name = "resource_building_manager")
-    private ResourceBuildingManager resourceBuildingManager;
-
-    /**
-     * Constructor for a building.
-     * Takes a level value and a power value.
-     * @param level Level value for the building.
-     */
-    public Building(BuildingTypes buildingType, int level, BuildingManager buildingManager) {
-        this.buildingType = buildingType;
-        this.level = level;
-        this.buildingManager = buildingManager;
-    }
-
-    public Building(BuildingTypes buildingType, int level, TroopBuildingManager troopBuildingManager) {
-        this.buildingType = buildingType;
-        this.level = level;
-        this.troopBuildingManager = troopBuildingManager;
-    }
-
-    public Building(BuildingTypes buildingType, int level, ResourceBuildingManager resourceBuildingManager) {
-        this.buildingType = buildingType;
-        this.level = level;
-        this.resourceBuildingManager = resourceBuildingManager;
-    }
 
     public Building()
     {
@@ -97,8 +65,9 @@ public abstract class Building {
     }
 
     public void upgrade() throws Exception {
-        if (this.level < 5 && getLevel() >= this.level++) {
+        if (this.level < 5) {
             this.level++;
+            this.power *= 1.5;
         }
         else if (this.level == 5){
             throw new Exception("Max level reached for building");

@@ -21,7 +21,12 @@ public class Stables extends TroopTrainingBuilding{
         super(BuildingTypes.STABLES, level, troopBuildingManager);
         setTrainingCapacity(50);
         setTrainingTime(30);
-        setStoneTrainingCost(40);
-        setWoodTrainingCost(30);
+        setTrainingCost(20);
+        setPower(50);
+    }
+
+    public Stables()
+    {
+
     }
 }
