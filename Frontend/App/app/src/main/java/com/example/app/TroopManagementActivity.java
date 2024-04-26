@@ -477,6 +477,10 @@ public class TroopManagementActivity extends AppCompatActivity {
 
                             Log.d("Total Time", "Total time = " + totalTimeInMillis);
 
+                            if (timeLeftInMillis <= 5) {
+                                timeLeftInMillis = totalTimeInMillis;
+                            }
+
                             // Start countdown timer
                             countDownTimer = new CountDownTimer(timeLeftInMillis, 1000) {
                                 @Override
@@ -527,7 +531,15 @@ public class TroopManagementActivity extends AppCompatActivity {
             Duration mageDuration = Duration.between(now, mageFinal);
             Duration cavalryDuration = Duration.between(now, cavalryFinal);
 
-            totalDifference = archerDuration.toMillis() + cavalryDuration.toMillis() + mageDuration.toMillis();
+            if (archersToTrainCount > 0) {
+                totalDifference += archerDuration.toMillis() - 7000;
+            }
+            if (magesToTrainCount > 0) {
+                totalDifference += mageDuration.toMillis() - 7000;
+            }
+            if (cavalryToTrainCount > 0) {
+                totalDifference += cavalryDuration.toMillis() - 7000;
+            }
         }
 
         return totalDifference;
