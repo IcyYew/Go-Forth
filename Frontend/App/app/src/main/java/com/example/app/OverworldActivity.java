@@ -423,8 +423,6 @@ public class OverworldActivity extends AppCompatActivity {
 
             // Update the map to reflect the player's new position
             displayMap();
-        } else {
-            Toast.makeText(getApplicationContext(), "You can only move up to 3 positions away from your base.", Toast.LENGTH_SHORT).show();
         }
     }
 
