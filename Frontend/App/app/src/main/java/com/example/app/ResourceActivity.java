@@ -215,20 +215,25 @@ public class ResourceActivity extends AppCompatActivity {
     }
 
     private void updateBuildingAmount() {
+        if(List.size() == 0) return;
         String url = "http://coms-309-048.class.las.iastate.edu:8080/buildings/updateResources/" + String.valueOf(userID);
-
-        // makes JsonObjectRequest to get the current player. GETs the archerNum, warriorNum, mageNum, and cavalryNum
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+        JSONObject jsonObject = new JSONObject(); //Initialize input JSON
+        try {
+            jsonObject.put("playerID", userID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonObject,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-
+                        fillListAndCollect(true);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(ResourceActivity.this, "Error fetching player resources buildings: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ResourceActivity.this, "Error fetching player resources buildings 1: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -270,7 +275,7 @@ public class ResourceActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(ResourceActivity.this, "Error fetching player resources: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ResourceActivity.this, "Error fetching player resources 2: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -317,7 +322,8 @@ public class ResourceActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Error fetching clans: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
-    }
+        // add to volley queue
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);    }
     private class Building{
 
         private int ID;
@@ -335,10 +341,8 @@ public class ResourceActivity extends AppCompatActivity {
     {
         try {
             while(!stopThread) {
-                updateThread.sleep(500);
+                updateThread.sleep(1000);
                 updateBuildingAmount();
-                updateThread.sleep(500);
-                fillListAndCollect(true);
                 updateAmount();
             }
         }
