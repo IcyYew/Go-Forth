@@ -79,6 +79,7 @@ public class PlayerController {
         player.setTroopBuildings(new TroopBuildingManager(player.getPlayerID()));
         player.setResourceBuildings(new ResourceBuildingManager(player.getPlayerID()));
         player.setLocationX(rand.nextInt(30));
+        player.setTotalKills(0);
         player.setLocationY(rand.nextInt(30));
         //Save fully created player into database
         playerRepository.save(player);

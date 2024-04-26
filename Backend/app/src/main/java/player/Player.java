@@ -86,6 +86,9 @@ public class Player {
     @Column(name="locationY")
     private int locationY;
 
+    @Column(name="kill-count")
+    private int totalKills;
+
     @Column(name="archerFinalDate")
     private String archerFinalDate = "a";
 
@@ -105,6 +108,13 @@ public class Player {
      */
     public Player() {
 
+    }
+
+    public int getTotalKills() {
+        return this.totalKills;
+    }
+    public void setTotalKills(int totalKills) {
+        this.totalKills = totalKills;
     }
 
 
@@ -172,7 +182,7 @@ public class Player {
      */
     public Player(ResourceManager resources, TroopManager troops, BuildingManager buildings,
                   TroopBuildingManager troopBuildings, ResourceBuildingManager resourceBuildings,
-                  int playerID, double power, String userName, String password, int locationX, int locationY) {
+                  int playerID, double power, String userName, String password, int locationX, int locationY, int totalKills) {
         setResources(resources);
         setTroops(troops);
         setBuildings(buildings);
@@ -184,6 +194,7 @@ public class Player {
         setPassword(password);
         setLocationX(locationX);
         setLocationY(locationY);
+        setTotalKills(totalKills);
     }
 
     /**
