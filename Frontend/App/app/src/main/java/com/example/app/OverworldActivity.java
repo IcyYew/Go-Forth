@@ -31,7 +31,7 @@ import java.util.Random;
  * Activity used to do most of the game stuff
  */
 public class OverworldActivity extends AppCompatActivity {
-    private static final int GRID_SIZE = 20;
+    private static final int GRID_SIZE = 30;
     private static final int GRID_ITEM_SIZE_DP = 75;
     private static final int RESOURCE_CHANCE = 5;
     private ArrayList<String> names = new ArrayList<>();
@@ -278,12 +278,12 @@ public class OverworldActivity extends AppCompatActivity {
      * Moves the player's base to the new position and updates the original position
      */
     private void moveBase() {
-        if (!(wood >= 1000 && stone >= 1000)) {
-            Toast.makeText(this, "You need at least 1000 wood and 1000 stone to move your base!", Toast.LENGTH_SHORT).show();
+        if (!(wood >= 5000 && stone >= 5000)) {
+            Toast.makeText(this, "You need at least 5000 wood and 5000 stone to move your base!", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        removeResource(1000, "WOOD");
+        removeResource(5000, "WOOD");
 
         try {
             Thread.sleep(100);
@@ -291,7 +291,7 @@ public class OverworldActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        removeResource(1000, "STONE");
+        removeResource(5000, "STONE");
 
         try {
             Thread.sleep(100);
@@ -391,10 +391,10 @@ public class OverworldActivity extends AppCompatActivity {
         int newCol = playerCol + deltaX;
 
         // Define the boundaries for the user based on their original position
-        int minRow = originalRow - 3;
-        int maxRow = originalRow + 3;
-        int minCol = originalCol - 3;
-        int maxCol = originalCol + 3;
+        int minRow = originalRow - 10;
+        int maxRow = originalRow + 10;
+        int minCol = originalCol - 10;
+        int maxCol = originalCol + 10;
 
         // Ensure the new position is within grid boundaries and within the defined boundaries from the original position
         if (newRow >= minRow && newRow <= maxRow && newCol >= minCol && newCol <= maxCol
