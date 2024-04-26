@@ -95,6 +95,8 @@ public class Research {
 
     public void setLevel(int level) {
         this.level = level;
+        setPower(getPower() + (this.level * 500) + (this.tier * 750));
+        setPlatinumCost(getPlatinumCost() + (this.level * 200) + (this.tier * 500));
     }
 
     public double getPlatinumCost() {

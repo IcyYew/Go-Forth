@@ -1,6 +1,8 @@
 package player;
 
+import buildings.BuildingController;
 import buildings.BuildingTypes;
+import buildings.Research.Research;
 import buildings.Research.ResearchManager;
 import buildings.Research.ResearchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,8 @@ import troops.*;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
+
+import static troops.TroopTypes.ARCHER;
 
 /**
  * A REST controller for managing a player's information
@@ -81,6 +85,9 @@ public class PlayerController {
         // Return id of created player
         return "New player of ID: " + player.getPlayerID();
     }
+
+
+
 
     // Returns sorted list of players based on power, descending order
 

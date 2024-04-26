@@ -74,6 +74,7 @@ public class TroopManager {
         }
         return null;
     }
+
     /**
      * Gets the player's ID.
      * @return Returns this TroopManager's player's ID.

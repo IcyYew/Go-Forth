@@ -264,7 +264,9 @@ public class Player {
      * Updates a player's power
      */
     public void updatePower() {
-        this.power = troops.calculateTotalTroopPower();
+        this.power = 0;
+        this.power += troops.calculateTotalTroopPower();
+        this.power += research.getResearch("Attack Bonus").getPower();
     }
 
     /**
