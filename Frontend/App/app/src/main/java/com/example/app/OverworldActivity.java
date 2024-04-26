@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,20 +33,19 @@ import java.util.Random;
 public class OverworldActivity extends AppCompatActivity {
     private static final int GRID_SIZE = 20;
     private static final int GRID_ITEM_SIZE_DP = 75;
-    private static final int RESOURCE_CHANCE = 5; // Adjust the chance of placing a resource (1 in 10)
-    private SharedPreferences sharedPreferences;
-    private int userID;
+    private static final int RESOURCE_CHANCE = 5;
     private ArrayList<String> names = new ArrayList<>();
+    private ArrayList<Integer> ids = new ArrayList<>();
     private ArrayList<Integer> xCoords = new ArrayList<>();
     private ArrayList<Integer> yCoords = new ArrayList<>();
     private ArrayList<Integer> resourceXCoords = new ArrayList<>();
     private ArrayList<Integer> resourceYCoords = new ArrayList<>();
     private ArrayList<String> resourceTypes = new ArrayList<>(); // To keep track of the type of resource (stone or wood)
     private LinearLayout gridLayout;
-    private int playerRow, playerCol;
-    private int originalRow, originalCol; // To store the player's original starting position
+    private int userID, playerRow, playerCol, originalRow, originalCol, wood, stone, enemyIndex, enemyID;
     private boolean isPlayerMoved = false; // To track whether the player has moved
-    private Button collectButton;
+    private Button collectButton, moveButton, fightButton, backButton;
+    private TextView woodHeld, stoneHeld;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,21 +57,134 @@ public class OverworldActivity extends AppCompatActivity {
             userID = getIntent().getIntExtra("ID", -1);
         }
 
-        // Initialize shared preferences
-        sharedPreferences = getSharedPreferences("MapData", Context.MODE_PRIVATE);
-
         // Initialize layout
         gridLayout = findViewById(R.id.gridLayout);
 
-        // Initialize the collect button
+        // Initialize buttons
         collectButton = findViewById(R.id.collectButton);
         collectButton.setVisibility(View.GONE);
+        moveButton = findViewById(R.id.moveButton);
+        moveButton.setVisibility(View.GONE);
+        fightButton = findViewById(R.id.fightButton);
+        fightButton.setVisibility(View.GONE);
+        backButton = findViewById(R.id.backButton);
+        backButton.setVisibility(View.GONE);
 
-        // Set up the button click listener for collecting resources
+        // Set up the buttons
         collectButton.setOnClickListener(view -> collectResource());
+        moveButton.setOnClickListener(view -> moveBase());
+        fightButton.setOnClickListener(view -> startFight(userID, enemyID));
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Return to the main activity
+                Intent intent = new Intent(OverworldActivity.this, MainActivity.class);
+                intent.putExtra("ID", String.valueOf(userID));
+                startActivity(intent);
+            }
+        });
+
+        woodHeld = findViewById(R.id.WoodAmount);
+        stoneHeld = findViewById(R.id.StoneAmount);
 
         // Fetch player data and generate the initial map
         fetchPlayerDataAndGenerateMap();
+    }
+
+
+
+
+
+    /**
+     * Generates the displayed map (slots pictures in the correct grid positions)
+     */
+    private void displayMap() {
+        // Clear current grid layout
+        gridLayout.removeAllViews();
+
+        // Loop to create grid items based on the player's position
+        for (int row = 0; row < GRID_SIZE; row++) {
+            LinearLayout rowLayout = new LinearLayout(this);
+            rowLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+            for (int col = 0; col < GRID_SIZE; col++) {
+                ImageView gridItem = new ImageView(this);
+                gridItem.setLayoutParams(new LinearLayout.LayoutParams(
+                        dpToPx(GRID_ITEM_SIZE_DP), dpToPx(GRID_ITEM_SIZE_DP)
+                ));
+
+                // Determine the type of cell at the current position
+                boolean isCellSet = false;  // Used to track if a cell is set with an image
+
+                if (row == playerRow && col == playerCol && !isUserPosition(row, col)) {
+                    fightButton.setVisibility(View.GONE);
+                    backButton.setVisibility(View.GONE);
+
+                    gridItem.setBackgroundResource(R.drawable.knight);
+                    isCellSet = true;
+
+                    if (isEmptyTile(row, col)) {
+                        moveButton.setVisibility(View.VISIBLE);
+                    } else {
+                        moveButton.setVisibility(View.GONE);
+                    }
+                } else if (row == originalRow && col == originalCol) {
+                    // Original player position
+                    gridItem.setBackgroundResource(R.drawable.castle);
+                    isCellSet = true;
+
+                    if (!isPlayerMoved) {
+                        backButton.setVisibility(View.VISIBLE);
+                    }
+                } else if (isUserPosition(row, col)) {
+                    // Other players' positions
+                    gridItem.setBackgroundResource(R.drawable.enemy);
+                    isCellSet = true;
+
+                    // If the player is at an enemy's position, show the fight button
+                    if (row == playerRow && col == playerCol) {
+                        fightButton.setVisibility(View.VISIBLE);
+                        enemyIndex = getEnemyIndex(row, col);
+                        fightButton.setText("Fight " + names.get(enemyIndex));
+                        enemyID = ids.get(enemyIndex);
+                    }
+                } else if (isResourcePosition(row, col)) {
+                    // Resource positions
+                    // Find the index of the resource at the current position
+                    int resourceIndex = -1;
+                    for (int i = 0; i < resourceXCoords.size(); i++) {
+                        if (resourceXCoords.get(i) == row && resourceYCoords.get(i) == col) {
+                            resourceIndex = i;
+                            break; // Exit the loop as soon as we find a match
+                        }
+                    }
+
+                    // Check if a resource was found at the current position
+                    if (resourceIndex != -1) {
+                        String resourceType = resourceTypes.get(resourceIndex);
+                        if (resourceType.equals("stone")) {
+                            gridItem.setBackgroundResource(R.drawable.stone);
+                        } else {
+                            gridItem.setBackgroundResource(R.drawable.wood);
+                        }
+                        isCellSet = true;
+                    }
+                }
+
+                // If no specific condition was met, set the cell as grass
+                if (!isCellSet) {
+                    gridItem.setBackgroundResource(R.drawable.grass);
+                }
+
+                // Add grid item to row layout
+                rowLayout.addView(gridItem);
+            }
+
+            // Add row layout to grid layout
+            gridLayout.addView(rowLayout);
+        }
+
+        updateAmount();
     }
 
     /**
@@ -92,6 +205,7 @@ public class OverworldActivity extends AppCompatActivity {
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject playerObject = jsonArray.getJSONObject(i);
                                 int id = playerObject.getInt("playerID");
+                                ids.add(playerObject.getInt("playerID"));
                                 names.add(playerObject.getString("userName"));
                                 xCoords.add(playerObject.getInt("locationX"));
                                 yCoords.add(playerObject.getInt("locationY"));
@@ -147,7 +261,6 @@ public class OverworldActivity extends AppCompatActivity {
 
                 // Place a resource if the random value is less than the threshold
                 if (randomValue < probabilityThreshold) {
-                    Log.d("Coordinate", i + ", " + j);
                     resourceXCoords.add(i);
                     resourceYCoords.add(j);
                     // Randomly choose the type of resource (stone or wood)
@@ -157,111 +270,93 @@ public class OverworldActivity extends AppCompatActivity {
         }
     }
 
+
+
+
+
     /**
-     * Generates the displayed map (slots pictures in the correct grid positions)
+     * Moves the player's base to the new position and updates the original position
      */
-    private void displayMap() {
-        // Clear current grid layout
-        gridLayout.removeAllViews();
-
-        // Loop to create grid items based on the player's position
-        for (int row = 0; row < GRID_SIZE; row++) {
-            LinearLayout rowLayout = new LinearLayout(this);
-            rowLayout.setOrientation(LinearLayout.HORIZONTAL);
-
-            for (int col = 0; col < GRID_SIZE; col++) {
-                ImageView gridItem = new ImageView(this);
-                gridItem.setLayoutParams(new LinearLayout.LayoutParams(
-                        dpToPx(GRID_ITEM_SIZE_DP), dpToPx(GRID_ITEM_SIZE_DP)
-                ));
-
-                // Determine the type of cell at the current position
-                boolean isCellSet = false;  // Used to track if a cell is set with an image
-
-                if (row == playerRow && col == playerCol) {
-                    if (!isPlayerMoved) {
-                        gridItem.setBackgroundResource(R.drawable.castle);
-                    } else {
-                        gridItem.setBackgroundResource(R.drawable.knight);
-                    }
-                    isCellSet = true;
-                } else if (row == originalRow && col == originalCol) {
-                    // Original player position
-                    gridItem.setBackgroundResource(R.drawable.castle);
-                    isCellSet = true;
-                } else if (isUserPosition(row, col)) {
-                    // Other players' positions
-                    gridItem.setBackgroundResource(R.drawable.enemy);
-                    isCellSet = true;
-                } else if (isResourcePosition(row, col)) {
-                    // Resource positions
-                    // Find the index of the resource at the current position
-                    int resourceIndex = -1;
-                    for (int i = 0; i < resourceXCoords.size(); i++) {
-                        if (resourceXCoords.get(i) == row && resourceYCoords.get(i) == col) {
-                            resourceIndex = i;
-                            break; // Exit the loop as soon as we find a match
-                        }
-                    }
-
-                    // Check if a resource was found at the current position
-                    if (resourceIndex != -1) {
-                        String resourceType = resourceTypes.get(resourceIndex);
-                        if (resourceType.equals("stone")) {
-                            gridItem.setBackgroundResource(R.drawable.stone);
-                        } else {
-                            gridItem.setBackgroundResource(R.drawable.wood);
-                        }
-                        isCellSet = true;
-                    }
-                }
-
-                // If no specific condition was met, set the cell as grass
-                if (!isCellSet) {
-                    gridItem.setBackgroundResource(R.drawable.grass);
-                }
-
-                // Add grid item to row layout
-                rowLayout.addView(gridItem);
-            }
-
-            // Add row layout to grid layout
-            gridLayout.addView(rowLayout);
+    private void moveBase() {
+        if (!(wood >= 1000 && stone >= 1000)) {
+            Toast.makeText(this, "You need at least 1000 wood and 1000 stone to move your base!", Toast.LENGTH_SHORT).show();
+            return;
         }
-    }
 
-    /**
-     * Checks if a grid position is a user position
-     *
-     * @param x
-     * @param y
-     * @return true or false
-     */
-    private boolean isUserPosition(int x, int y) {
-        // Check if the provided coordinates match any other players' positions
+        removeResource(1000, "WOOD");
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        removeResource(1000, "STONE");
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         for (int i = 0; i < xCoords.size(); i++) {
-            if (x == xCoords.get(i) && y == yCoords.get(i)) {
-                return true;
+            if (xCoords.get(i) == originalRow && yCoords.get(i) == originalCol) {
+                xCoords.remove(i);
+                yCoords.remove(i);
+                break;
             }
         }
-        return false;
+
+        // Save the current position as the new base position
+        originalRow = playerRow;
+        originalCol = playerCol;
+
+        // Add the new base position to the list of player coordinates
+        xCoords.add(playerRow);
+        yCoords.add(playerCol);
+
+        // Send an update to the server
+        updateBasePosition();
+
+        // Hide the move button after moving the base
+        moveButton.setVisibility(View.GONE);
+
+        isPlayerMoved = false;
+
+        // Re-render the map to reflect the changes
+        displayMap();
     }
 
-    /**
-     * Checks if a grid position is a resource position
-     * @param x
-     * @param y
-     * @return true or false
-     */
-    private boolean isResourcePosition(int x, int y) {
-        // Check if the provided coordinates match any resource positions
-        for (int i = 0; i < resourceXCoords.size(); i++) {
-            if (x == resourceXCoords.get(i) && y == resourceYCoords.get(i)) {
-                return true;
-            }
+    private void updateBasePosition() {
+        JSONObject jsonObject = new JSONObject(); //Initialize input JSON
+        try {
+            jsonObject.put("locationX", playerRow);
+            jsonObject.put("locationY", playerCol);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        return false;
+        String url = "http://coms-309-048.class.las.iastate.edu:8080/players/changePlayerLocation/" + userID;
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonObject,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(OverworldActivity.this, "Error updating resources: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        // add to volley queue
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
+
+
+
+
 
     private int dpToPx(int dp) {
         // Convert dp to pixels
@@ -308,6 +403,13 @@ public class OverworldActivity extends AppCompatActivity {
             playerRow = newRow;
             playerCol = newCol;
 
+            // Hide or show the move button depending on the new position
+            if (isEmptyTile(newRow, newCol)) {
+                moveButton.setVisibility(View.VISIBLE);
+            } else {
+                moveButton.setVisibility(View.GONE);
+            }
+
             if (!isPlayerMoved) {
                 isPlayerMoved = true;
             }
@@ -325,6 +427,10 @@ public class OverworldActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "You can only move up to 3 positions away from your base.", Toast.LENGTH_SHORT).show();
         }
     }
+
+
+
+
 
     /**
      * Checks to see if we need to display collect button
@@ -382,6 +488,8 @@ public class OverworldActivity extends AppCompatActivity {
                 // Hide the collect button
                 collectButton.setVisibility(View.GONE);
 
+                updateAmount();
+
                 // Update the display
                 displayMap();
 
@@ -389,17 +497,6 @@ public class OverworldActivity extends AppCompatActivity {
                 break;
             }
         }
-    }
-
-    /**
-     * Back to main
-     * @param view
-     */
-    public void goBack(View view) {
-        // Return to the main activity
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("ID", String.valueOf(userID));
-        startActivity(intent);
     }
 
     /**
@@ -421,8 +518,7 @@ public class OverworldActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        String lower = resourceName.toLowerCase();
-                        Toast.makeText(OverworldActivity.this, amount + " " + lower + " collected", Toast.LENGTH_SHORT).show();
+                        updateAmount();
                     }
                 },
                 new Response.ErrorListener() {
@@ -434,5 +530,188 @@ public class OverworldActivity extends AppCompatActivity {
 
         // add to volley queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+    }
+
+    /** Adds resources to the backend then updates the current count shown onscreen.
+     *
+     * @param amount Amount of resources to remove
+     * @param resourceName Name of resource to remove
+     */
+    private void removeResource(int amount, String resourceName){
+        JSONObject jsonObject = new JSONObject(); //Initialize input JSON
+        try {
+            jsonObject.put("resourceType", resourceName);
+            jsonObject.put("quantity", amount);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String url = "http://coms-309-048.class.las.iastate.edu:8080/players/removeresource/" + userID;
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonObject,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        updateAmount(); //update screen when backend is done updating
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(OverworldActivity.this, "Error updating resources: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        // add to volley queue
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+    }
+
+    /**
+     * This method gets the newly updated resource amount from the database.
+     * It then displays the values on the corresponding TextView.
+     */
+    private void updateAmount() {
+        String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getPlayer/" + String.valueOf(userID);
+
+        // makes JsonObjectRequest to get the current player. GETs the archerNum, warriorNum, mageNum, and cavalryNum
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            //Get current resource values
+                            JSONObject resourceObject = response.getJSONObject("resources");
+                            wood = resourceObject.getInt("wood");
+                            stone = resourceObject.getInt("stone");
+
+                            String woodText = "Wood: " + wood;
+                            String stoneText = "Stone: " + stone;
+                            //print current resource values on screen.
+                            woodHeld.setText(woodText);
+                            stoneHeld.setText(stoneText);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(OverworldActivity.this, "Error parsing JSON response", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(OverworldActivity.this, "Error fetching player resources: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        // add to volley queue
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+    }
+
+
+
+
+
+    private int getEnemyIndex(int row, int col) {
+        for (int i = 0; i < xCoords.size(); i++) {
+            if (xCoords.get(i) == row && yCoords.get(i) == col) {
+                return i;
+            }
+        }
+        return -1; // If no enemy found at the given coordinates
+    }
+
+    /**
+     * Simulates fight by calling the players/fight/{user1}/{user2} endpoint. Displays returned value
+     *
+     * @param player1ID
+     * @param player2ID
+     */
+    private void startFight(int player1ID, int player2ID) {
+        // use the players/fight/{user1}/{user2} endpoint
+        String url = "http://coms-309-048.class.las.iastate.edu:8080/players/fight/" + player1ID + "/" + player2ID;
+
+        // Makes StringRequest at the endpoint and sets the TextView to the result
+        StringRequest request = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        handleFightResult(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), "Error during fight: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        // add request to volley queue
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+    }
+
+    /**
+     * Method to handle fight results and declare a winner
+     *
+     * @param response
+     */
+    private void handleFightResult(String response) {
+        Log.d("Response", response);
+        // parse the response
+        String[] parts = response.split("\n");
+        String result = parts[0];
+        String player1Info = parts[1];
+        String player2Info = parts[3];
+
+        // display the appropriate message based on the result
+        String message;
+        if (result.equals("ATTACKER_WIN")) {
+            Toast.makeText(this, "You won!", Toast.LENGTH_SHORT).show();
+        } else if (result.equals("DEFENDER_WIN")) {
+            Toast.makeText(this, "You lost!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "It's a draw", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+
+
+
+    /**
+     * Checks if a grid position is a user position
+     *
+     * @param x
+     * @param y
+     * @return true or false
+     */
+    private boolean isUserPosition(int x, int y) {
+        // Check if the provided coordinates match any other players' positions
+        for (int i = 0; i < xCoords.size(); i++) {
+            if (x == xCoords.get(i) && y == yCoords.get(i)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Checks if a grid position is a resource position
+     * @param x
+     * @param y
+     * @return true or false
+     */
+    private boolean isResourcePosition(int x, int y) {
+        // Check if the provided coordinates match any resource positions
+        for (int i = 0; i < resourceXCoords.size(); i++) {
+            if (x == resourceXCoords.get(i) && y == resourceYCoords.get(i)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Check if the tile is empty at the given coordinates
+     */
+    private boolean isEmptyTile(int row, int col) {
+        // Check if the given position is free of other players and resources
+        return !isUserPosition(row, col) && !isResourcePosition(row, col);
     }
 }

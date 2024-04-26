@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
     private Button signupButton;
     private Button troopManagementButton;
     private Button displayButton;
-    private Button fightButton;
     private Button resourceButton;
     private Button overworldButton;
     private Button globalChatButton;
@@ -61,8 +60,6 @@ public class MainActivity extends AppCompatActivity {
         troopManagementButton = findViewById(R.id.troopManagementButton);
 
         displayButton = findViewById(R.id.displayButton);
-
-        fightButton = findViewById(R.id.fightButton);
 
         resourceButton = findViewById(R.id.ResourceButton);
 
@@ -149,16 +146,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, DisplayActivity.class);
-                intent.putExtra("ID", userID);
-                startActivity(intent);
-            }
-        });
-
-        // fight button pressed
-        fightButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, FightActivity.class);
                 intent.putExtra("ID", userID);
                 startActivity(intent);
             }
