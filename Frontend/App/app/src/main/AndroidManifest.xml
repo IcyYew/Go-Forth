@@ -61,9 +61,6 @@
             android:name=".DisplayActivity"
             android:exported="false" />
         <activity
-            android:name=".FightActivity"
-            android:exported="false" />
-        <activity
             android:name=".OverworldActivity"
             android:exported="false" />
         <activity
