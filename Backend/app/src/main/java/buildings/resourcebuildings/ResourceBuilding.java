@@ -4,8 +4,11 @@ import buildings.Building;
 import buildings.BuildingManager;
 import buildings.BuildingTypes;
 import buildings.troopBuildings.TroopBuildingManager;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import resources.Resource;
 
 import java.time.Duration;
@@ -19,9 +22,15 @@ public abstract class ResourceBuilding extends Building
     public int resourceProductionRate;
     public LocalDateTime timeLastCollected;
 
+    @ManyToOne
+    @JoinColumn(name = "resource_building_manager")
+    private ResourceBuildingManager resourceBuildingManager;
+
     public ResourceBuilding(BuildingTypes buildingTypes, int level, ResourceBuildingManager resourceBuildingManager)
     {
-        super(buildingTypes, level, resourceBuildingManager);
+        setBuildingType(buildingTypes);
+        setLevel(level);
+        setResourceBuildingManager(resourceBuildingManager);
     }
 
     public ResourceBuilding()
@@ -33,12 +42,13 @@ public abstract class ResourceBuilding extends Building
     public void upgrade() throws Exception {
         if (this.level <= 5) {
             this.level++;
+            this.power *= 1.5;
             resourceProductionRate += 10;
             setStoneUpgradeCost(level);
             setWoodUpgradeCost(level);
-
         }
-        else {
+        else
+        {
             throw new Exception("Max level reached");
         }
     }
@@ -86,5 +96,13 @@ public abstract class ResourceBuilding extends Building
 
     public void setResources(int resources) {
         this.resources = resources;
+    }
+
+    public ResourceBuildingManager getResourceBuildingManager() {
+        return resourceBuildingManager;
+    }
+
+    public void setResourceBuildingManager(ResourceBuildingManager resourceBuildingManager) {
+        this.resourceBuildingManager = resourceBuildingManager;
     }
 }

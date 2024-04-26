@@ -1,7 +1,7 @@
 package buildings;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +9,7 @@ import java.util.List;
  * Class for the Building Manager.
  */
 
+@JsonSerialize(using = BuildingManagerSerializer.class)
 @Entity
 public class BuildingManager {
 
@@ -17,7 +18,7 @@ public class BuildingManager {
     private Integer playerId;
 
     @OneToMany(mappedBy = "buildingManager", cascade = CascadeType.ALL)
-    public List<Building> buildingManager;
+    public List<OtherBuilding> buildingManager;
 
     public BuildingManager(Integer playerId)
     {
@@ -44,7 +45,7 @@ public class BuildingManager {
 
     public int getBuildingLevel(BuildingTypes buildingType)
     {
-        for (Building building : buildingManager)
+        for (OtherBuilding building : buildingManager)
         {
             if (building.getBuildingType() == buildingType)
             {
@@ -56,13 +57,25 @@ public class BuildingManager {
 
     public void upgradeBuilding(BuildingTypes buildingType) throws Exception
     {
-        for (Building building : buildingManager)
+        for (OtherBuilding building : buildingManager)
         {
             if (building.getBuildingType() == buildingType)
             {
                 building.upgrade();
             }
         }
+    }
+
+    public int getLevel(BuildingTypes buildingType)
+    {
+        for (Building building : buildingManager)
+        {
+            if (building.getBuildingType() == buildingType)
+            {
+                return building.getLevel();
+            }
+        }
+        return 0;
     }
 
     @Override

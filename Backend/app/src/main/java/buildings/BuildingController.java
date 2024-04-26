@@ -2,12 +2,15 @@ package buildings;
 
 import buildings.resourcebuildings.ResourceBuilding;
 import buildings.resourcebuildings.ResourceBuildingRepository;
+import buildings.troopBuildings.TroopBuildingRepository;
+import buildings.troopBuildings.TroopTrainingBuilding;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import player.Player;
 import player.PlayerRepository;
 import resources.ResourceType;
 
+import javax.print.attribute.standard.MediaSize;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,16 +26,28 @@ public class BuildingController {
     @Autowired
     private ResourceBuildingRepository resourceBuildingRepository;
 
-    @GetMapping("/buildings/getall")
-    public List<Building> getAllBuildings()
+    @Autowired
+    private TroopBuildingRepository troopBuildingRepository;
+
+    @Autowired
+    private OtherBuildingRepository otherBuildingRepository;
+
+    @GetMapping("/buildings/getTroopBuildings")
+    public List<TroopTrainingBuilding> getTroopBuildings()
     {
-        return buildingRepository.findAll();
+        return troopBuildingRepository.findAll();
     }
 
     @GetMapping("/buildings/getResourceBuildings")
     public List<ResourceBuilding> getResourceBuildings()
     {
         return resourceBuildingRepository.findAll();
+    }
+
+    @GetMapping("/buildings/getOtherBuildings")
+    public List<OtherBuilding> getOtherBuildings()
+    {
+        return otherBuildingRepository.findAll();
     }
 
     @GetMapping("/buildings/{id}")

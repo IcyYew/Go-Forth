@@ -1,12 +1,14 @@
 package buildings.troopBuildings;
 
 import buildings.BuildingTypes;
+import buildings.resourcebuildings.ResourceBuildingManagerSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonSerialize(using = TroopBuildingManagerSerializer.class)
 @Entity
 public class TroopBuildingManager
 {

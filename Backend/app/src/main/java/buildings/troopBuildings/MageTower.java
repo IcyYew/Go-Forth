@@ -21,8 +21,8 @@ public class MageTower extends TroopTrainingBuilding{
         super(BuildingTypes.MAGETOWER, level, troopBuildingManager);
         setTrainingCapacity(50);
         setTrainingTime(20);
-        setStoneTrainingCost(20);
-        setWoodTrainingCost(50);
+        setTrainingCost(15);
+        setPower(50);
     }
 
     public MageTower()
