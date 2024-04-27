@@ -126,12 +126,5 @@
             android:text=""
             android:layout_below="@id/WoodAmount"/>
 
-        <TextView
-            android:id="@+id/PowerLevel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:layout_below="@id/StoneAmount"/>
-
     </RelativeLayout>
 </RelativeLayout>
