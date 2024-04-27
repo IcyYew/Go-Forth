@@ -57,9 +57,7 @@ public class ResourceActivity extends AppCompatActivity {
     private TextView platinumHeld;
     private TextView platinumCollect;
     private Button addPlatinum;
-
-    private ArrayList<Building> List;
-
+    
     private Thread updateThread;
 
     private boolean stopThread;
@@ -83,9 +81,7 @@ public class ResourceActivity extends AppCompatActivity {
         if (extras != null) {
             userID = extras.getInt("ID");
         }
-
-        List = new ArrayList<>();
-
+        
         //Initialize buttons
         Back = findViewById(R.id.Back);
 
@@ -106,9 +102,8 @@ public class ResourceActivity extends AppCompatActivity {
         addPlatinum = findViewById(R.id.platCollectButton);
 
         Back = findViewById(R.id.Back);
-        fillListAndCollect(false);
-        updateAmount();
         updateBuildingAmount();
+        updateCurrentStorage();
 
         stopThread = false;
 
@@ -184,8 +179,8 @@ public class ResourceActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        updateAmount(); //update screen when backend is done updating
-                        fillListAndCollect(true);
+                        updateBuildingAmount();
+                        updateCurrentStorage();
                     }
                 },
                 new Response.ErrorListener() {
@@ -200,7 +195,6 @@ public class ResourceActivity extends AppCompatActivity {
     }
 
     private void updateBuildingAmount() {
-        if(List.size() == 0) return;
         String url = "http://coms-309-048.class.las.iastate.edu:8080/buildings/updateResources/" + String.valueOf(userID);
         JSONObject jsonObject = new JSONObject(); //Initialize input JSON
         try {
@@ -212,13 +206,13 @@ public class ResourceActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        fillListAndCollect(true);
+                        getCurrentResources();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(ResourceActivity.this, "Error fetching player resources buildings 1: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ResourceActivity.this, "updateBuildingAmount: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -230,7 +224,7 @@ public class ResourceActivity extends AppCompatActivity {
      * This method gets the newly updated resource amount from the database.
      * It then displays the values on the corresponding TextView.
      */
-    private void updateAmount() {
+    private void updateCurrentStorage() {
         String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getPlayer/" + String.valueOf(userID);
 
         // makes JsonObjectRequest to get the current player. GETs the archerNum, warriorNum, mageNum, and cavalryNum
@@ -260,7 +254,7 @@ public class ResourceActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(ResourceActivity.this, "Error fetching player resources 2: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ResourceActivity.this, "updateCurrentStorage: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -268,10 +262,9 @@ public class ResourceActivity extends AppCompatActivity {
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 
-    private void fillListAndCollect(boolean onlyUpdateToCollect) {
+    private void getCurrentResources() {
         // use getall endpoint URL
         String url = "http://coms-309-048.class.las.iastate.edu:8080/buildings/getPlayerBuildings/" + Integer.toString(userID);
-        if(!onlyUpdateToCollect) List.clear();
         // make a StringRequest to get the users from the server. Converts JSONArray into StringBuilder.
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
@@ -286,11 +279,10 @@ public class ResourceActivity extends AppCompatActivity {
                             JSONArray jsonArray = new JSONArray(response);
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject buildingObject = jsonArray.getJSONObject(i);
-                                if(!onlyUpdateToCollect) List.add(new Building(buildingObject.getInt("buildingID"), buildingObject.getString("buildingType"))); //Add new building
-                                if(List.get(i).Resource == "WOOD") woodTotal += buildingObject.getInt("resources");
-                                if(List.get(i).Resource == "FOOD") foodTotal += buildingObject.getInt("resources");
-                                if(List.get(i).Resource == "STONE") stoneTotal += buildingObject.getInt("resources");
-                                if(List.get(i).Resource == "PLATINUM") platinumTotal += buildingObject.getInt("resources");
+                                if(buildingObject.getString("buildingType") == "WOOD") woodTotal += buildingObject.getInt("resources");
+                                if(buildingObject.getString("buildingType") == "FOOD") foodTotal += buildingObject.getInt("resources");
+                                if(buildingObject.getString("buildingType") == "STONE") stoneTotal += buildingObject.getInt("resources");
+                                if(buildingObject.getString("buildingType") == "PLATINUM") platinumTotal += buildingObject.getInt("resources");
                             }
                             foodCollect.setText(String.valueOf(foodTotal));
                             woodCollect.setText(String.valueOf(woodTotal));
@@ -309,17 +301,6 @@ public class ResourceActivity extends AppCompatActivity {
                 });
         // add to volley queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);    }
-    private class Building{
-
-        private int ID;
-
-        private String Resource;
-
-        Building(int ID, String Resource){
-            this.ID = ID;
-            this.Resource = Resource;
-        }
-    }
     
     class UpdateThread implements Runnable {
     public void run()
@@ -328,7 +309,7 @@ public class ResourceActivity extends AppCompatActivity {
             while(!stopThread) {
                 updateThread.sleep(1000);
                 updateBuildingAmount();
-                updateAmount();
+                //updateCurrentStorage();
             }
         }
         catch (Exception e) {
