@@ -21,8 +21,13 @@ public class WarriorSchool extends TroopTrainingBuilding{
         super(BuildingTypes.WARRIORSCHOOL, level, troopBuildingManager);
         setTrainingCapacity(50);
         setTrainingTime(40);
-        setStoneTrainingCost(50);
-        setWoodTrainingCost(20);
+        setTrainingCost(25);
+        setPower(50);
+    }
+
+    public WarriorSchool()
+    {
+
     }
 
     public WarriorSchool() {

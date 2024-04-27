@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@JsonSerialize
+@JsonSerialize(using = ResourceBuildingManagerSerializer.class)
 @Entity
 public class ResourceBuildingManager
 {
@@ -16,12 +16,13 @@ public class ResourceBuildingManager
     private Integer playerId;
 
     @OneToMany(mappedBy = "resourceBuildingManager", cascade = CascadeType.ALL)
-    private List<ResourceBuilding> resourceBuildingManager;
+    public List<ResourceBuilding> resourceBuildingManager;
 
     public ResourceBuildingManager(Integer playerId)
     {
         this.playerId = playerId;
         this.resourceBuildingManager = new ArrayList<>();
+        initializeResourceBuildings();
     }
 
     public ResourceBuildingManager()
@@ -58,5 +59,24 @@ public class ResourceBuildingManager
                 resourceBuilding.upgrade();
             }
         }
+    }
+
+    public long calculateTotalResourceBuildingPower()
+    {
+        long power = 0;
+        for (ResourceBuilding resourceBuilding : resourceBuildingManager)
+        {
+            power += resourceBuilding.getPower();
+        }
+        return power;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "TroopManager{" +
+                "playerId=" + playerId +
+                ", troopManager=" + resourceBuildingManager +
+                '}';
     }
 }

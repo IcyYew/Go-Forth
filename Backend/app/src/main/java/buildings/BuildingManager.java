@@ -1,32 +1,30 @@
 package buildings;
 
+import buildings.resourcebuildings.ResourceBuilding;
 import buildings.resourcebuildings.Farm;
 import buildings.resourcebuildings.LumberYard;
 import buildings.resourcebuildings.PlatinumMine;
 import buildings.resourcebuildings.Quarry;
 import buildings.troopBuildings.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Class for the Building Manager.
  */
-@JsonSerialize
+
+@JsonSerialize(using = BuildingManagerSerializer.class)
 @Entity
 public class BuildingManager {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer playerId;
 
-    @OneToMany
-    public List<Building> buildingManager;
+    @OneToMany(mappedBy = "buildingManager", cascade = CascadeType.ALL)
+    public List<OtherBuilding> buildingManager;
 
     public BuildingManager(Integer playerId)
     {
@@ -46,7 +44,6 @@ public class BuildingManager {
 
     }
 
-
     public long getPlayerId()
     {
         return this.playerId;
@@ -54,7 +51,7 @@ public class BuildingManager {
 
     public int getBuildingLevel(BuildingTypes buildingType)
     {
-        for (Building building : buildingManager)
+        for (OtherBuilding building : buildingManager)
         {
             if (building.getBuildingType() == buildingType)
             {
@@ -62,6 +59,39 @@ public class BuildingManager {
             }
         }
         return 0;
+    }
+
+    public void upgradeBuilding(BuildingTypes buildingType) throws Exception
+    {
+        for (OtherBuilding building : buildingManager)
+        {
+            if (building.getBuildingType() == buildingType)
+            {
+                building.upgrade();
+            }
+        }
+    }
+
+    public int getLevel(BuildingTypes buildingType)
+    {
+        for (OtherBuilding building : buildingManager)
+        {
+            if (building.getBuildingType() == buildingType)
+            {
+                return building.getLevel();
+            }
+        }
+        return 0;
+    }
+
+    public long calculateTotalOtherBuildingPower()
+    {
+        long power = 0;
+        for (OtherBuilding otherBuilding : buildingManager)
+        {
+            power += otherBuilding.getPower();
+        }
+        return power;
     }
 
     @Override

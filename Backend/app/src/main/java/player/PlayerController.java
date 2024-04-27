@@ -1,10 +1,13 @@
 package player;
 
 import buildings.BuildingController;
+import buildings.BuildingManager;
 import buildings.BuildingTypes;
 import buildings.Research.Research;
 import buildings.Research.ResearchManager;
 import buildings.Research.ResearchRepository;
+import buildings.resourcebuildings.ResourceBuildingManager;
+import buildings.troopBuildings.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import resources.ResourceManager;
@@ -28,7 +31,6 @@ public class PlayerController {
 
     @Autowired
     private PlayerRepository playerRepository;
-
 
 
     // Returns all currently existing players and their info
@@ -69,7 +71,6 @@ public class PlayerController {
         // Create empty player and store username and password to generate a player ID used in the managers
         Player player = new Player();
         Random rand = new Random();
-
         player.setUserName(created.getUserName());
         player.setPassword(created.getPassword());
         // Save "empty" player to generate ID
@@ -77,17 +78,16 @@ public class PlayerController {
         player.setTroops(new TroopManager(player.getPlayerID()));
         player.setResources(new ResourceManager(player.getPlayerID()));
         player.setResearchManager(new ResearchManager(player.getPlayerID()));
-        player.setLocationX(rand.nextInt(20));
-        player.setLocationY(rand.nextInt(20));
+        player.setBuildings(new BuildingManager(player.getPlayerID()));
+        player.setTroopBuildings(new TroopBuildingManager(player.getPlayerID()));
+        player.setResourceBuildings(new ResourceBuildingManager(player.getPlayerID()));
+        player.setLocationX(rand.nextInt(30));
+        player.setLocationY(rand.nextInt(30));
         //Save fully created player into database
-        //researchRepository.save(player.getResearch);
         playerRepository.save(player);
         // Return id of created player
         return "New player of ID: " + player.getPlayerID();
     }
-
-
-
 
     // Returns sorted list of players based on power, descending order
 
@@ -126,8 +126,24 @@ public class PlayerController {
         }
     }
 
-    @GetMapping("/players/calculateTrainingTime/{playerID}")
-    public String calculateTrainingTime(@PathVariable int playerID, @RequestBody TroopRequest troopRequest)
+    @PostMapping("/players/changePlayerLocation/{playerID}")
+    public Player changePlayerLocation(@PathVariable int playerID, @RequestBody LocationRequest locationRequest)
+    {
+        Player player = playerRepository.findById(playerID).orElse(null);
+        if (player != null)
+        {
+            player.setLocationX(locationRequest.getLocationX());
+            player.setLocationY(locationRequest.getLocationY());
+            return playerRepository.save(player);
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    @PostMapping("/players/calculateTrainingTime/{playerID}")
+    public Player calculateTrainingTime(@PathVariable int playerID, @RequestBody TroopRequest troopRequest)
     {
         Player player = playerRepository.findById(playerID).orElse(null);
         if (player != null)
@@ -138,19 +154,19 @@ public class PlayerController {
                 case ARCHER:
                     formattedTime = player.troopBuildings.trainTroops(BuildingTypes.ARCHERYRANGE, troopRequest.getQuantity());
                     player.setArcherFinalDate(formattedTime);
-                    return formattedTime;
+                    return playerRepository.save(player);
                 case MAGE:
                     formattedTime = player.troopBuildings.trainTroops(BuildingTypes.MAGETOWER, troopRequest.getQuantity());
                     player.setMageFinalDate(formattedTime);
-                    return formattedTime;
+                    return playerRepository.save(player);
                 case CAVALRY:
                     formattedTime = player.troopBuildings.trainTroops(BuildingTypes.STABLES, troopRequest.getQuantity());
                     player.setCavalryFinalDate(formattedTime);
-                    return formattedTime;
+                    return playerRepository.save(player);
                 case WARRIOR:
                     formattedTime = player.troopBuildings.trainTroops(BuildingTypes.WARRIORSCHOOL, troopRequest.getQuantity());
                     player.setCavalryFinalDate(formattedTime);
-                    return formattedTime;
+                    return playerRepository.save(player);
             }
         }
         return null;
@@ -269,6 +285,32 @@ public class PlayerController {
         }
     }
 
+    public static class LocationRequest {
+        private int locationX;
+        private int locationY;
+
+        public LocationRequest(int locationX, int locationY)
+        {
+            setLocationX(locationX);
+            setLocationY(locationY);
+        }
+
+        public int getLocationX() {
+            return locationX;
+        }
+
+        public void setLocationX(int locationX) {
+            this.locationX = locationX;
+        }
+
+        public int getLocationY() {
+            return locationY;
+        }
+
+        public void setLocationY(int locationY) {
+            this.locationY = locationY;
+        }
+    }
     // Class used for managing resource requests
 
     /**

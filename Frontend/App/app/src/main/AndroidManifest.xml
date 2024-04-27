@@ -61,10 +61,10 @@
             android:name=".DisplayActivity"
             android:exported="false" />
         <activity
-            android:name=".FightActivity"
+            android:name=".OverworldActivity"
             android:exported="false" />
         <activity
-            android:name=".OverworldActivity"
+            android:name=".ResearchActivity"
             android:exported="false" />
         <activity
             android:name=".ChatActivity1"

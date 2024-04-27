@@ -2,7 +2,10 @@ package buildings;
 
 import buildings.resourcebuildings.ResourceBuildingManager;
 import buildings.troopBuildings.TroopBuildingManager;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
+
+import java.util.Optional;
 
 /**
  * Abstract class for buildings.
@@ -10,53 +13,24 @@ import jakarta.persistence.*;
  */
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Building {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "id")
+    private Integer buildingID;
 
     @Enumerated(EnumType.STRING)
     private BuildingTypes buildingType;
 
     protected int level;
+
     protected int stoneUpgradeCost;
+
     protected int woodUpgradeCost;
+
     protected int power;
-
-    @ManyToOne
-    @JoinColumn(name = "building_manager")
-    private BuildingManager buildingManager;
-
-    @ManyToOne
-    private TroopBuildingManager troopBuildingManager;
-
-    @ManyToOne
-    private ResourceBuildingManager resourceBuildingManager;
-
-    /**
-     * Constructor for a building.
-     * Takes a level value and a power value.
-     * @param level Level value for the building.
-     */
-    public Building(BuildingTypes buildingType, int level, BuildingManager buildingManager) {
-        this.buildingType = buildingType;
-        this.level = level;
-        this.buildingManager = buildingManager;
-    }
-
-    public Building(BuildingTypes buildingType, int level, TroopBuildingManager troopBuildingManager) {
-        this.buildingType = buildingType;
-        this.level = level;
-        this.troopBuildingManager = troopBuildingManager;
-    }
-
-    public Building(BuildingTypes buildingType, int level, ResourceBuildingManager resourceBuildingManager) {
-        this.buildingType = buildingType;
-        this.level = level;
-        this.resourceBuildingManager = resourceBuildingManager;
-    }
 
     public Building()
     {
@@ -91,8 +65,9 @@ public abstract class Building {
     }
 
     public void upgrade() throws Exception {
-        if (this.level < 5 && getLevel() >= this.level++) {
+        if (this.level < 5) {
             this.level++;
+            this.power *= 1.5;
         }
         else if (this.level == 5){
             throw new Exception("Max level reached for building");
@@ -101,8 +76,6 @@ public abstract class Building {
             throw new Exception("Main building level requirement not met");
         }
     }
-
-
 
     public int getStoneUpgradeCost() {
         return stoneUpgradeCost;
@@ -127,4 +100,5 @@ public abstract class Building {
     public void setPower(int power) {
         this.power = power;
     }
+
 }

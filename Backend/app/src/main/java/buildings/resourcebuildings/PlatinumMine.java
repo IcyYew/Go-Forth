@@ -4,6 +4,8 @@ import buildings.BuildingTypes;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
+import java.time.LocalDateTime;
+
 /**
  * Class for the Platinum Mine.
  */
@@ -15,5 +17,12 @@ public class PlatinumMine extends ResourceBuilding{
     {
         super(BuildingTypes.PLATINUMMINE, level, resourceBuildingManager);
         setResourceProductionRate(10);
+        setTimeLastCollected(LocalDateTime.now());
+        setPower(30);
+    }
+
+    public PlatinumMine()
+    {
+
     }
 }

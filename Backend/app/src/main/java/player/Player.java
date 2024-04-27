@@ -36,28 +36,26 @@ public class Player {
      * Represents a player's resources
      */
     @ManyToOne(cascade = CascadeType.ALL)
-    ResourceManager resources;
+    public ResourceManager resources;
 
     //Troop manager storing and managing a players troops
     /**
      * Represents a player's troops
      */
     @ManyToOne(cascade = CascadeType.ALL)
-    TroopManager troops;
+    public TroopManager troops;
 
     @ManyToOne(cascade = CascadeType.ALL)
     ResearchManager research;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    BuildingManager buildings;
-
-
+    public BuildingManager buildings;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    TroopBuildingManager troopBuildings;
+    public TroopBuildingManager troopBuildings;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    ResourceBuildingManager resourceBuildings;
+    public ResourceBuildingManager resourceBuildings;
 
 
 
@@ -267,6 +265,9 @@ public class Player {
         this.power = 0;
         this.power += troops.calculateTotalTroopPower();
         this.power += research.getResearch("Attack Bonus").getPower();
+        this.power += troopBuildings.calculateTotalTroopBuildingPower();
+        this.power += resourceBuildings.calculateTotalResourceBuildingPower();
+        this.power += buildings.calculateTotalOtherBuildingPower();
     }
 
     /**
