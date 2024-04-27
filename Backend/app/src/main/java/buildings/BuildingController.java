@@ -121,10 +121,7 @@ public class BuildingController {
        player.updatePower();
        playerRepository.save(player);
     }
-
-
-
-    @GetMapping("/buildings/{buildingID}")
+    
     @GetMapping("/buildings/getPlayerBuildings/{playerID}")
     public List<Building> getPlayerBuildings(@PathVariable int playerID)
     {
