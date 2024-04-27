@@ -84,6 +84,11 @@ public class BuildingManager {
         return 0;
     }
 
+    public List<OtherBuilding> getOtherBuildings()
+    {
+        return buildingManager;
+    }
+
     public long calculateTotalOtherBuildingPower()
     {
         long power = 0;

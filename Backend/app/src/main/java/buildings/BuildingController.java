@@ -125,6 +125,22 @@ public class BuildingController {
 
 
     @GetMapping("/buildings/{buildingID}")
+    @GetMapping("/buildings/getPlayerBuildings/{playerID}")
+    public List<Building> getPlayerBuildings(@PathVariable int playerID)
+    {
+        Player player = playerRepository.findById(playerID).orElse(null);
+        if (player != null)
+        {
+            List<Building> list = new ArrayList<>();
+            list.addAll(player.resourceBuildings.getResourceBuildings());
+            list.addAll(player.troopBuildings.getTroopBuildings());
+            list.addAll(player.buildings.getOtherBuildings());
+            return list;
+        }
+        return null;
+    }
+
+    @GetMapping("/buildings/getBuilding/{buildingID}")
     public Building getBuilding(@PathVariable int buildingID)
     {
         return buildingRepository.findById(buildingID).orElse(null);
@@ -145,10 +161,10 @@ public class BuildingController {
         return 0;
     }
 
-    @PostMapping("/buildings/upgrade/{buildingID}")
-    public String upgradeBuilding(@PathVariable int buildingID, @RequestBody BuildingRequest buildingRequest)
+    @PostMapping("/buildings/upgrade/{playerID}")
+    public String upgradeBuilding(@PathVariable int playerID, @RequestBody BuildingRequest buildingRequest)
     {
-        Player player = playerRepository.findById(buildingRequest.getPlayerID()).orElse(null);
+        Player player = playerRepository.findById(playerID).orElse(null);
         Building building = buildingRepository.findById(buildingRequest.getBuildingID()).orElse(null);
         if (building != null && player != null)
         {
@@ -205,34 +221,36 @@ public class BuildingController {
         }
     }
 
-    @PostMapping("/buildings/collectResources/{buildingID}")
-    public long collectResources(@PathVariable int buildingID, @RequestBody BuildingRequest buildingRequest)
+    @PostMapping("/buildings/collectResources/{playerID}")
+    public int collectResources(@PathVariable int playerID, @RequestBody BuildingRequest buildingRequest)
     {
         ResourceBuilding building = resourceBuildingRepository.findById(buildingRequest.getBuildingID()).orElse(null);
-        Player player = playerRepository.findById(buildingRequest.getPlayerID()).orElse(null);
+        Player player = playerRepository.findById(playerID).orElse(null);
         if (building != null && player != null)
         {
+            int amountCollected = building.collectResources();
             switch (buildingRequest.getBuildingType())
             {
                 case FARM:
-                    player.resources.addResource(ResourceType.FOOD, building.collectResources());
+                    player.resources.addResource(ResourceType.FOOD, amountCollected);
                 case LUMBERYARD:
-                    player.resources.addResource(ResourceType.WOOD, building.collectResources());
+                    player.resources.addResource(ResourceType.WOOD, amountCollected);
                 case PLATINUMMINE:
-                    player.resources.addResource(ResourceType.PLATINUM, building.collectResources());
+                    player.resources.addResource(ResourceType.PLATINUM, amountCollected);
                 case QUARRY:
-                    player.resources.addResource(ResourceType.STONE, building.collectResources());
+                    player.resources.addResource(ResourceType.STONE, amountCollected);
             }
             buildingRepository.save(building);
             playerRepository.save(player);
+            return amountCollected;
         }
         return 0;
     }
 
-    @PostMapping("/buildings/updateResources/{buildingID}")
-    public List<Integer> updateResources(@PathVariable int playerID, @RequestBody UpdateRequest updateRequest)
+    @PostMapping("/buildings/updateResources/{playerID}")
+    public List<Integer> updateResources(@PathVariable int playerID)
     {
-        Player player = playerRepository.findById(updateRequest.getPlayerID()).orElse(null);
+        Player player = playerRepository.findById(playerID).orElse(null);
         if (player != null)
         {
             List<Integer> list = new ArrayList<>();
@@ -249,23 +267,13 @@ public class BuildingController {
 
     public static class BuildingRequest
     {
-        private int playerID;
         private int buildingID;
         private BuildingTypes buildingType;
 
-        public BuildingRequest(int playerID, int buildingID, BuildingTypes buildingType)
+        public BuildingRequest(int buildingID, BuildingTypes buildingType)
         {
-            setPlayerID(playerID);
             setBuildingID(buildingID);
             setBuildingType(buildingType);
-        }
-
-        public int getPlayerID() {
-            return playerID;
-        }
-
-        public void setPlayerID(int playerID) {
-            this.playerID = playerID;
         }
 
         public int getBuildingID() {
@@ -282,24 +290,6 @@ public class BuildingController {
 
         public void setBuildingType(BuildingTypes buildingType) {
             this.buildingType = buildingType;
-        }
-    }
-
-    public static class UpdateRequest
-    {
-        private int playerID;
-
-        public UpdateRequest(int playerID)
-        {
-            setPlayerID(playerID);
-        }
-
-        public int getPlayerID() {
-            return playerID;
-        }
-
-        public void setPlayerID(int playerID) {
-            this.playerID = playerID;
         }
     }
 }

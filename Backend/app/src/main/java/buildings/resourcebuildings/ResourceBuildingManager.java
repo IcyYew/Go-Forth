@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @JsonSerialize(using = ResourceBuildingManagerSerializer.class)
@@ -59,6 +60,11 @@ public class ResourceBuildingManager
                 resourceBuilding.upgrade();
             }
         }
+    }
+
+    public List<ResourceBuilding> getResourceBuildings()
+    {
+        return resourceBuildingManager;
     }
 
     public long calculateTotalResourceBuildingPower()
