@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClanActivity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">com.example.goforth</a> &gt; <span class="el_source">ClanActivity.java</span></div><h1>ClanActivity.java</h1><pre class="source lang-java linenums">package com.example.goforth;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+/**
+ * Main Screen for clans
+ */
+<span class="nc" id="L26">public class ClanActivity extends AppCompatActivity {</span>
+
+    private int userID;
+
+    Button back;
+
+    Button DisplayClans;
+
+    Button ClanManagement;
+
+    Button ClanChat;
+
+    Button JoinClan;
+
+    Button CreateClan;
+
+    TextView ClanName;
+
+    Button LeaveClan;
+
+    private int clanID;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="nc" id="L51">        super.onCreate(savedInstanceState);</span>
+<span class="nc" id="L52">        setContentView(R.layout.activity_clan);</span>
+
+<span class="nc" id="L54">        Bundle extras = getIntent().getExtras();</span>
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        if (extras != null) {</span>
+<span class="nc" id="L56">            userID = Integer.parseInt(extras.getString(&quot;ID&quot;));</span>
+        }
+
+<span class="nc" id="L59">        back = findViewById(R.id.Back);</span>
+
+<span class="nc" id="L61">        ClanManagement = findViewById(R.id.ClanManagement);</span>
+
+<span class="nc" id="L63">        ClanChat = findViewById(R.id.ClanChat);</span>
+
+<span class="nc" id="L65">        JoinClan =  findViewById(R.id.JoinClan);</span>
+
+<span class="nc" id="L67">        CreateClan = findViewById(R.id.Create);</span>
+
+<span class="nc" id="L69">        ClanName =  findViewById(R.id.Name);</span>
+
+<span class="nc" id="L71">        DisplayClans =  findViewById(R.id.ClanList);</span>
+
+<span class="nc" id="L73">        LeaveClan =  findViewById(R.id.LeaveClan);</span>
+
+
+<span class="nc" id="L76">        logIntoCurrentClan(); //Loads current clan information for user</span>
+        /**
+         * Goes back to main activity
+         */
+<span class="nc" id="L80">        back.setOnClickListener(new View.OnClickListener() {</span>
+            //Back button clicked
+            @Override
+            public void onClick(View v) {
+                //goes to MainActivity with userID
+<span class="nc" id="L85">                Intent intent = new Intent(ClanActivity.this, MainActivity.class);</span>
+<span class="nc" id="L86">                intent.putExtra(&quot;ID&quot;, String.valueOf(userID));</span>
+<span class="nc" id="L87">                startActivity(intent);</span>
+<span class="nc" id="L88">            }</span>
+        });
+        /**
+         * Goes to clan manager
+         */
+<span class="nc" id="L93">        ClanManagement.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L96">                Intent intent = new Intent(ClanActivity.this, ClanManagement.class);</span>
+<span class="nc" id="L97">                intent.putExtra(&quot;ID&quot;, userID);</span>
+<span class="nc" id="L98">                intent.putExtra(&quot;clanID&quot;, clanID);</span>
+<span class="nc" id="L99">                startActivity(intent);</span>
+<span class="nc" id="L100">            }</span>
+        });
+        /**
+         * Leaves current clan
+         */
+<span class="nc" id="L105">        LeaveClan.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L108">                String url = &quot;http://coms-309-048.class.las.iastate.edu:8080/clans/removemember&quot;;</span>
+
+                // Create a JSONObject with the clan's details
+<span class="nc" id="L111">                JSONObject requestBody = new JSONObject();</span>
+                try {
+<span class="nc" id="L113">                    requestBody.put(&quot;clanID&quot;, clanID);</span>
+<span class="nc" id="L114">                    requestBody.put(&quot;playerID&quot;, userID);</span>
+<span class="nc" id="L115">                } catch (JSONException e) {</span>
+<span class="nc" id="L116">                    e.printStackTrace();</span>
+<span class="nc" id="L117">                }</span>
+
+                // Create a JsonObjectRequest with the POST method
+<span class="nc" id="L120">                JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, requestBody,</span>
+<span class="nc" id="L121">                        new Response.Listener&lt;JSONObject&gt;() {</span>
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                // Handle successful response from the server
+<span class="nc" id="L125">                                Log.d(&quot;Clan leave&quot;, &quot;clan left: &quot; + response.toString());</span>
+
+
+<span class="nc" id="L128">                            }</span>
+                        },
+<span class="nc" id="L130">                        new Response.ErrorListener() {</span>
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                // Handle error response from the server
+<span class="nc" id="L134">                                Log.e(&quot;Clan Leave&quot;, &quot;Error leaving clan: &quot; + error.getMessage());</span>
+<span class="nc" id="L135">                            }</span>
+                        });
+
+                // add to volley request queue
+<span class="nc" id="L139">                VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);</span>
+<span class="nc" id="L140">                logIntoCurrentClan();</span>
+<span class="nc" id="L141">            }</span>
+        });
+        /**
+         * Goes to CreateClanActivity
+         */
+<span class="nc" id="L146">        CreateClan.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+                //goes to MainActivity with userID
+<span class="nc" id="L150">                Intent intent = new Intent(ClanActivity.this, ClanCreateActivity.class);</span>
+<span class="nc" id="L151">                intent.putExtra(&quot;ID&quot;, userID);</span>
+<span class="nc" id="L152">                startActivity(intent);</span>
+<span class="nc" id="L153">            }</span>
+        });
+        /**
+         * Goes to JoinClanActivity
+         */
+<span class="nc" id="L158">        JoinClan.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+                //goes to MainActivity with userID
+<span class="nc" id="L162">                Intent intent = new Intent(ClanActivity.this, ClanJoinActivity.class);</span>
+<span class="nc" id="L163">                intent.putExtra(&quot;ID&quot;, userID);</span>
+<span class="nc" id="L164">                startActivity(intent);</span>
+<span class="nc" id="L165">            }</span>
+        });
+        /**
+         * Goes to clan chat
+         */
+<span class="nc" id="L170">        ClanChat.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L173">                String url = &quot;http://coms-309-048.class.las.iastate.edu:8080/players/getPlayer/&quot; + String.valueOf(userID);</span>
+
+                // makes JsonObjectRequest to get the current player. GETs the archerNum, warriorNum, mageNum, and cavalryNum
+<span class="nc" id="L176">                JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,</span>
+<span class="nc" id="L177">                        new Response.Listener&lt;JSONObject&gt;() {</span>
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+<span class="nc" id="L181">                                    String serverUrl = &quot;ws://coms-309-048.class.las.iastate.edu:8080/chat/clan/&quot; + response.getString(&quot;userName&quot;); //Get url to join server</span>
+<span class="nc" id="L182">                                    Log.d(&quot;URL&quot;, serverUrl);</span>
+
+                                    // Establish WebSocket connection and set listener
+<span class="nc" id="L185">                                    ClanChatManager.getInstance().connectWebSocket(serverUrl); //Connects to the clan chat server</span>
+<span class="nc" id="L186">                                } catch (JSONException e) {</span>
+<span class="nc" id="L187">                                    e.printStackTrace();</span>
+<span class="nc" id="L188">                                    Toast.makeText(ClanActivity.this, &quot;Error parsing JSON response&quot;, Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L189">                                }</span>
+<span class="nc" id="L190">                            }</span>
+                        },
+<span class="nc" id="L192">                        new Response.ErrorListener() {</span>
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+<span class="nc" id="L195">                                Toast.makeText(ClanActivity.this, &quot;Error fetching player data: &quot; + error.getMessage(), Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L196">                            }</span>
+                        });
+
+                // add to volley queue
+<span class="nc" id="L200">                VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);</span>
+
+                // got to chat activity
+<span class="nc" id="L203">                Intent intent = new Intent(ClanActivity.this, ClanChat.class);</span>
+<span class="nc" id="L204">                intent.putExtra(&quot;ID&quot;, userID);</span>
+<span class="nc" id="L205">                startActivity(intent);</span>
+<span class="nc" id="L206">            }</span>
+        });
+
+<span class="nc" id="L209">        DisplayClans.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+                //goes to MainActivity with userID
+<span class="nc" id="L213">                Intent intent = new Intent(ClanActivity.this, ClanDisplay.class);</span>
+<span class="nc" id="L214">                intent.putExtra(&quot;ID&quot;, userID);</span>
+<span class="nc" id="L215">                startActivity(intent);</span>
+<span class="nc" id="L216">            }</span>
+        });
+<span class="nc" id="L218">    }</span>
+
+    /**
+     * Gets players current clan
+     */
+    private void logIntoCurrentClan(){
+<span class="nc" id="L224">        String url = &quot;http://coms-309-048.class.las.iastate.edu:8080/players/getall&quot;;</span>
+
+        // make a StringRequest to get the user from the server. Converts JSONArray into StringBuilder.
+<span class="nc" id="L227">        StringRequest request = new StringRequest(Request.Method.GET, url,</span>
+<span class="nc" id="L228">                new Response.Listener&lt;String&gt;() {</span>
+                    @Override
+                    public void onResponse(String response) {
+<span class="nc" id="L231">                        Log.d(&quot;Display response&quot;, response);</span>
+                        try {
+<span class="nc" id="L233">                            JSONArray jsonArray = new JSONArray(response);</span>
+<span class="nc" id="L234">                            JSONObject playerObject = jsonArray.getJSONObject(userID - 1);</span>
+<span class="nc" id="L235">                            clanID = playerObject.getInt(&quot;clanMembershipID&quot;); //Put players clan into clan ID</span>
+<span class="nc" id="L236">                            ClanName.setText(&quot;Clan ID: &quot; + Integer.toString(clanID)); //Set clanname</span>
+                            }
+<span class="nc" id="L238">                         catch (JSONException e) {</span>
+<span class="nc" id="L239">                            e.printStackTrace();</span>
+<span class="nc" id="L240">                        }</span>
+<span class="nc" id="L241">                    }</span>
+                },
+<span class="nc" id="L243">                new Response.ErrorListener() {</span>
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+<span class="nc" id="L246">                        Toast.makeText(getApplicationContext(), &quot;Error fetching players: &quot; + error.getMessage(), Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L247">                    }</span>
+                });
+
+        // add to the request queue
+<span class="nc" id="L251">        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);</span>
+<span class="nc" id="L252">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>Generated by the Android Gradle plugin 8.3.2</div></body></html>
