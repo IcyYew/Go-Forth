@@ -1,2 +1,0 @@
-04-26 22:03:38.892  6917  6952 I TestRunner: started: useAppContext(com.example.goforth.ExampleInstrumentedTest)
-04-26 22:03:38.894  6917  6952 I TestRunner: finished: useAppContext(com.example.goforth.ExampleInstrumentedTest)

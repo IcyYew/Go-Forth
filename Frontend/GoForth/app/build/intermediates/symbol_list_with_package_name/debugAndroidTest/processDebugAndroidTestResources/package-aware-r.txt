@@ -1,3 +1,0 @@
-com.example.goforth.test
-style WhiteBackgroundDialogTheme
-style WhiteBackgroundTheme
