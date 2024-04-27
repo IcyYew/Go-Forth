@@ -148,25 +148,58 @@ public class PlayerController {
         Player player = playerRepository.findById(playerID).orElse(null);
         if (player != null)
         {
+            Troop troop = player.troops.getTroop(troopRequest.getTroopType());
             String formattedTime;
             switch (troopRequest.getTroopType())
             {
                 case ARCHER:
-                    formattedTime = player.troopBuildings.trainTroops(BuildingTypes.ARCHERYRANGE, troopRequest.getQuantity());
-                    player.setArcherFinalDate(formattedTime);
-                    return playerRepository.save(player);
+                    if (player.resources.getResource(ResourceType.FOOD) >= player.troopBuildings.getTrainingBuilding(BuildingTypes.ARCHERYRANGE).getTrainingCost() * troopRequest.getQuantity())
+                    {
+                        player.resources.removeResource(ResourceType.FOOD, player.troopBuildings.getTrainingBuilding(BuildingTypes.ARCHERYRANGE).getTrainingCost() * troopRequest.getQuantity());
+                        formattedTime = player.troopBuildings.trainTroops(BuildingTypes.ARCHERYRANGE, troopRequest.getQuantity());
+                        player.setArcherFinalDate(formattedTime);
+                        return playerRepository.save(player);
+                    }
+                    else
+                    {
+                        throw new RuntimeException("Not Enough Food!");
+                    }
                 case MAGE:
-                    formattedTime = player.troopBuildings.trainTroops(BuildingTypes.MAGETOWER, troopRequest.getQuantity());
-                    player.setMageFinalDate(formattedTime);
-                    return playerRepository.save(player);
+                    if (player.resources.getResource(ResourceType.FOOD) >= player.troopBuildings.getTrainingBuilding(BuildingTypes.MAGETOWER).getTrainingCost() * troopRequest.getQuantity())
+                    {
+                        player.resources.removeResource(ResourceType.FOOD, player.troopBuildings.getTrainingBuilding(BuildingTypes.MAGETOWER).getTrainingCost() * troopRequest.getQuantity());
+                        formattedTime = player.troopBuildings.trainTroops(BuildingTypes.MAGETOWER, troopRequest.getQuantity());
+                        player.setMageFinalDate(formattedTime);
+                        return playerRepository.save(player);
+                    }
+                    else
+                    {
+                        throw new RuntimeException("Not Enough Food!");
+                    }
                 case CAVALRY:
-                    formattedTime = player.troopBuildings.trainTroops(BuildingTypes.STABLES, troopRequest.getQuantity());
-                    player.setCavalryFinalDate(formattedTime);
-                    return playerRepository.save(player);
+                    if (player.resources.getResource(ResourceType.FOOD) >= player.troopBuildings.getTrainingBuilding(BuildingTypes.STABLES).getTrainingCost() * troopRequest.getQuantity())
+                    {
+                        player.resources.removeResource(ResourceType.FOOD, player.troopBuildings.getTrainingBuilding(BuildingTypes.STABLES).getTrainingCost() * troopRequest.getQuantity());
+                        formattedTime = player.troopBuildings.trainTroops(BuildingTypes.STABLES, troopRequest.getQuantity());
+                        player.setCavalryFinalDate(formattedTime);
+                        return playerRepository.save(player);
+                    }
+                    else
+                    {
+                        throw new RuntimeException("Not Enough Food!");
+                    }
                 case WARRIOR:
-                    formattedTime = player.troopBuildings.trainTroops(BuildingTypes.WARRIORSCHOOL, troopRequest.getQuantity());
-                    player.setWarriorFinalDate(formattedTime);
-                    return playerRepository.save(player);
+                    if (player.resources.getResource(ResourceType.FOOD) >= player.troopBuildings.getTrainingBuilding(BuildingTypes.WARRIORSCHOOL).getTrainingCost() * troopRequest.getQuantity())
+                    {
+                        player.resources.removeResource(ResourceType.FOOD, player.troopBuildings.getTrainingBuilding(BuildingTypes.WARRIORSCHOOL).getTrainingCost() * troopRequest.getQuantity());
+                        formattedTime = player.troopBuildings.trainTroops(BuildingTypes.WARRIORSCHOOL, troopRequest.getQuantity());
+                        player.setWarriorFinalDate(formattedTime);
+                        return playerRepository.save(player);
+                    }
+                    else
+                    {
+                        throw new RuntimeException("Not Enough Food!");
+                    }
             }
         }
         return null;

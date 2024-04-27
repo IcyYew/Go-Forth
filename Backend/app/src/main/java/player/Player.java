@@ -1,10 +1,14 @@
 package player;
 
+import buildings.Building;
 import buildings.BuildingManager;
 import buildings.BuildingTypes;
+import buildings.OtherBuilding;
 import buildings.Research.ResearchManager;
+import buildings.resourcebuildings.ResourceBuilding;
 import buildings.resourcebuildings.ResourceBuildingManager;
 import buildings.troopBuildings.TroopBuildingManager;
+import buildings.troopBuildings.TroopTrainingBuilding;
 import jakarta.persistence.*;
 import resources.ResourceManager;
 import troops.TroopManager;
@@ -355,6 +359,32 @@ public class Player {
 
     public void setResourceBuildings(ResourceBuildingManager resourceBuildings) {
         this.resourceBuildings = resourceBuildings;
+    }
+
+    public Building getBuildingOfType(BuildingTypes buildingType)
+    {
+        for (ResourceBuilding resourceBuilding : resourceBuildings.resourceBuildingManager)
+        {
+            if (resourceBuilding.getBuildingType() == buildingType)
+            {
+                return resourceBuilding;
+            }
+        }
+        for (TroopTrainingBuilding troopTrainingBuilding : troopBuildings.troopBuildingManager)
+        {
+            if (troopTrainingBuilding.getBuildingType() == buildingType)
+            {
+                return troopTrainingBuilding;
+            }
+        }
+        for (OtherBuilding otherBuilding : buildings.buildingManager)
+        {
+            if (otherBuilding.getBuildingType() == buildingType)
+            {
+                return otherBuilding;
+            }
+        }
+        return null;
     }
 
     /**

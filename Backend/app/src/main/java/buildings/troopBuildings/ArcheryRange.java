@@ -39,8 +39,6 @@ public class ArcheryRange extends TroopTrainingBuilding {
 
     }
 
-
-
     @Override
     public double getTrainingTime() {
         return super.getTrainingTime();
