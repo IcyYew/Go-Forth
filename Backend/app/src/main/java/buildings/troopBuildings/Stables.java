@@ -30,6 +30,4 @@ public class Stables extends TroopTrainingBuilding{
 
     }
 
-    public Stables() {
-    }
 }

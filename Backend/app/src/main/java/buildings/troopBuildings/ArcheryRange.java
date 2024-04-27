@@ -37,8 +37,6 @@ public class ArcheryRange extends TroopTrainingBuilding {
 
     }
 
-    public ArcheryRange() {
-    }
 
 
     @Override

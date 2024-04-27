@@ -37,13 +37,10 @@ public class Research {
         setResearchManager(researchManager);
         setTier(tier);
         setLevel(level);
-        initializeValues();
+        setPlatinumCost(50 + (this.level * 200) + (this.tier * 500));
+        setPower(0);
     }
 
-    public void initializeValues() {
-        setPower(100 + (this.level * 500) + (this.tier * 750));
-        setPlatinumCost(50 + (this.level * 200) + (this.tier * 500));
-    }
 
     public Research() {
 
@@ -97,6 +94,11 @@ public class Research {
         this.level = level;
         setPower(getPower() + (this.level * 500) + (this.tier * 750));
         setPlatinumCost(getPlatinumCost() + (this.level * 200) + (this.tier * 500));
+    }
+    public void levelUpResearch(int level, ResearchManager researchManager) {
+        this.level = level;
+        setPower(getPower() + (this.level * 500) + (this.tier * 750));
+        setPlatinumCost(Math.ceil(getPlatinumCost() + (this.level * 200) + (this.tier * 500) * (Math.pow(.97, researchManager.getResearch("Research Cost").getLevel()))));
     }
 
     public double getPlatinumCost() {

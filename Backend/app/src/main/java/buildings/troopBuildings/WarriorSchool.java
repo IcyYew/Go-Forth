@@ -30,6 +30,4 @@ public class WarriorSchool extends TroopTrainingBuilding{
 
     }
 
-    public WarriorSchool() {
-    }
 }
