@@ -137,10 +137,7 @@ public class ResourceActivity extends AppCompatActivity {
             //Back add food clicked
             @Override
             public void onClick(View v) {
-                for(int i = 0; i < List.size(); i++) {
-                    if(List.get(i).Resource == "FOOD")
-                        addResource(List.get(i).ID, "FOOD");
-                }
+                addResource("FOOD");
             }
         });
 
@@ -148,10 +145,7 @@ public class ResourceActivity extends AppCompatActivity {
             //Add wood clicked
             @Override
             public void onClick(View v) {
-                for(int i = 0; i < List.size(); i++) {
-                    if(List.get(i).Resource == "WOOD")
-                        addResource(List.get(i).ID, "WOOD");
-                }
+                addResource("WOOD");
             }
         });
 
@@ -159,10 +153,7 @@ public class ResourceActivity extends AppCompatActivity {
             //Add stone clicked
             @Override
             public void onClick(View v) {
-                for(int i = 0; i < List.size(); i++) {
-                    if(List.get(i).Resource == "STONE")
-                        addResource(List.get(i).ID, "STONE");
-                }
+                        addResource("STONE");
             }
         });
 
@@ -170,10 +161,7 @@ public class ResourceActivity extends AppCompatActivity {
             //Add platinum clicked
             @Override
             public void onClick(View v) {
-                for(int i = 0; i < List.size(); i++) {
-                    if(List.get(i).Resource == "PLATINUM")
-                        addResource(List.get(i).ID, "PLATINUM");
-                }
+                addResource("PLATINUM");
             }
         });
 
@@ -182,15 +170,12 @@ public class ResourceActivity extends AppCompatActivity {
     /**
      * Adds resources to the backend then updates the current count shown onscreen.
      *
-     * @param buildingID ID of building collected from
      * @param resourceName Name of the resource to add
      */
-    private void addResource(int buildingID, String resourceName){
+    private void addResource(String resourceName){
         JSONObject jsonObject = new JSONObject(); //Initialize input JSON
         try {
             jsonObject.put("buildingType", resourceName);
-            jsonObject.put("buildingID", buildingID);
-            jsonObject.put("playerID", userID);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -285,7 +270,7 @@ public class ResourceActivity extends AppCompatActivity {
 
     private void fillListAndCollect(boolean onlyUpdateToCollect) {
         // use getall endpoint URL
-        String url = "http://coms-309-048.class.las.iastate.edu:8080/buildings/getResourceBuildings/" + Integer.toString(userID);
+        String url = "http://coms-309-048.class.las.iastate.edu:8080/buildings/getPlayerBuildings/" + Integer.toString(userID);
         if(!onlyUpdateToCollect) List.clear();
         // make a StringRequest to get the users from the server. Converts JSONArray into StringBuilder.
         StringRequest request = new StringRequest(Request.Method.GET, url,

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ClanJoinActivity">
+
+    <Button
+        android:id="@+id/Back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="20dp"
+        android:text="Back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="147dp"
+        android:layout_height="112dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="33dp"
+        android:text="Enter Clan Name:"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Back" />
+
+    <EditText
+        android:id="@+id/Name"
+        android:layout_width="249dp"
+        android:layout_height="114dp"
+        android:layout_marginTop="101dp"
+        android:layout_marginEnd="7dp"
+        android:ems="10"
+        android:hint="Clan Name"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/Join"
+        android:layout_width="163dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="124dp"
+        android:layout_marginTop="348dp"
+        android:text="Join Clan"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Name" />
+</androidx.constraintlayout.widget.ConstraintLayout>

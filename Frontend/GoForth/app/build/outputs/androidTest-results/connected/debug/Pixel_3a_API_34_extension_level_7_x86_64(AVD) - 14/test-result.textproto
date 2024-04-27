@@ -1,0 +1,276 @@
+# 2024-04-27T03:04:02.677631185Z:
+test_suite_meta_data {
+  scheduled_test_case_count: 5
+}
+test_status: PASSED
+test_result {
+  test_case {
+    test_class: "ExampleInstrumentedTest"
+    test_package: "com.example.goforth"
+    test_method: "useAppContext"
+    start_time {
+      seconds: 1714187019
+      nanos: 660000000
+    }
+    end_time {
+      seconds: 1714187019
+      nanos: 697000000
+    }
+  }
+  test_status: PASSED
+  output_artifact {
+    label {
+      label: "logcat"
+      namespace: "android"
+    }
+    source_path {
+      path: "/home/ndlynch/sd2_1/Frontend/GoForth/app/build/outputs/androidTest-results/connected/debug/Pixel_3a_API_34_extension_level_7_x86_64(AVD) - 14/logcat-com.example.goforth.ExampleInstrumentedTest-useAppContext.txt"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info"
+      namespace: "android"
+    }
+    source_path {
+      path: "/home/ndlynch/sd2_1/Frontend/GoForth/app/build/outputs/androidTest-results/connected/debug/Pixel_3a_API_34_extension_level_7_x86_64(AVD) - 14/device-info.pb"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.meminfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/home/ndlynch/sd2_1/Frontend/GoForth/app/build/outputs/androidTest-results/connected/debug/Pixel_3a_API_34_extension_level_7_x86_64(AVD) - 14/meminfo"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.cpuinfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/home/ndlynch/sd2_1/Frontend/GoForth/app/build/outputs/androidTest-results/connected/debug/Pixel_3a_API_34_extension_level_7_x86_64(AVD) - 14/cpuinfo"
+    }
+  }
+}
+test_result {
+  test_case {
+    test_class: "NicholasSystemTest"
+    test_package: "com.example.goforth"
+    test_method: "testLogin"
+    start_time {
+      seconds: 1714187019
+      nanos: 735000000
+    }
+    end_time {
+      seconds: 1714187025
+      nanos: 88000000
+    }
+  }
+  test_status: PASSED
+  output_artifact {
+    label {
+      label: "logcat"
+      namespace: "android"
+    }
+    source_path {
+      path: "/home/ndlynch/sd2_1/Frontend/GoForth/app/build/outputs/androidTest-results/connected/debug/Pixel_3a_API_34_extension_level_7_x86_64(AVD) - 14/logcat-com.example.goforth.NicholasSystemTest-testLogin.txt"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info"
+      namespace: "android"
+    }
+    source_path {
+      path: "/home/ndlynch/sd2_1/Frontend/GoForth/app/build/outputs/androidTest-results/connected/debug/Pixel_3a_API_34_extension_level_7_x86_64(AVD) - 14/device-info.pb"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.meminfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/home/ndlynch/sd2_1/Frontend/GoForth/app/build/outputs/androidTest-results/connected/debug/Pixel_3a_API_34_extension_level_7_x86_64(AVD) - 14/meminfo"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.cpuinfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/home/ndlynch/sd2_1/Frontend/GoForth/app/build/outputs/androidTest-results/connected/debug/Pixel_3a_API_34_extension_level_7_x86_64(AVD) - 14/cpuinfo"
+    }
+  }
+}
+test_result {
+  test_case {
+    test_class: "NicholasSystemTest"
+    test_package: "com.example.goforth"
+    test_method: "signupTest"
+    start_time {
+      seconds: 1714187025
+      nanos: 896000000
+    }
+    end_time {
+      seconds: 1714187030
+      nanos: 795000000
+    }
+  }
+  test_status: PASSED
+  output_artifact {
+    label {
+      label: "logcat"
+      namespace: "android"
+    }
+    source_path {
+      path: "/home/ndlynch/sd2_1/Frontend/GoForth/app/build/outputs/androidTest-results/connected/debug/Pixel_3a_API_34_extension_level_7_x86_64(AVD) - 14/logcat-com.example.goforth.NicholasSystemTest-signupTest.txt"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info"
+      namespace: "android"
+    }
+    source_path {
+      path: "/home/ndlynch/sd2_1/Frontend/GoForth/app/build/outputs/androidTest-results/connected/debug/Pixel_3a_API_34_extension_level_7_x86_64(AVD) - 14/device-info.pb"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.meminfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/home/ndlynch/sd2_1/Frontend/GoForth/app/build/outputs/androidTest-results/connected/debug/Pixel_3a_API_34_extension_level_7_x86_64(AVD) - 14/meminfo"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.cpuinfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/home/ndlynch/sd2_1/Frontend/GoForth/app/build/outputs/androidTest-results/connected/debug/Pixel_3a_API_34_extension_level_7_x86_64(AVD) - 14/cpuinfo"
+    }
+  }
+}
+test_result {
+  test_case {
+    test_class: "NicholasSystemTest"
+    test_package: "com.example.goforth"
+    test_method: "clanJoin"
+    start_time {
+      seconds: 1714187031
+      nanos: 633000000
+    }
+    end_time {
+      seconds: 1714187035
+      nanos: 829000000
+    }
+  }
+  test_status: PASSED
+  output_artifact {
+    label {
+      label: "logcat"
+      namespace: "android"
+    }
+    source_path {
+      path: "/home/ndlynch/sd2_1/Frontend/GoForth/app/build/outputs/androidTest-results/connected/debug/Pixel_3a_API_34_extension_level_7_x86_64(AVD) - 14/logcat-com.example.goforth.NicholasSystemTest-clanJoin.txt"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info"
+      namespace: "android"
+    }
+    source_path {
+      path: "/home/ndlynch/sd2_1/Frontend/GoForth/app/build/outputs/androidTest-results/connected/debug/Pixel_3a_API_34_extension_level_7_x86_64(AVD) - 14/device-info.pb"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.meminfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/home/ndlynch/sd2_1/Frontend/GoForth/app/build/outputs/androidTest-results/connected/debug/Pixel_3a_API_34_extension_level_7_x86_64(AVD) - 14/meminfo"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.cpuinfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/home/ndlynch/sd2_1/Frontend/GoForth/app/build/outputs/androidTest-results/connected/debug/Pixel_3a_API_34_extension_level_7_x86_64(AVD) - 14/cpuinfo"
+    }
+  }
+}
+test_result {
+  test_case {
+    test_class: "NicholasSystemTest"
+    test_package: "com.example.goforth"
+    test_method: "clanCreation"
+    start_time {
+      seconds: 1714187036
+      nanos: 765000000
+    }
+    end_time {
+      seconds: 1714187040
+      nanos: 636000000
+    }
+  }
+  test_status: PASSED
+  output_artifact {
+    label {
+      label: "logcat"
+      namespace: "android"
+    }
+    source_path {
+      path: "/home/ndlynch/sd2_1/Frontend/GoForth/app/build/outputs/androidTest-results/connected/debug/Pixel_3a_API_34_extension_level_7_x86_64(AVD) - 14/logcat-com.example.goforth.NicholasSystemTest-clanCreation.txt"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info"
+      namespace: "android"
+    }
+    source_path {
+      path: "/home/ndlynch/sd2_1/Frontend/GoForth/app/build/outputs/androidTest-results/connected/debug/Pixel_3a_API_34_extension_level_7_x86_64(AVD) - 14/device-info.pb"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.meminfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/home/ndlynch/sd2_1/Frontend/GoForth/app/build/outputs/androidTest-results/connected/debug/Pixel_3a_API_34_extension_level_7_x86_64(AVD) - 14/meminfo"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.cpuinfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/home/ndlynch/sd2_1/Frontend/GoForth/app/build/outputs/androidTest-results/connected/debug/Pixel_3a_API_34_extension_level_7_x86_64(AVD) - 14/cpuinfo"
+    }
+  }
+}
+output_artifact {
+  label {
+    label: "test-results.log"
+    namespace: "com.google.testing.platform.runtime.android.driver.AndroidInstrumentationDriver"
+  }
+  source_path {
+    path: "/home/ndlynch/sd2_1/Frontend/GoForth/app/build/outputs/androidTest-results/connected/debug/Pixel_3a_API_34_extension_level_7_x86_64(AVD) - 14/testlog/test-results.log"
+  }
+  type: TEST_DATA
+  mime_type: "text/plain"
+}

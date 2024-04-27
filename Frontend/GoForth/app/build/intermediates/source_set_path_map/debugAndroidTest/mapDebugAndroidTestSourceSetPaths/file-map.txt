@@ -1,0 +1,6 @@
+com.example.goforth.test.app-annotation-experimental-1.4.0-0 /home/ndlynch/.gradle/caches/transforms-3/114b2297a508ec651c76a747782d8bb8/transformed/annotation-experimental-1.4.0/res
+com.example.goforth.test.app-core-1.5.0-1 /home/ndlynch/.gradle/caches/transforms-3/ddc9225bc569f6db036fc98f9d401b51/transformed/core-1.5.0/res
+com.example.goforth.test.app-androidTest-2 /home/ndlynch/sd2_1/Frontend/GoForth/app/build/generated/res/resValues/androidTest/debug
+com.example.goforth.test.app-mergeDebugAndroidTestResources-3 /home/ndlynch/sd2_1/Frontend/GoForth/app/build/intermediates/incremental/debugAndroidTest/mergeDebugAndroidTestResources/merged.dir
+com.example.goforth.test.app-mergeDebugAndroidTestResources-4 /home/ndlynch/sd2_1/Frontend/GoForth/app/build/intermediates/incremental/debugAndroidTest/mergeDebugAndroidTestResources/stripped.dir
+com.example.goforth.test.app-debugAndroidTest-5 /home/ndlynch/sd2_1/Frontend/GoForth/app/build/intermediates/merged_res/debugAndroidTest/mergeDebugAndroidTestResources
