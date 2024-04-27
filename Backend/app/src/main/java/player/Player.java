@@ -1,6 +1,7 @@
 package player;
 
 import buildings.BuildingManager;
+import buildings.Research.ResearchManager;
 import buildings.resourcebuildings.ResourceBuildingManager;
 import buildings.troopBuildings.TroopBuildingManager;
 import jakarta.persistence.*;
@@ -45,6 +46,9 @@ public class Player {
     public TroopManager troops;
 
     @ManyToOne(cascade = CascadeType.ALL)
+    ResearchManager research;
+
+    @ManyToOne(cascade = CascadeType.ALL)
     public BuildingManager buildings;
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -52,6 +56,16 @@ public class Player {
 
     @ManyToOne(cascade = CascadeType.ALL)
     public ResourceBuildingManager resourceBuildings;
+
+
+
+    public ResearchManager getResearchManager() {
+        return research;
+    }
+
+    public void setResearchManager(ResearchManager researchManager) {
+        this.research= researchManager;
+    }
 
     @Column(name="clan-permissions-level")
     private Integer clanPermissions = 0;
@@ -171,13 +185,14 @@ public class Player {
      * @param password
      */
     public Player(ResourceManager resources, TroopManager troops, BuildingManager buildings,
-                  TroopBuildingManager troopBuildings, ResourceBuildingManager resourceBuildings,
+                  TroopBuildingManager troopBuildings, ResourceBuildingManager resourceBuildings, ResearchManager researchManager,
                   int playerID, double power, String userName, String password, int locationX, int locationY) {
         setResources(resources);
         setTroops(troops);
         setBuildings(buildings);
         setTroopBuildings(troopBuildings);
         setResourceBuildings(resourceBuildings);
+        setResearchManager(researchManager);
         setPlayerID(playerID);
         setPower(power);
         setUserName(userName);
@@ -247,7 +262,15 @@ public class Player {
      * Updates a player's power
      */
     public void updatePower() {
-        this.power = troops.calculateTotalTroopPower();
+        this.power = 0;
+        this.power += troops.calculateTotalTroopPower();
+        this.power += research.getResearch("Attack Bonus").getPower();
+        this.power += research.getResearch("Training Speed").getPower();
+        this.power += research.getResearch("Building Cost").getPower();
+        this.power += research.getResearch("Research Cost").getPower();
+        this.power += research.getResearch("Training Capacity").getPower();
+        this.power += research.getResearch("Building Speed").getPower();
+
         this.power += troopBuildings.calculateTotalTroopBuildingPower();
         this.power += resourceBuildings.calculateTotalResourceBuildingPower();
         this.power += buildings.calculateTotalOtherBuildingPower();
@@ -349,6 +372,7 @@ public class Player {
                 "buildings=" + buildings +
                 ", playerID=" + playerID +
                 ", power=" + power +
+                ", research=" + research +
                 '}';
     }
 }

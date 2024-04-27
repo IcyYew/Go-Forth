@@ -1,22 +1,24 @@
 package player;
 
-import buildings.Building;
+import buildings.BuildingController;
 import buildings.BuildingManager;
 import buildings.BuildingTypes;
+import buildings.Research.Research;
+import buildings.Research.ResearchManager;
+import buildings.Research.ResearchRepository;
 import buildings.resourcebuildings.ResourceBuildingManager;
 import buildings.troopBuildings.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import resources.ResourceManager;
-import resources.ResourceRepository;
 import resources.ResourceType;
 import troops.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
+
+import static troops.TroopTypes.ARCHER;
 
 /**
  * A REST controller for managing a player's information
@@ -75,6 +77,7 @@ public class PlayerController {
         player = playerRepository.save(player);
         player.setTroops(new TroopManager(player.getPlayerID()));
         player.setResources(new ResourceManager(player.getPlayerID()));
+        player.setResearchManager(new ResearchManager(player.getPlayerID()));
         player.setBuildings(new BuildingManager(player.getPlayerID()));
         player.setTroopBuildings(new TroopBuildingManager(player.getPlayerID()));
         player.setResourceBuildings(new ResourceBuildingManager(player.getPlayerID()));

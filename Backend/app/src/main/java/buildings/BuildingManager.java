@@ -1,6 +1,11 @@
 package buildings;
 
 import buildings.resourcebuildings.ResourceBuilding;
+import buildings.resourcebuildings.Farm;
+import buildings.resourcebuildings.LumberYard;
+import buildings.resourcebuildings.PlatinumMine;
+import buildings.resourcebuildings.Quarry;
+import buildings.troopBuildings.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import java.util.ArrayList;
