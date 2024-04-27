@@ -25,6 +25,8 @@ public class Farm extends ResourceBuilding {
         setResourceProductionRate(10);
         setTimeLastCollected(LocalDateTime.now());
         setPower(30);
+        setStoneUpgradeCost(400);
+        setWoodUpgradeCost(400);
     }
 
     public Farm()

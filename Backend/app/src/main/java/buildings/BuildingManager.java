@@ -99,6 +99,18 @@ public class BuildingManager {
         return power;
     }
 
+    public OtherBuilding getOtherBuilding(BuildingTypes buildingType)
+    {
+        for (OtherBuilding otherBuilding : buildingManager)
+        {
+            if (otherBuilding.getBuildingType() == buildingType)
+            {
+                return otherBuilding;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString()
     {

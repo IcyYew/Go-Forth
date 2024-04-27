@@ -2,10 +2,8 @@ package buildings;
 
 import buildings.Research.Research;
 import buildings.Research.ResearchManager;
-import buildings.Research.ResearchRepository;
 import buildings.resourcebuildings.ResourceBuilding;
 import buildings.resourcebuildings.ResourceBuildingRepository;
-import buildings.troopBuildings.ArcheryRange;
 import buildings.troopBuildings.TroopBuildingRepository;
 import buildings.troopBuildings.TroopTrainingBuilding;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +12,7 @@ import player.Player;
 import player.PlayerRepository;
 import resources.ResourceType;
 
+import javax.print.attribute.standard.MediaSize;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -121,7 +120,7 @@ public class BuildingController {
        player.updatePower();
        playerRepository.save(player);
     }
-    
+
     @GetMapping("/buildings/getPlayerBuildings/{playerID}")
     public List<Building> getPlayerBuildings(@PathVariable int playerID)
     {
@@ -162,21 +161,86 @@ public class BuildingController {
     public String upgradeBuilding(@PathVariable int playerID, @RequestBody BuildingRequest buildingRequest)
     {
         Player player = playerRepository.findById(playerID).orElse(null);
-        Building building = buildingRepository.findById(buildingRequest.getBuildingID()).orElse(null);
-        if (building != null && player != null)
+
+        if (player != null)
         {
-            try {
-                building.upgrade();
-                buildingRepository.save(building);
-                playerRepository.save(player);
-                return "Building upgraded to level " + building.getLevel() + ".";
-            }
-            catch (Exception e)
+            switch (buildingRequest.getBuildingType())
             {
-                return e.getMessage();
+                case FARM:
+                case LUMBERYARD:
+                case PLATINUMMINE:
+                case QUARRY:
+                    ResourceBuilding resourceBuilding = player.resourceBuildings.getResourceBuilding(buildingRequest.getBuildingType());
+                    if (player.resources.getResource(ResourceType.WOOD) >= resourceBuilding.getWoodUpgradeCost() &&
+                            player.resources.getResource(ResourceType.STONE) >= resourceBuilding.getStoneUpgradeCost())
+                    {
+                        try {
+                            player.resources.removeResource(ResourceType.STONE, resourceBuilding.getStoneUpgradeCost());
+                            player.resources.removeResource(ResourceType.WOOD, resourceBuilding.getWoodUpgradeCost());
+                            player.resourceBuildings.upgradeBuilding(buildingRequest.getBuildingType());
+                            playerRepository.save(player);
+                            return "Building upgraded to level " + player.resourceBuildings.getLevel(buildingRequest.getBuildingType()) + ".";
+                        }
+                        catch (Exception e)
+                        {
+                            return e.getMessage();
+                        }
+                    }
+                    else
+                    {
+                        return "Not Enough Resources";
+                    }
+                case ARCHERYRANGE:
+                case MAGETOWER:
+                case STABLES:
+                case WARRIORSCHOOL:
+                    TroopTrainingBuilding troopTrainingBuilding = player.troopBuildings.getTrainingBuilding(buildingRequest.getBuildingType());
+                    if (player.resources.getResource(ResourceType.WOOD) >= troopTrainingBuilding.getWoodUpgradeCost() &&
+                            player.resources.getResource(ResourceType.STONE) >= troopTrainingBuilding.getStoneUpgradeCost())
+                    {
+                        try
+                        {
+                            player.resources.removeResource(ResourceType.STONE, troopTrainingBuilding.getStoneUpgradeCost());
+                            player.resources.removeResource(ResourceType.WOOD, troopTrainingBuilding.getWoodUpgradeCost());
+                            player.troopBuildings.upgradeBuilding(buildingRequest.getBuildingType());
+                            playerRepository.save(player);
+                            return "Building upgraded to level " + player.troopBuildings.getLevel(buildingRequest.getBuildingType()) + ".";
+                        }
+                        catch (Exception e)
+                        {
+                            return e.getMessage();
+                        }
+                    }
+                    else
+                    {
+                        return "Not Enough Resources";
+                    }
+                case MAINBUILDING:
+                case RESEARCHBUILDING:
+                    OtherBuilding otherBuilding = player.buildings.getOtherBuilding(buildingRequest.getBuildingType());
+                    if (player.resources.getResource(ResourceType.WOOD) >= otherBuilding.getWoodUpgradeCost() &&
+                            player.resources.getResource(ResourceType.STONE) >= otherBuilding.getStoneUpgradeCost())
+                    {
+                        try
+                        {
+                            player.resources.removeResource(ResourceType.STONE, otherBuilding.getStoneUpgradeCost());
+                            player.resources.removeResource(ResourceType.WOOD, otherBuilding.getWoodUpgradeCost());
+                            player.buildings.upgradeBuilding(buildingRequest.getBuildingType());
+                            playerRepository.save(player);
+                            return "Building upgraded to level " + player.buildings.getLevel(buildingRequest.getBuildingType()) + ".";
+                        }
+                        catch (Exception e)
+                        {
+                            return e.getMessage();
+                        }
+                    }
+                    else
+                    {
+                        return "Not Enough Resources";
+                    }
             }
         }
-        return "Building not found.";
+        return null;
     }
 
     public static class ResearchLevelRequest {
@@ -221,11 +285,10 @@ public class BuildingController {
     @PostMapping("/buildings/collectResources/{playerID}")
     public int collectResources(@PathVariable int playerID, @RequestBody BuildingRequest buildingRequest)
     {
-        ResourceBuilding building = resourceBuildingRepository.findById(buildingRequest.getBuildingID()).orElse(null);
         Player player = playerRepository.findById(playerID).orElse(null);
-        if (building != null && player != null)
+        if (player != null)
         {
-            int amountCollected = building.collectResources();
+            int amountCollected = player.resourceBuildings.collectResources(buildingRequest.buildingType);
             switch (buildingRequest.getBuildingType())
             {
                 case FARM:
@@ -237,7 +300,6 @@ public class BuildingController {
                 case QUARRY:
                     player.resources.addResource(ResourceType.STONE, amountCollected);
             }
-            buildingRepository.save(building);
             playerRepository.save(player);
             return amountCollected;
         }
@@ -264,21 +326,11 @@ public class BuildingController {
 
     public static class BuildingRequest
     {
-        private int buildingID;
         private BuildingTypes buildingType;
 
-        public BuildingRequest(int buildingID, BuildingTypes buildingType)
+        public BuildingRequest(BuildingTypes buildingType)
         {
-            setBuildingID(buildingID);
             setBuildingType(buildingType);
-        }
-
-        public int getBuildingID() {
-            return buildingID;
-        }
-
-        public void setBuildingID(int buildingID) {
-            this.buildingID = buildingID;
         }
 
         public BuildingTypes getBuildingType() {

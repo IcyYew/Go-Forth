@@ -50,9 +50,12 @@ public class TroopBuildingManager
         }
         return 0;
     }
-    public TroopTrainingBuilding getTrainingBuilding(BuildingTypes buildingType) {
-        for (TroopTrainingBuilding troopTrainingBuilding : troopBuildingManager) {
-            if (troopTrainingBuilding.getBuildingType() == buildingType) {
+    public TroopTrainingBuilding getTrainingBuilding(BuildingTypes buildingType)
+    {
+        for (TroopTrainingBuilding troopTrainingBuilding : troopBuildingManager)
+        {
+            if (troopTrainingBuilding.getBuildingType() == buildingType)
+            {
                 return troopTrainingBuilding;
             }
         }
