@@ -51,6 +51,11 @@ public class TroopBuildingManager
         return 0;
     }
 
+    public List<TroopTrainingBuilding> getTroopBuildings()
+    {
+        return troopBuildingManager;
+    }
+
     public String trainTroops(BuildingTypes buildingType, int quantity)
     {
         for (TroopTrainingBuilding troopTrainingBuilding : troopBuildingManager)

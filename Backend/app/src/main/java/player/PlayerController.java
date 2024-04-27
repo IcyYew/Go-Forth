@@ -162,7 +162,7 @@ public class PlayerController {
                     return playerRepository.save(player);
                 case WARRIOR:
                     formattedTime = player.troopBuildings.trainTroops(BuildingTypes.WARRIORSCHOOL, troopRequest.getQuantity());
-                    player.setCavalryFinalDate(formattedTime);
+                    player.setWarriorFinalDate(formattedTime);
                     return playerRepository.save(player);
             }
         }
