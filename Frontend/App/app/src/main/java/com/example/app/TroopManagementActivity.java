@@ -524,21 +524,26 @@ public class TroopManagementActivity extends AppCompatActivity {
             LocalDateTime archerFinal = LocalDateTime.parse(archerFinalDate, format);
             LocalDateTime mageFinal = LocalDateTime.parse(mageFinalDate, format);
             LocalDateTime cavalryFinal = LocalDateTime.parse(cavalryFinalDate, format);
+            LocalDateTime knightFinal = LocalDateTime.parse(warriorFinalDate, format);
 
             now = LocalDateTime.now();
 
             Duration archerDuration = Duration.between(now, archerFinal);
             Duration mageDuration = Duration.between(now, mageFinal);
             Duration cavalryDuration = Duration.between(now, cavalryFinal);
+            Duration knightDuration = Duration.between(now, knightFinal);
 
             if (archersToTrainCount > 0) {
-                totalDifference += archerDuration.toMillis() - 7000;
+                totalDifference += archerDuration.toMillis() - 3000;
             }
             if (magesToTrainCount > 0) {
-                totalDifference += mageDuration.toMillis() - 7000;
+                totalDifference += mageDuration.toMillis() - 3000;
             }
             if (cavalryToTrainCount > 0) {
-                totalDifference += cavalryDuration.toMillis() - 7000;
+                totalDifference += cavalryDuration.toMillis() - 3000;
+            }
+            if (knightsToTrainCount > 0) {
+                totalDifference += knightDuration.toMillis() - 3000;
             }
         }
 
