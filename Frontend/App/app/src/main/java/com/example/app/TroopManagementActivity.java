@@ -412,7 +412,7 @@ public class TroopManagementActivity extends AppCompatActivity {
         super.onPause();
         // Save remaining time to SharedPreferences
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putLong("millisLeft", timeLeftInMillis);
+        editor.putLong("millisLeft", 0);
         editor.apply();
         // Cancel the countdown timer
         if (countDownTimer != null) {
@@ -477,7 +477,7 @@ public class TroopManagementActivity extends AppCompatActivity {
 
                             Log.d("Total Time", "Total time = " + totalTimeInMillis);
 
-                            if (timeLeftInMillis <= 5) {
+                            if (timeLeftInMillis == 0) {
                                 timeLeftInMillis = totalTimeInMillis;
                             }
 
