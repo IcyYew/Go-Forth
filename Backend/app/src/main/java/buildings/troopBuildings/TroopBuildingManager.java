@@ -1,12 +1,15 @@
 package buildings.troopBuildings;
 
 import buildings.BuildingTypes;
+import buildings.resourcebuildings.ResourceBuilding;
+import buildings.resourcebuildings.ResourceBuildingManagerSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonSerialize(using = TroopBuildingManagerSerializer.class)
 @Entity
 public class TroopBuildingManager
 {
@@ -15,7 +18,18 @@ public class TroopBuildingManager
     private Integer playerId;
 
     @OneToMany(mappedBy = "troopBuildingManager", cascade = CascadeType.ALL)
-    private List<TroopTrainingBuilding> troopBuildingManager;
+    public List<TroopTrainingBuilding> troopBuildingManager;
+
+    public TroopBuildingManager(Integer playerId) {
+        this.playerId = playerId;
+        this.troopBuildingManager = new ArrayList<>();
+        initializeTroopBuildings();
+    }
+
+    public TroopBuildingManager()
+    {
+
+    }
 
     private void initializeTroopBuildings()
     {
@@ -58,6 +72,16 @@ public class TroopBuildingManager
                 troopTrainingBuilding.upgrade();
             }
         }
+    }
+
+    public long calculateTotalTroopBuildingPower()
+    {
+        long power = 0;
+        for (TroopTrainingBuilding troopTrainingBuilding : troopBuildingManager)
+        {
+            power += troopTrainingBuilding.getPower();
+        }
+        return power;
     }
 
     @Override

@@ -5,6 +5,8 @@ import buildings.BuildingTypes;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
+import java.time.LocalDateTime;
+
 /**
  * Class for the Lumberyard.
  * @author Michael Geltz.
@@ -17,5 +19,12 @@ public class LumberYard extends ResourceBuilding{
     {
         super(BuildingTypes.LUMBERYARD, level, resourceBuildingManager);
         setResourceProductionRate(10);
+        setTimeLastCollected(LocalDateTime.now());
+        setPower(30);
+    }
+
+    public LumberYard()
+    {
+
     }
 }

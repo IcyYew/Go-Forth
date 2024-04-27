@@ -27,7 +27,12 @@ public class ArcheryRange extends TroopTrainingBuilding{
         super(BuildingTypes.ARCHERYRANGE, level, troopBuildingManager);
         setTrainingCapacity(50);
         setTrainingTime(10);
-        setStoneTrainingCost(30);
-        setWoodTrainingCost(40);
+        setTrainingCost(10);
+        setPower(50);
+    }
+
+    public ArcheryRange()
+    {
+
     }
 }
