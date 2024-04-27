@@ -157,87 +157,26 @@ public class BuildingController {
         return 0;
     }
 
-    @PostMapping("/buildings/upgrade/{playerID}")
-    public String upgradeBuilding(@PathVariable int playerID, @RequestBody BuildingRequest buildingRequest)
-    {
-        Player player = playerRepository.findById(playerID).orElse(null);
+    @PostMapping("/buildings/upgrade")
+    public Player upgradeBuilding(@RequestBody BuildingRequest buildingRequest) throws Exception {
+        Player player = playerRepository.findById(buildingRequest.getPlayerID()).orElse(null);
 
         if (player != null)
         {
-            switch (buildingRequest.getBuildingType())
+            Building building = player.getBuildingOfType(buildingRequest.getBuildingType());
             {
-                case FARM:
-                case LUMBERYARD:
-                case PLATINUMMINE:
-                case QUARRY:
-                    ResourceBuilding resourceBuilding = player.resourceBuildings.getResourceBuilding(buildingRequest.getBuildingType());
-                    if (player.resources.getResource(ResourceType.WOOD) >= resourceBuilding.getWoodUpgradeCost() &&
-                            player.resources.getResource(ResourceType.STONE) >= resourceBuilding.getStoneUpgradeCost())
-                    {
-                        try {
-                            player.resources.removeResource(ResourceType.STONE, resourceBuilding.getStoneUpgradeCost());
-                            player.resources.removeResource(ResourceType.WOOD, resourceBuilding.getWoodUpgradeCost());
-                            player.resourceBuildings.upgradeBuilding(buildingRequest.getBuildingType());
-                            playerRepository.save(player);
-                            return "Building upgraded to level " + player.resourceBuildings.getLevel(buildingRequest.getBuildingType()) + ".";
-                        }
-                        catch (Exception e)
-                        {
-                            return e.getMessage();
-                        }
-                    }
-                    else
-                    {
-                        return "Not Enough Resources";
-                    }
-                case ARCHERYRANGE:
-                case MAGETOWER:
-                case STABLES:
-                case WARRIORSCHOOL:
-                    TroopTrainingBuilding troopTrainingBuilding = player.troopBuildings.getTrainingBuilding(buildingRequest.getBuildingType());
-                    if (player.resources.getResource(ResourceType.WOOD) >= troopTrainingBuilding.getWoodUpgradeCost() &&
-                            player.resources.getResource(ResourceType.STONE) >= troopTrainingBuilding.getStoneUpgradeCost())
-                    {
-                        try
-                        {
-                            player.resources.removeResource(ResourceType.STONE, troopTrainingBuilding.getStoneUpgradeCost());
-                            player.resources.removeResource(ResourceType.WOOD, troopTrainingBuilding.getWoodUpgradeCost());
-                            player.troopBuildings.upgradeBuilding(buildingRequest.getBuildingType());
-                            playerRepository.save(player);
-                            return "Building upgraded to level " + player.troopBuildings.getLevel(buildingRequest.getBuildingType()) + ".";
-                        }
-                        catch (Exception e)
-                        {
-                            return e.getMessage();
-                        }
-                    }
-                    else
-                    {
-                        return "Not Enough Resources";
-                    }
-                case MAINBUILDING:
-                case RESEARCHBUILDING:
-                    OtherBuilding otherBuilding = player.buildings.getOtherBuilding(buildingRequest.getBuildingType());
-                    if (player.resources.getResource(ResourceType.WOOD) >= otherBuilding.getWoodUpgradeCost() &&
-                            player.resources.getResource(ResourceType.STONE) >= otherBuilding.getStoneUpgradeCost())
-                    {
-                        try
-                        {
-                            player.resources.removeResource(ResourceType.STONE, otherBuilding.getStoneUpgradeCost());
-                            player.resources.removeResource(ResourceType.WOOD, otherBuilding.getWoodUpgradeCost());
-                            player.buildings.upgradeBuilding(buildingRequest.getBuildingType());
-                            playerRepository.save(player);
-                            return "Building upgraded to level " + player.buildings.getLevel(buildingRequest.getBuildingType()) + ".";
-                        }
-                        catch (Exception e)
-                        {
-                            return e.getMessage();
-                        }
-                    }
-                    else
-                    {
-                        return "Not Enough Resources";
-                    }
+                if (player.resources.getResource(ResourceType.WOOD) >= building.getWoodUpgradeCost() &&
+                        player.resources.getResource(ResourceType.STONE) >= building.getStoneUpgradeCost())
+                {
+                    player.resources.removeResource(ResourceType.STONE, building.getStoneUpgradeCost());
+                    player.resources.removeResource(ResourceType.WOOD, building.getWoodUpgradeCost());
+                    building.upgrade();
+                    return playerRepository.save(player);
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
         return null;
@@ -268,24 +207,22 @@ public class BuildingController {
             this.playerID = playerID;
         }
     }
-    @GetMapping("/buildings/getResourcesHeld/{buildingID}")
-    public int getResourcesHeld(@PathVariable int buildingID)
+
+    @PostMapping("/buildings/getResourcesHeld")
+    public int getResourcesHeld(@RequestBody BuildingRequest buildingRequest)
     {
-        ResourceBuilding building = resourceBuildingRepository.findById(buildingID).orElse(null);
-        if (building != null)
+        Player player = playerRepository.findById(buildingRequest.getPlayerID()).orElse(null);
+        if (player != null)
         {
-            return building.getResources();
+            return player.resourceBuildings.getResources(buildingRequest.getBuildingType());
         }
-        else
-        {
-            return 0;
-        }
+        return 0;
     }
 
-    @PostMapping("/buildings/collectResources/{playerID}")
-    public int collectResources(@PathVariable int playerID, @RequestBody BuildingRequest buildingRequest)
+    @PostMapping("/buildings/collectResources")
+    public void collectResources(@RequestBody BuildingRequest buildingRequest)
     {
-        Player player = playerRepository.findById(playerID).orElse(null);
+        Player player = playerRepository.findById(buildingRequest.getPlayerID()).orElse(null);
         if (player != null)
         {
             int amountCollected = player.resourceBuildings.collectResources(buildingRequest.buildingType);
@@ -293,43 +230,44 @@ public class BuildingController {
             {
                 case FARM:
                     player.resources.addResource(ResourceType.FOOD, amountCollected);
+                    break;
                 case LUMBERYARD:
                     player.resources.addResource(ResourceType.WOOD, amountCollected);
+                    break;
                 case PLATINUMMINE:
                     player.resources.addResource(ResourceType.PLATINUM, amountCollected);
+                    break;
                 case QUARRY:
                     player.resources.addResource(ResourceType.STONE, amountCollected);
+                    break;
             }
             playerRepository.save(player);
-            return amountCollected;
         }
-        return 0;
     }
 
     @PostMapping("/buildings/updateResources/{playerID}")
-    public List<Integer> updateResources(@PathVariable int playerID)
+    public Player updateResources(@PathVariable int playerID)
     {
         Player player = playerRepository.findById(playerID).orElse(null);
         if (player != null)
         {
-            List<Integer> list = new ArrayList<>();
             for (ResourceBuilding building : player.resourceBuildings.resourceBuildingManager)
             {
                 building.updateResources();
-                list.add(building.getResources());
             }
-            playerRepository.save(player);
-            return list;
+            return playerRepository.save(player);
         }
         return null;
     }
 
     public static class BuildingRequest
     {
+        private int playerID;
         private BuildingTypes buildingType;
 
-        public BuildingRequest(BuildingTypes buildingType)
+        public BuildingRequest(BuildingTypes buildingType, int playerID)
         {
+            setPlayerID(playerID);
             setBuildingType(buildingType);
         }
 
@@ -339,6 +277,14 @@ public class BuildingController {
 
         public void setBuildingType(BuildingTypes buildingType) {
             this.buildingType = buildingType;
+        }
+
+        public int getPlayerID() {
+            return playerID;
+        }
+
+        public void setPlayerID(int playerID) {
+            this.playerID = playerID;
         }
     }
 }

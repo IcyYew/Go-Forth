@@ -17,7 +17,7 @@ public class TroopTrainingBuilding extends buildings.Building {
     protected double trainingTime;
     protected int trainingCapacity;
     protected double trainingTimeTotal;
-    protected double trainingCost;
+    protected int trainingCost;
     protected LocalDateTime trainingTimeStarted;
     protected LocalDateTime trainingTimeFinished;
     @ManyToOne
@@ -114,11 +114,11 @@ public class TroopTrainingBuilding extends buildings.Building {
         this.troopBuildingManager = troopBuildingManager;
     }
 
-    public double getTrainingCost() {
+    public int getTrainingCost() {
         return trainingCost;
     }
 
-    public void setTrainingCost(double trainingCost) {
+    public void setTrainingCost(int trainingCost) {
         this.trainingCost = trainingCost;
     }
 }

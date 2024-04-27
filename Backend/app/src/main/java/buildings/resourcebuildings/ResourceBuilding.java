@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 public abstract class ResourceBuilding extends Building
 {
     public int resources;
+    public int resourceLimit;
     public int resourceProductionRate;
     public LocalDateTime timeLastCollected;
 
@@ -43,7 +44,8 @@ public abstract class ResourceBuilding extends Building
         if (this.level <= 5) {
             this.level++;
             this.power *= 1.5;
-            resourceProductionRate += 10;
+            this.resourceLimit *= 1.5;
+            resourceProductionRate += 1;
             setStoneUpgradeCost(level);
             setWoodUpgradeCost(level);
         }
@@ -59,6 +61,10 @@ public abstract class ResourceBuilding extends Building
         Duration timeSinceCall = Duration.between(timeLastCollected, currentTime);
         long seconds = timeSinceCall.getSeconds();
         resources += seconds * resourceProductionRate;
+        if (resources >= resourceLimit)
+        {
+            resources = resourceLimit;
+        }
         timeLastCollected = currentTime;
     }
 
@@ -104,5 +110,13 @@ public abstract class ResourceBuilding extends Building
 
     public void setResourceBuildingManager(ResourceBuildingManager resourceBuildingManager) {
         this.resourceBuildingManager = resourceBuildingManager;
+    }
+
+    public int getResourceLimit() {
+        return resourceLimit;
+    }
+
+    public void setResourceLimit(int resourceLimit) {
+        this.resourceLimit = resourceLimit;
     }
 }

@@ -102,6 +102,18 @@ public class ResourceBuildingManager
         return 0;
     }
 
+    public int getResources(BuildingTypes buildingType)
+    {
+        for (ResourceBuilding resourceBuilding : resourceBuildingManager)
+        {
+            if (resourceBuilding.getBuildingType() == buildingType)
+            {
+                return resourceBuilding.getResources();
+            }
+        }
+        return 0;
+    }
+
     @Override
     public String toString()
     {
