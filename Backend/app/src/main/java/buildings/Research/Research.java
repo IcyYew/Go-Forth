@@ -108,4 +108,18 @@ public class Research {
     public void setPlatinumCost(double platinumCost) {
         this.platinumCost = platinumCost;
     }
+
+
+    @Override
+    public String toString() {
+        return "Research{" +
+                "researchId=" + researchId +
+                ", power=" + power +
+                ", tier=" + tier +
+                ", researchName='" + researchName + '\'' +
+                ", level=" + level +
+                ", platinumCost=" + platinumCost +
+                ", researchManager=" + researchManager +
+                '}';
+    }
 }

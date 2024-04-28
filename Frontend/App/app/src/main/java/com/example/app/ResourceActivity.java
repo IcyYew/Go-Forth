@@ -1,5 +1,6 @@
 package com.example.app;
 
+import static java.lang.System.currentTimeMillis;
 import static java.lang.Thread.sleep;
 
 import android.os.Bundle;
@@ -81,7 +82,6 @@ public class ResourceActivity extends AppCompatActivity {
         if (extras != null) {
             userID = extras.getInt("ID");
         }
-        
         //Initialize buttons
         Back = findViewById(R.id.Back);
 
@@ -102,8 +102,8 @@ public class ResourceActivity extends AppCompatActivity {
         addPlatinum = findViewById(R.id.platCollectButton);
 
         Back = findViewById(R.id.Back);
-        updateBuildingAmount();
         updateCurrentStorage();
+        updateBuildingAmount();
 
         stopThread = false;
 
@@ -180,15 +180,16 @@ public class ResourceActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        updateBuildingAmount();
                         updateCurrentStorage();
+                        updateBuildingAmount();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        updateCurrentStorage();
                         updateBuildingAmount();
-                        updateCurrentStorage();                    }
+                    }
                 });
 
         // add to volley queue
@@ -276,9 +277,10 @@ public class ResourceActivity extends AppCompatActivity {
     class UpdateThread implements Runnable {
     public void run()
     {
+        while(System.currentTimeMillis() % 1000 != 0){}
         try {
             while(!stopThread) {
-                updateThread.sleep(1000);
+                Thread.sleep(1000);
                 updateBuildingAmount();
                 //updateCurrentStorage();
             }

@@ -37,8 +37,15 @@ public class BuildingController {
     private OtherBuildingRepository otherBuildingRepository;
 
    @GetMapping("/buildings/research/getallresearch/{playerID}")
-    public ResearchManager researchList(@PathVariable Integer playerID) {
-       return playerRepository.getById(playerID).getResearchManager();
+    public List<Research> researchList(@PathVariable Integer playerID) {
+       List<Research> researchList = new ArrayList<>();
+       ResearchManager researchManager = playerRepository.getById(playerID).getResearchManager();
+       researchList.add(researchManager.getResearch("Attack Bonus"));
+       researchList.add(researchManager.getResearch("Research Cost"));
+       researchList.add(researchManager.getResearch("Training Capacity"));
+       researchList.add(researchManager.getResearch("Training Speed"));
+       researchList.add(researchManager.getResearch("Building Speed"));
+       return researchList;
     }
 
     @PostMapping("/buildings/research/levelresearch/attackbonus")
