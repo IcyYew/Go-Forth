@@ -70,8 +70,8 @@ public abstract class Building {
         if (this.level < 5) {
             this.level++;
             this.power *= 1.5;
-            setWoodUpgradeCost(this.getStoneUpgradeCost());
-            setStoneUpgradeCost(this.getWoodUpgradeCost());
+            upgradeStoneUpgradeCost();
+            upgradeWoodUpgradeCost();
         }
         else if (this.level == 5){
             throw new Exception("Max level reached for building");
@@ -94,13 +94,23 @@ public abstract class Building {
     }
 
     public void setStoneUpgradeCost(int stoneUpgradeCost) {
-        if (this.level == 1) {
-            this.stoneUpgradeCost = stoneUpgradeCost;
+        this.stoneUpgradeCost = stoneUpgradeCost;
+    }
+    public void upgradeWoodUpgradeCost() {
+        if (costMultiplier > 0) {
+            this.woodUpgradeCost = this.woodUpgradeCost * (int)((8.0/5.0) * (double)level * costMultiplier);
         }
         else {
-            this.stoneUpgradeCost = this.stoneUpgradeCost * (int)((8.0/5.0) * (double)level);
+            this.woodUpgradeCost = this.woodUpgradeCost * (int)((8.0/5.0) * (double)level);
         }
-
+    }
+    public void upgradeStoneUpgradeCost() {
+        if (costMultiplier > 0) {
+            this.stoneUpgradeCost = this.stoneUpgradeCost * (int)((8.0/5.0) * (double)level * costMultiplier);
+        }
+        else {
+            this.stoneUpgradeCost = this.stoneUpgradeCost * (int) ((8.0/5.0) * (double)level);
+        }
     }
 
     public int getWoodUpgradeCost() {
@@ -108,17 +118,7 @@ public abstract class Building {
     }
 
     public void setWoodUpgradeCost(int woodUpgradeCost) {
-        if (this.level == 1) {
-            this.woodUpgradeCost = woodUpgradeCost;
-        }
-        else {
-            if (costMultiplier > 0) {
-                this.woodUpgradeCost = this.woodUpgradeCost * (int)((8.0/5.0) * (double)level * costMultiplier);
-            }
-            else {
-                this.woodUpgradeCost = this.woodUpgradeCost * (int)((8.0/5.0) * (double)level);
-            }
-        }
+        this.woodUpgradeCost = woodUpgradeCost;
     }
 
     public int getPower() {

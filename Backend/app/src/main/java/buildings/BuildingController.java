@@ -13,6 +13,8 @@ import player.PlayerRepository;
 import resources.ResourceType;
 
 import javax.print.attribute.standard.MediaSize;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,34 +76,35 @@ public class BuildingController {
     public void levelBuildingCost(@RequestBody ResearchLevelRequest researchLevelRequest) {
         Player player = playerRepository.getById(researchLevelRequest.getPlayerID());
         Research research = player.getResearchManager().getResearch(researchLevelRequest.getResearchName());
+        Double multiplierCalc;
         if (research.getLevel() < 5 && research.getPlatinumCost() <= player.getResources().getResource(ResourceType.PLATINUM)) {
             research.levelUpResearch(research.getLevel() + 1, player.getResearchManager());
             for (Building building : player.getBuildings().getOtherBuildings()) {
-                if (building.getLevel() == 1 && research.getLevel() == 1) {
-                    building.setWoodUpgradeCost((int)(building.getWoodUpgradeCost() * .97));
-                    building.setStoneUpgradeCost((int)(building.getStoneUpgradeCost() * .97));
-                }
-                else {
-                    building.setCostMultiplier(Math.pow(.97, research.getLevel()));
-                }
+                building.setWoodUpgradeCost((int)(building.getWoodUpgradeCost() * .93));
+                building.setStoneUpgradeCost((int)(building.getStoneUpgradeCost() * .93));
+                multiplierCalc = Math.pow(.93, research.getLevel());
+                BigDecimal bd = new BigDecimal(Double.toString(multiplierCalc));
+                bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+                multiplierCalc = bd.doubleValue();
+                building.setCostMultiplier(multiplierCalc);
             }
             for (Building building : player.getTroopBuildings().getTroopBuildings()) {
-                if (building.getLevel() == 1 && research.getLevel() == 1) {
-                    building.setWoodUpgradeCost((int)(building.getWoodUpgradeCost() * .97));
-                    building.setStoneUpgradeCost((int)(building.getStoneUpgradeCost() * .97));
-                }
-                else {
-                    building.setCostMultiplier(Math.pow(.97, research.getLevel()));
-                }
+                building.setWoodUpgradeCost((int)(building.getWoodUpgradeCost() * .93));
+                building.setStoneUpgradeCost((int)(building.getStoneUpgradeCost() * .93));
+                multiplierCalc = Math.pow(.93, research.getLevel());
+                BigDecimal bd = new BigDecimal(Double.toString(multiplierCalc));
+                bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+                multiplierCalc = bd.doubleValue();
+                building.setCostMultiplier(multiplierCalc);
             }
             for (Building building : player.getResourceBuildings().getResourceBuildings()) {
-                if (building.getLevel() == 1 && research.getLevel() == 1) {
-                    building.setWoodUpgradeCost((int)(building.getWoodUpgradeCost() * .97));
-                    building.setStoneUpgradeCost((int)(building.getStoneUpgradeCost() * .97));
-                }
-                else {
-                    building.setCostMultiplier(Math.pow(.97, research.getLevel()));
-                }
+                building.setWoodUpgradeCost((int)(building.getWoodUpgradeCost() * .93));
+                building.setStoneUpgradeCost((int)(building.getStoneUpgradeCost() * .93));
+                multiplierCalc = Math.pow(.93, research.getLevel());
+                BigDecimal bd = new BigDecimal(Double.toString(multiplierCalc));
+                bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+                multiplierCalc = bd.doubleValue();
+                building.setCostMultiplier(multiplierCalc);
             }
         }
         player.updatePower();
