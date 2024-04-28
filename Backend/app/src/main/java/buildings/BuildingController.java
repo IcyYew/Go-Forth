@@ -45,6 +45,7 @@ public class BuildingController {
        researchList.add(researchManager.getResearch("Training Capacity"));
        researchList.add(researchManager.getResearch("Training Speed"));
        researchList.add(researchManager.getResearch("Building Speed"));
+       researchList.add(researchManager.getResearch("Building Cost"));
        return researchList;
     }
 
@@ -52,8 +53,9 @@ public class BuildingController {
     public void levelAttackBonus(@RequestBody ResearchLevelRequest researchLevelRequest) {
        Player player = playerRepository.getById(researchLevelRequest.getPlayerID());
        Research research = player.getResearchManager().getResearch(researchLevelRequest.getResearchName());
-       if (research.getLevel() < 5) {
+       if (research.getLevel() < 5 && research.getPlatinumCost() <= player.getResources().getResource(ResourceType.PLATINUM)) {
            research.levelUpResearch(research.getLevel() + 1, player.getResearchManager());
+           player.getResources().removeResource(ResourceType.PLATINUM, (int)research.getPlatinumCost());
            player.getTroops().getTroop(ARCHER).setDamage(Math.ceil(player.getTroops().getTroop(ARCHER).getDamage() * (research.getLevel() * 1.05)));
            player.getTroops().getTroop(MAGE).setDamage(Math.ceil(player.getTroops().getTroop(MAGE).getDamage() * (research.getLevel() * 1.05)));
            player.getTroops().getTroop(WARRIOR).setDamage(Math.ceil(player.getTroops().getTroop(WARRIOR).getDamage() * (research.getLevel() * 1.05)));
@@ -61,6 +63,11 @@ public class BuildingController {
        }
        player.updatePower();
        playerRepository.save(player);
+    }
+
+    @PostMapping("/buildings/research/levelresearch/buildingspeed")
+    public void levelBuildingSpeed(@RequestBody ResearchLevelRequest researchLevelRequest) {
+
     }
 
     @PostMapping("/buildings/research/levelresearch/buildingcost")
@@ -78,8 +85,9 @@ public class BuildingController {
        Research buildingCost = player.getResearchManager().getResearch("Building Cost");
        Research trainingCapacity = player.getResearchManager().getResearch("Training Capacity");
        Research buildingSpeed = player.getResearchManager().getResearch("Building Speed");
-       if (research.getLevel() < 5) {
+       if (research.getLevel() < 5 && research.getPlatinumCost() <= player.getResources().getResource(ResourceType.PLATINUM)) {
            research.levelUpResearch(research.getLevel() + 1, player.getResearchManager());
+           player.getResources().removeResource(ResourceType.PLATINUM,  (int)research.getPlatinumCost());
            attackBonus.setPlatinumCost(Math.ceil(attackBonus.getPlatinumCost() * .97));
            trainingSpeed.setPlatinumCost(Math.ceil(trainingSpeed.getPlatinumCost() * .97));
            buildingCost.setPlatinumCost(Math.ceil(buildingCost.getPlatinumCost() * .97));
@@ -98,8 +106,9 @@ public class BuildingController {
        TroopTrainingBuilding mageTower = player.getTroopBuildings().getTrainingBuilding(BuildingTypes.MAGETOWER);
        TroopTrainingBuilding warriorSchool = player.getTroopBuildings().getTrainingBuilding(BuildingTypes.WARRIORSCHOOL);
        TroopTrainingBuilding stables = player.getTroopBuildings().getTrainingBuilding(BuildingTypes.STABLES);
-       if (research.getLevel() < 5) {
+       if (research.getLevel() < 5 && research.getPlatinumCost() <= player.getResources().getResource(ResourceType.PLATINUM)) {
            research.levelUpResearch(research.getLevel() + 1, player.getResearchManager());
+           player.getResources().removeResource(ResourceType.PLATINUM,  (int)research.getPlatinumCost());
            archeryRange.setTrainingTime(Math.floor(archeryRange.getTrainingTime() * .95));
            mageTower.setTrainingTime(Math.floor(mageTower.getTrainingTime() * .95));
            stables.setTrainingTime(Math.floor(stables.getTrainingTime() * .95));
@@ -117,8 +126,9 @@ public class BuildingController {
        TroopTrainingBuilding mageTower = player.getTroopBuildings().getTrainingBuilding(BuildingTypes.MAGETOWER);
        TroopTrainingBuilding warriorSchool = player.getTroopBuildings().getTrainingBuilding(BuildingTypes.WARRIORSCHOOL);
        TroopTrainingBuilding stables = player.getTroopBuildings().getTrainingBuilding(BuildingTypes.STABLES);
-       if (research.getLevel() < 5) {
+       if (research.getLevel() < 5 && research.getPlatinumCost() <= player.getResources().getResource(ResourceType.PLATINUM)) {
            research.levelUpResearch(research.getLevel() + 1, player.getResearchManager());
+           player.getResources().removeResource(ResourceType.PLATINUM,  (int)research.getPlatinumCost());
            archeryRange.setTrainingCapacity(archeryRange.getTrainingCapacity() + 10);
            mageTower.setTrainingCapacity(mageTower.getTrainingCapacity() + 10);
            warriorSchool.setTrainingCapacity(warriorSchool.getTrainingCapacity() + 10);
