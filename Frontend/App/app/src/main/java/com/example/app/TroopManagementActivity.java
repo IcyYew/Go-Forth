@@ -98,7 +98,8 @@ public class TroopManagementActivity extends AppCompatActivity {
         knightsToTrainCount = prefs.getInt("knightsToTrainCount", 0);
         magesToTrainCount = prefs.getInt("magesToTrainCount", 0);
         cavalryToTrainCount = prefs.getInt("cavalryToTrainCount", 0);
-        //wasTraining = false;
+
+        //wasTraining = false; // use this to clear wasTraining if stuffs fucked
         wasTraining = prefs.getBoolean("wasTraining", false);
 
         // UI initialization
