@@ -132,7 +132,7 @@ public class ResourceActivity extends AppCompatActivity {
             //Back add food clicked
             @Override
             public void onClick(View v) {
-                addResource("FOOD");
+                addResource("FARM");
             }
         });
 
@@ -140,7 +140,7 @@ public class ResourceActivity extends AppCompatActivity {
             //Add wood clicked
             @Override
             public void onClick(View v) {
-                addResource("WOOD");
+                addResource("LUMBERYARD");
             }
         });
 
@@ -148,7 +148,7 @@ public class ResourceActivity extends AppCompatActivity {
             //Add stone clicked
             @Override
             public void onClick(View v) {
-                        addResource("STONE");
+                        addResource("QUARRY");
             }
         });
 
@@ -156,7 +156,7 @@ public class ResourceActivity extends AppCompatActivity {
             //Add platinum clicked
             @Override
             public void onClick(View v) {
-                addResource("PLATINUM");
+                addResource("PLATINUMMINE");
             }
         });
 
@@ -171,10 +171,11 @@ public class ResourceActivity extends AppCompatActivity {
         JSONObject jsonObject = new JSONObject(); //Initialize input JSON
         try {
             jsonObject.put("buildingType", resourceName);
+            jsonObject.put("playerID", userID);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        String url = "http://coms-309-048.class.las.iastate.edu:8080/buildings/collectResources/" + userID;
+        String url = "http://coms-309-048.class.las.iastate.edu:8080/buildings/collectResources";
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonObject,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -186,8 +187,8 @@ public class ResourceActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(ResourceActivity.this, "Error updating resources: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+                        updateBuildingAmount();
+                        updateCurrentStorage();                    }
                 });
 
         // add to volley queue
@@ -196,18 +197,28 @@ public class ResourceActivity extends AppCompatActivity {
 
     private void updateBuildingAmount() {
         String url = "http://coms-309-048.class.las.iastate.edu:8080/buildings/updateResources/" + String.valueOf(userID);
-        JSONObject jsonObject = new JSONObject(); //Initialize input JSON
-        try {
-            jsonObject.put("playerID", userID);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonObject,
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        getCurrentResources();
-                    }
+                        try {
+                            //Get current resource values
+                            JSONObject resourceObject = response.getJSONObject("resourceBuildings");
+                            int food = resourceObject.getInt("farmresources");
+                            int wood = resourceObject.getInt("lumberyardresources");
+                            int stone = resourceObject.getInt("quarryresources");
+                            int platinum = resourceObject.getInt("platinummineresources");
+
+                            //print current resource values on screen.
+                            foodCollect.setText(String.valueOf(food));
+                            woodCollect.setText(String.valueOf(wood));
+                            stoneCollect.setText(String.valueOf(stone));
+                            platinumCollect.setText(String.valueOf(platinum));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(ResourceActivity.this, "Error parsing JSON response", Toast.LENGTH_SHORT).show();
+                        }                    }
                 },
                 new Response.ErrorListener() {
                     @Override
@@ -262,46 +273,6 @@ public class ResourceActivity extends AppCompatActivity {
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 
-    private void getCurrentResources() {
-        // use getall endpoint URL
-        String url = "http://coms-309-048.class.las.iastate.edu:8080/buildings/getPlayerBuildings/" + Integer.toString(userID);
-        // make a StringRequest to get the users from the server. Converts JSONArray into StringBuilder.
-        StringRequest request = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        int woodTotal = 0;
-                        int foodTotal = 0;
-                        int stoneTotal = 0;
-                        int platinumTotal = 0;
-                        Log.d("Display response", response);
-                        try {
-                            JSONArray jsonArray = new JSONArray(response);
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject buildingObject = jsonArray.getJSONObject(i);
-                                if(buildingObject.getString("buildingType") == "WOOD") woodTotal += buildingObject.getInt("resources");
-                                if(buildingObject.getString("buildingType") == "FOOD") foodTotal += buildingObject.getInt("resources");
-                                if(buildingObject.getString("buildingType") == "STONE") stoneTotal += buildingObject.getInt("resources");
-                                if(buildingObject.getString("buildingType") == "PLATINUM") platinumTotal += buildingObject.getInt("resources");
-                            }
-                            foodCollect.setText(String.valueOf(foodTotal));
-                            woodCollect.setText(String.valueOf(woodTotal));
-                            stoneCollect.setText(String.valueOf(stoneTotal));
-                            platinumCollect.setText(String.valueOf(platinumTotal));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), "Error fetching clans: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-        // add to volley queue
-        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);    }
-    
     class UpdateThread implements Runnable {
     public void run()
     {
