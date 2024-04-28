@@ -1,6 +1,11 @@
 package buildings;
 
 import buildings.resourcebuildings.ResourceBuilding;
+import buildings.resourcebuildings.Farm;
+import buildings.resourcebuildings.LumberYard;
+import buildings.resourcebuildings.PlatinumMine;
+import buildings.resourcebuildings.Quarry;
+import buildings.troopBuildings.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import java.util.ArrayList;
@@ -79,6 +84,11 @@ public class BuildingManager {
         return 0;
     }
 
+    public List<OtherBuilding> getOtherBuildings()
+    {
+        return buildingManager;
+    }
+
     public long calculateTotalOtherBuildingPower()
     {
         long power = 0;
@@ -87,6 +97,18 @@ public class BuildingManager {
             power += otherBuilding.getPower();
         }
         return power;
+    }
+
+    public OtherBuilding getOtherBuilding(BuildingTypes buildingType)
+    {
+        for (OtherBuilding otherBuilding : buildingManager)
+        {
+            if (otherBuilding.getBuildingType() == buildingType)
+            {
+                return otherBuilding;
+            }
+        }
+        return null;
     }
 
     @Override

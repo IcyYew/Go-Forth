@@ -42,10 +42,10 @@ public class OverworldActivity extends AppCompatActivity {
     private ArrayList<Integer> resourceYCoords = new ArrayList<>();
     private ArrayList<String> resourceTypes = new ArrayList<>(); // To keep track of the type of resource (stone or wood)
     private LinearLayout gridLayout;
-    private int userID, playerRow, playerCol, originalRow, originalCol, wood, stone, enemyIndex, enemyID;
+    private int userID, playerRow, playerCol, originalRow, originalCol, wood, stone, power, enemyIndex, enemyID;
     private boolean isPlayerMoved = false; // To track whether the player has moved
     private Button collectButton, moveButton, fightButton, backButton;
-    private TextView woodHeld, stoneHeld;
+    private TextView woodHeld, stoneHeld, powerLevel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +86,7 @@ public class OverworldActivity extends AppCompatActivity {
 
         woodHeld = findViewById(R.id.WoodAmount);
         stoneHeld = findViewById(R.id.StoneAmount);
+        powerLevel = findViewById(R.id.PowerLevel);
 
         // Fetch player data and generate the initial map
         fetchPlayerDataAndGenerateMap();
@@ -575,6 +576,7 @@ public class OverworldActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
+                            power = response.getInt("power");
                             //Get current resource values
                             JSONObject resourceObject = response.getJSONObject("resources");
                             wood = resourceObject.getInt("wood");
@@ -582,9 +584,11 @@ public class OverworldActivity extends AppCompatActivity {
 
                             String woodText = "Wood: " + wood;
                             String stoneText = "Stone: " + stone;
+                            String powerText = "Power: " + power;
                             //print current resource values on screen.
                             woodHeld.setText(woodText);
                             stoneHeld.setText(stoneText);
+                            powerLevel.setText(powerText);
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Toast.makeText(OverworldActivity.this, "Error parsing JSON response", Toast.LENGTH_SHORT).show();
@@ -654,11 +658,7 @@ public class OverworldActivity extends AppCompatActivity {
         // parse the response
         String[] parts = response.split("\n");
         String result = parts[0];
-        String player1Info = parts[1];
-        String player2Info = parts[3];
 
-        // display the appropriate message based on the result
-        String message;
         if (result.equals("ATTACKER_WIN")) {
             Toast.makeText(this, "You won!", Toast.LENGTH_SHORT).show();
         } else if (result.equals("DEFENDER_WIN")) {
@@ -666,6 +666,8 @@ public class OverworldActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "It's a draw", Toast.LENGTH_SHORT).show();
         }
+
+        updateAmount();
     }
 
 

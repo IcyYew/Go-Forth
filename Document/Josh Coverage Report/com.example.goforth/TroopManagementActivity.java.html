@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TroopManagementActivity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">com.example.goforth</a> &gt; <span class="el_source">TroopManagementActivity.java</span></div><h1>TroopManagementActivity.java</h1><pre class="source lang-java linenums">package com.example.goforth;
+
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Locale;
+
+/**
+ * Activity for viewing the troops a user has as well as updating the troops by adding new ones.
+ *
+ * @author Josh Dwight
+ */
+<span class="fc" id="L31">public class TroopManagementActivity extends AppCompatActivity {</span>
+    // stores userID so it can track across activities
+<span class="fc" id="L33">    private int userID = 1;</span>
+
+    // stores intermediary counts
+<span class="fc" id="L36">    private int archersToTrainCount = 0;</span>
+<span class="fc" id="L37">    private int knightsToTrainCount = 0;</span>
+<span class="fc" id="L38">    private int magesToTrainCount = 0;</span>
+<span class="fc" id="L39">    private int cavalryToTrainCount = 0;</span>
+    public int archersCount;
+
+    // textviews
+    private TextView archersToTrainCountTextView;
+    private TextView knightsToTrainCountTextView;
+    private TextView magesToTrainCountTextView;
+    private TextView cavalryToTrainCountTextView;
+    private TextView archersCountTextView;
+    private TextView knightsCountTextView;
+    private TextView magesCountTextView;
+    private TextView cavalryCountTextView;
+    private TextView trainingTimeValue;
+
+    // checkboxes
+    private CheckBox archersCheckbox;
+    private CheckBox knightsCheckbox;
+    private CheckBox magesCheckbox;
+    private CheckBox cavalryCheckbox;
+
+    // Countdown timer variable
+    private CountDownTimer countDownTimer;
+<span class="fc" id="L61">    private long totalTimeInMillis = 0;</span>
+<span class="fc" id="L62">    private long timeLeftInMillis = 0;</span>
+    private SharedPreferences prefs;
+    private static final String PREF_NAME = &quot;troop_training_timer&quot;;
+    /**
+     * onCreate sets onClickListeners to all of the buttons and initializes UI elements. Also gets extras.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  &lt;b&gt;&lt;i&gt;Note: Otherwise it is null.&lt;/i&gt;&lt;/b&gt;
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="fc" id="L74">        super.onCreate(savedInstanceState);</span>
+<span class="fc" id="L75">        setContentView(R.layout.activity_troop_management);</span>
+
+        // get extras so userID can track across activities
+<span class="fc" id="L78">        Bundle extras = getIntent().getExtras();</span>
+<span class="fc bfc" id="L79" title="All 2 branches covered.">        if (extras != null) {</span>
+<span class="fc" id="L80">            userID = extras.getInt(&quot;ID&quot;);</span>
+        }
+
+        // Initialize SharedPreferences
+<span class="fc" id="L84">        prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);</span>
+
+<span class="fc" id="L86">        archersToTrainCount = prefs.getInt(&quot;archersToTrainCount&quot;, 0);</span>
+<span class="fc" id="L87">        knightsToTrainCount = prefs.getInt(&quot;knightsToTrainCount&quot;, 0);</span>
+<span class="fc" id="L88">        magesToTrainCount = prefs.getInt(&quot;magesToTrainCount&quot;, 0);</span>
+<span class="fc" id="L89">        cavalryToTrainCount = prefs.getInt(&quot;cavalryToTrainCount&quot;, 0);</span>
+
+        // UI initialization
+<span class="fc" id="L92">        archersToTrainCountTextView = findViewById(R.id.archersToTrainCount);</span>
+<span class="fc" id="L93">        knightsToTrainCountTextView = findViewById(R.id.knightsToTrainCount);</span>
+<span class="fc" id="L94">        magesToTrainCountTextView = findViewById(R.id.magesToTrainCount);</span>
+<span class="fc" id="L95">        cavalryToTrainCountTextView = findViewById(R.id.cavalryToTrainCount);</span>
+<span class="fc" id="L96">        trainingTimeValue = findViewById(R.id.trainingTimeValue);</span>
+
+<span class="fc" id="L98">        archersToTrainCountTextView.setText(String.valueOf(archersToTrainCount));</span>
+<span class="fc" id="L99">        knightsToTrainCountTextView.setText(String.valueOf(knightsToTrainCount));</span>
+<span class="fc" id="L100">        magesToTrainCountTextView.setText(String.valueOf(magesToTrainCount));</span>
+<span class="fc" id="L101">        cavalryToTrainCountTextView.setText(String.valueOf(cavalryToTrainCount));</span>
+
+
+<span class="fc" id="L104">        archersCheckbox = findViewById(R.id.archersCheckbox);</span>
+<span class="fc" id="L105">        knightsCheckbox = findViewById(R.id.knightsCheckbox);</span>
+<span class="fc" id="L106">        magesCheckbox = findViewById(R.id.magesCheckbox);</span>
+<span class="fc" id="L107">        cavalryCheckbox = findViewById(R.id.cavalryCheckbox);</span>
+
+<span class="fc" id="L109">        Button backButton = findViewById(R.id.backButton);</span>
+
+        // get troop data from server
+<span class="fc" id="L112">        getPlayerData();</span>
+
+        // Load remaining time from SharedPreferences
+<span class="fc" id="L115">        timeLeftInMillis = prefs.getLong(&quot;millisLeft&quot;, 0);</span>
+<span class="fc" id="L116">        updateCountdownText();</span>
+<span class="pc bpc" id="L117" title="1 of 2 branches missed.">        if (timeLeftInMillis != 0) {</span>
+<span class="nc" id="L118">            startCountdownTimer();</span>
+        }
+
+
+        // back button pressed
+<span class="fc" id="L123">        backButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L126">                Intent intent = new Intent(TroopManagementActivity.this, MainActivity.class);</span>
+<span class="nc" id="L127">                intent.putExtra(&quot;ID&quot;, String.valueOf(userID));</span>
+<span class="nc" id="L128">                startActivity(intent);</span>
+<span class="nc" id="L129">            }</span>
+        });
+
+        // train one button pressed (update correct troop to train count)
+<span class="fc" id="L133">        Button trainOneButton = findViewById(R.id.trainOneButton);</span>
+<span class="fc" id="L134">        trainOneButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="fc" id="L137">                trainTroops(1);</span>
+<span class="fc" id="L138">            }</span>
+        });
+
+        // train 10 button pressed (update correct troop to train count)
+<span class="fc" id="L142">        Button trainTenButton = findViewById(R.id.trainTenButton);</span>
+<span class="fc" id="L143">        trainTenButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="fc" id="L146">                trainTroops(10);</span>
+<span class="fc" id="L147">            }</span>
+        });
+
+        // train 50 button pressed (update correct troop to train count)
+<span class="fc" id="L151">        Button trainFiftyButton = findViewById(R.id.trainFiftyButton);</span>
+<span class="fc" id="L152">        trainFiftyButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L155">                trainTroops(50);</span>
+<span class="nc" id="L156">            }</span>
+        });
+
+        // train 100 button pressed (update correct troop to train count)
+<span class="fc" id="L160">        Button trainHundredButton = findViewById(R.id.trainHundredButton);</span>
+<span class="fc" id="L161">        trainHundredButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L164">                trainTroops(100);</span>
+<span class="nc" id="L165">            }</span>
+        });
+
+        // confirm training button pressed
+<span class="fc" id="L169">        Button confirmTrainingButton = findViewById(R.id.confirmTrainingButton);</span>
+<span class="fc" id="L170">        confirmTrainingButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="fc" id="L173">                startCountdownTimer();</span>
+<span class="fc" id="L174">            }</span>
+        });
+<span class="fc" id="L176">    }</span>
+
+    /**
+     * Checks which troops' checkboxes are currently checked and updates their &quot;to train&quot; counts accordingly
+     *
+     * @param amount
+     */
+    private void trainTroops(int amount) {
+<span class="pc bpc" id="L184" title="1 of 2 branches missed.">        if (archersCheckbox.isChecked()) {</span>
+<span class="fc" id="L185">            archersToTrainCount += amount;</span>
+<span class="fc" id="L186">            archersToTrainCountTextView.setText(String.valueOf(archersToTrainCount));</span>
+        }
+<span class="pc bpc" id="L188" title="1 of 2 branches missed.">        if (knightsCheckbox.isChecked()) {</span>
+<span class="nc" id="L189">            knightsToTrainCount += amount;</span>
+<span class="nc" id="L190">            knightsToTrainCountTextView.setText(String.valueOf(knightsToTrainCount));</span>
+        }
+<span class="pc bpc" id="L192" title="1 of 2 branches missed.">        if (magesCheckbox.isChecked()) {</span>
+<span class="nc" id="L193">            magesToTrainCount += amount;</span>
+<span class="nc" id="L194">            magesToTrainCountTextView.setText(String.valueOf(magesToTrainCount));</span>
+        }
+<span class="pc bpc" id="L196" title="1 of 2 branches missed.">        if (cavalryCheckbox.isChecked()) {</span>
+<span class="nc" id="L197">            cavalryToTrainCount += amount;</span>
+<span class="nc" id="L198">            cavalryToTrainCountTextView.setText(String.valueOf(cavalryToTrainCount));</span>
+        }
+<span class="fc" id="L200">        SharedPreferences.Editor editor = prefs.edit();</span>
+<span class="fc" id="L201">        editor.putInt(&quot;archersToTrainCount&quot;, archersToTrainCount);</span>
+<span class="fc" id="L202">        editor.putInt(&quot;knightsToTrainCount&quot;, knightsToTrainCount);</span>
+<span class="fc" id="L203">        editor.putInt(&quot;magesToTrainCount&quot;, magesToTrainCount);</span>
+<span class="fc" id="L204">        editor.putInt(&quot;cavalryToTrainCount&quot;, cavalryToTrainCount);</span>
+<span class="fc" id="L205">        editor.apply();</span>
+<span class="fc" id="L206">    }</span>
+
+    /**
+     * When training is confirmed, update the troop counts (addtroops endpoint) and get the new troop counts from server (getPlayer endpoint)
+     */
+    private void confirmTraining() {
+        // server stuff
+<span class="fc" id="L213">        updateTroopCounts(archersToTrainCount, knightsToTrainCount, magesToTrainCount, cavalryToTrainCount);</span>
+<span class="fc" id="L214">        getPlayerData();</span>
+
+        // Reset the troops to be trained counts
+<span class="fc" id="L217">        archersToTrainCount = 0;</span>
+<span class="fc" id="L218">        knightsToTrainCount = 0;</span>
+<span class="fc" id="L219">        magesToTrainCount = 0;</span>
+<span class="fc" id="L220">        cavalryToTrainCount = 0;</span>
+
+<span class="fc" id="L222">        archersToTrainCountTextView.setText(String.valueOf(archersToTrainCount));</span>
+<span class="fc" id="L223">        knightsToTrainCountTextView.setText(String.valueOf(knightsToTrainCount));</span>
+<span class="fc" id="L224">        magesToTrainCountTextView.setText(String.valueOf(magesToTrainCount));</span>
+<span class="fc" id="L225">        cavalryToTrainCountTextView.setText(String.valueOf(cavalryToTrainCount));</span>
+
+        // Clear checkboxes
+<span class="fc" id="L228">        archersCheckbox.setChecked(false);</span>
+<span class="fc" id="L229">        knightsCheckbox.setChecked(false);</span>
+<span class="fc" id="L230">        magesCheckbox.setChecked(false);</span>
+<span class="fc" id="L231">        cavalryCheckbox.setChecked(false);</span>
+
+        // Clear SharedPreferences for troop counts
+<span class="fc" id="L234">        SharedPreferences.Editor editor = prefs.edit();</span>
+<span class="fc" id="L235">        editor.remove(&quot;archersToTrainCount&quot;);</span>
+<span class="fc" id="L236">        editor.remove(&quot;knightsToTrainCount&quot;);</span>
+<span class="fc" id="L237">        editor.remove(&quot;magesToTrainCount&quot;);</span>
+<span class="fc" id="L238">        editor.remove(&quot;cavalryToTrainCount&quot;);</span>
+<span class="fc" id="L239">        editor.apply();</span>
+<span class="fc" id="L240">    }</span>
+
+    /**
+     * Uses the /players/getPlayer/{userID} endpoint to get the troop counts of the currently selected user.
+     */
+    private void getPlayerData() {
+<span class="fc" id="L246">        archersCountTextView = findViewById(R.id.archersCount);</span>
+<span class="fc" id="L247">        knightsCountTextView = findViewById(R.id.knightsCount);</span>
+<span class="fc" id="L248">        magesCountTextView = findViewById(R.id.magesCount);</span>
+<span class="fc" id="L249">        cavalryCountTextView = findViewById(R.id.cavalryCount);</span>
+
+        // use the /players/getplayer/{userID} endpoint
+<span class="fc" id="L252">        String url = &quot;http://coms-309-048.class.las.iastate.edu:8080/players/getPlayer/&quot; + String.valueOf(userID);</span>
+
+        // makes JsonObjectRequest to get the current player. GETs the archerNum, warriorNum, mageNum, and cavalryNum
+<span class="fc" id="L255">        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,</span>
+<span class="fc" id="L256">                new Response.Listener&lt;JSONObject&gt;() {</span>
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+<span class="fc" id="L260">                            JSONObject troopsObject = response.getJSONObject(&quot;troops&quot;);</span>
+<span class="fc" id="L261">                            archersCount = troopsObject.getInt(&quot;archerNum&quot;);</span>
+<span class="fc" id="L262">                            int knightsCount = troopsObject.getInt(&quot;warriorNum&quot;);</span>
+<span class="fc" id="L263">                            int magesCount = troopsObject.getInt(&quot;mageNum&quot;);</span>
+<span class="fc" id="L264">                            int cavalryCount = troopsObject.getInt(&quot;cavalryNum&quot;);</span>
+
+<span class="fc" id="L266">                            archersCountTextView.setText(String.valueOf(archersCount));</span>
+<span class="fc" id="L267">                            knightsCountTextView.setText(String.valueOf(knightsCount));</span>
+<span class="fc" id="L268">                            magesCountTextView.setText(String.valueOf(magesCount));</span>
+<span class="fc" id="L269">                            cavalryCountTextView.setText(String.valueOf(cavalryCount));</span>
+<span class="nc" id="L270">                        } catch (JSONException e) {</span>
+<span class="nc" id="L271">                            e.printStackTrace();</span>
+<span class="nc" id="L272">                            Toast.makeText(TroopManagementActivity.this, &quot;Error parsing JSON response&quot;, Toast.LENGTH_SHORT).show();</span>
+<span class="fc" id="L273">                        }</span>
+<span class="fc" id="L274">                    }</span>
+                },
+<span class="fc" id="L276">                new Response.ErrorListener() {</span>
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+<span class="nc" id="L279">                        Toast.makeText(TroopManagementActivity.this, &quot;Error fetching player data: &quot; + error.getMessage(), Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L280">                    }</span>
+                });
+
+        // add to volley queue
+<span class="fc" id="L284">        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);</span>
+<span class="fc" id="L285">    }</span>
+
+    /**
+     * Uses the /players/addtroops/{userID} endpoint to POST the new troop counts to the server
+     *
+     * @param archersCount number of archers to add
+     * @param warriorsCount number of warrior to add
+     * @param magesCount number of mages to add
+     * @param cavalryCount number of cavalry to add
+     */
+    private void updateTroopCounts(int archersCount, int warriorsCount, int magesCount, int cavalryCount) {
+<span class="fc" id="L296">        String baseURL = &quot;http://coms-309-048.class.las.iastate.edu:8080/players/addtroops/&quot; + userID;</span>
+
+<span class="fc" id="L298">        JSONObject archerJSON = createTroopJSON(&quot;ARCHER&quot;, archersCount);</span>
+<span class="fc" id="L299">        JSONObject warriorJSON = createTroopJSON(&quot;WARRIOR&quot;, warriorsCount);</span>
+<span class="fc" id="L300">        JSONObject mageJSON = createTroopJSON(&quot;MAGE&quot;, magesCount);</span>
+<span class="fc" id="L301">        JSONObject cavalryJSON = createTroopJSON(&quot;CAVALRY&quot;, cavalryCount);</span>
+
+<span class="fc" id="L303">        makePOSTRequest(baseURL, archerJSON);</span>
+<span class="fc" id="L304">        makePOSTRequest(baseURL, warriorJSON);</span>
+<span class="fc" id="L305">        makePOSTRequest(baseURL, mageJSON);</span>
+<span class="fc" id="L306">        makePOSTRequest(baseURL, cavalryJSON);</span>
+<span class="fc" id="L307">    }</span>
+
+    /**
+     * create a troop JSON object of the selected type to use in POST
+     *
+     * @param troopType type of troop
+     * @param quantity number of troops
+     * @return returns a troop JSON
+     */
+    private JSONObject createTroopJSON(String troopType, int quantity) {
+<span class="fc" id="L317">        JSONObject jsonObject = new JSONObject();</span>
+        try {
+<span class="fc" id="L319">            jsonObject.put(&quot;troopType&quot;, troopType);</span>
+<span class="fc" id="L320">            jsonObject.put(&quot;quantity&quot;, quantity);</span>
+<span class="nc" id="L321">        } catch (JSONException e) {</span>
+<span class="nc" id="L322">            e.printStackTrace();</span>
+<span class="fc" id="L323">        }</span>
+<span class="fc" id="L324">        return jsonObject;</span>
+    }
+
+    /**
+     * Makes a POST request using the given url and request body
+     *
+     * @param url
+     * @param requestBody
+     */
+    private void makePOSTRequest(String url, JSONObject requestBody) {
+        // make a JsonObjectRequest to POST to server
+<span class="fc" id="L335">        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, requestBody,</span>
+<span class="fc" id="L336">                new Response.Listener&lt;JSONObject&gt;() {</span>
+                    @Override
+                    public void onResponse(JSONObject response) {
+<span class="fc" id="L339">                        getPlayerData();</span>
+<span class="fc" id="L340">                    }</span>
+                },
+<span class="fc" id="L342">                new Response.ErrorListener() {</span>
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+<span class="nc" id="L345">                        Toast.makeText(TroopManagementActivity.this, &quot;Error updating troops: &quot; + error.getMessage(), Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L346">                    }</span>
+                });
+
+        // add to volley queue
+<span class="fc" id="L350">        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);</span>
+<span class="fc" id="L351">    }</span>
+
+    /**
+     * Calculates the total time to train troops
+     *
+     * @return time
+     */
+    private long calculateTotalTrainingTime() {
+<span class="fc" id="L359">        int archerTime = archersToTrainCount * 1; // 1 second per archer</span>
+<span class="fc" id="L360">        int knightTime = knightsToTrainCount * 2; // 2 seconds per knight</span>
+<span class="fc" id="L361">        int mageTime = magesToTrainCount * 3; // 3 seconds per mage</span>
+<span class="fc" id="L362">        int cavalryTime = cavalryToTrainCount * 4; // 4 seconds per cavalry</span>
+<span class="fc" id="L363">        return (archerTime + knightTime + mageTime + cavalryTime) * 1000; // Convert to milliseconds</span>
+    }
+
+    /**
+     * Method used to update countdown textview.
+     */
+    private void updateCountdownText() {
+<span class="fc" id="L370">        int minutes = (int) (timeLeftInMillis / 1000) / 60;</span>
+<span class="fc" id="L371">        int seconds = (int) (timeLeftInMillis / 1000) % 60;</span>
+<span class="fc" id="L372">        String timeLeftFormatted = String.format(Locale.getDefault(), &quot;%02d:%02d&quot;, minutes, seconds);</span>
+<span class="fc" id="L373">        trainingTimeValue.setText(timeLeftFormatted);</span>
+<span class="fc" id="L374">    }</span>
+
+    /**
+     * Method that starts the timer.
+     * Also declares what happens on tick and on finish.
+     */
+    private void startCountdownTimer() {
+        // Calculate total training time based on troops count
+<span class="fc" id="L382">        totalTimeInMillis = calculateTotalTrainingTime();</span>
+<span class="pc bpc" id="L383" title="1 of 2 branches missed.">        if (timeLeftInMillis == 0) {</span>
+<span class="fc" id="L384">            Log.d(&quot;Unhappy&quot;, String.valueOf(timeLeftInMillis));</span>
+<span class="fc" id="L385">            timeLeftInMillis = totalTimeInMillis;</span>
+        }
+
+        // Start countdown timer
+<span class="fc" id="L389">        countDownTimer = new CountDownTimer(timeLeftInMillis, 1000) {</span>
+            @Override
+            public void onTick(long millisUntilFinished) {
+<span class="fc" id="L392">                timeLeftInMillis = millisUntilFinished;</span>
+<span class="fc" id="L393">                updateCountdownText();</span>
+<span class="fc" id="L394">            }</span>
+
+            @Override
+            public void onFinish() {
+                // Reset countdown timer variables
+<span class="fc" id="L399">                timeLeftInMillis = 0;</span>
+<span class="fc" id="L400">                updateCountdownText();</span>
+<span class="fc" id="L401">                confirmTraining();</span>
+<span class="fc" id="L402">            }</span>
+<span class="fc" id="L403">        }.start();</span>
+<span class="fc" id="L404">    }</span>
+
+    /**
+     * Method that runs when you switch to a different activity.
+     */
+    @Override
+    protected void onPause() {
+<span class="fc" id="L411">        super.onPause();</span>
+        // Save remaining time to SharedPreferences
+<span class="fc" id="L413">        SharedPreferences.Editor editor = prefs.edit();</span>
+<span class="fc" id="L414">        editor.putLong(&quot;millisLeft&quot;, timeLeftInMillis);</span>
+<span class="fc" id="L415">        editor.apply();</span>
+        // Cancel the countdown timer
+<span class="pc bpc" id="L417" title="1 of 2 branches missed.">        if (countDownTimer != null) {</span>
+<span class="fc" id="L418">            countDownTimer.cancel();</span>
+        }
+<span class="fc" id="L420">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>Generated by the Android Gradle plugin 8.3.2</div></body></html>

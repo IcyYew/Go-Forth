@@ -76,6 +76,15 @@ public class TroopManager {
 
     }
 
+    public Troop getTroop(TroopTypes troopType) {
+        for (Troop troop : troopManager) {
+            if (troop.getTroopType() == troopType) {
+                return troop;
+            }
+        }
+        return null;
+    }
+
     /**
      * Gets the player's ID.
      * @return Returns this TroopManager's player's ID.

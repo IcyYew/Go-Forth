@@ -23,10 +23,13 @@ public class Stables extends TroopTrainingBuilding{
         setTrainingTime(30);
         setTrainingCost(20);
         setPower(50);
+        setStoneUpgradeCost(400);
+        setWoodUpgradeCost(400);
     }
 
     public Stables()
     {
 
     }
+
 }

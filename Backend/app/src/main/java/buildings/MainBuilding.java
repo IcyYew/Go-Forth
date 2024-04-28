@@ -21,6 +21,8 @@ public class MainBuilding extends OtherBuilding {
         setBuildingManager(buildingManager);
         setLevel(level);
         setPower(100);
+        setStoneUpgradeCost(400);
+        setWoodUpgradeCost(400);
     }
 
     public MainBuilding()

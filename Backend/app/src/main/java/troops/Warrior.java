@@ -16,7 +16,7 @@ public class Warrior extends Troop{
     private final TroopTypes weakness = TroopTypes.MAGE;
     private final int power = 7;
     private final int health = 12;
-    private final int damage = 2;
+    private double damage = 2;
     private final int movementSpeed = 3;
     private final int attackSpeed = 3;
 
@@ -76,7 +76,7 @@ public class Warrior extends Troop{
      * @return Returns the Warrior's damage value.
      */
     @Override
-    public int getDamage() {
+    public double getDamage() {
         return this.damage;
     }
 

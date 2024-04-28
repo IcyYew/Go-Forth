@@ -19,6 +19,8 @@ public class ResearchBuilding extends OtherBuilding{
         setBuildingManager(buildingManager);
         setLevel(level);
         setPower(50);
+        setStoneUpgradeCost(400);
+        setWoodUpgradeCost(400);
     }
 
     public ResearchBuilding()

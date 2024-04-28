@@ -3,8 +3,10 @@ package buildings.resourcebuildings;
 import buildings.BuildingTypes;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
+import resources.Resource;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @JsonSerialize(using = ResourceBuildingManagerSerializer.class)
@@ -61,6 +63,23 @@ public class ResourceBuildingManager
         }
     }
 
+    public List<ResourceBuilding> getResourceBuildings()
+    {
+        return resourceBuildingManager;
+    }
+
+    public ResourceBuilding getResourceBuilding(BuildingTypes buildingType)
+    {
+        for (ResourceBuilding resourceBuilding : resourceBuildingManager)
+        {
+            if (resourceBuilding.getBuildingType() == buildingType)
+            {
+                return resourceBuilding;
+            }
+        }
+        return null;
+    }
+
     public long calculateTotalResourceBuildingPower()
     {
         long power = 0;
@@ -69,6 +88,30 @@ public class ResourceBuildingManager
             power += resourceBuilding.getPower();
         }
         return power;
+    }
+
+    public int collectResources(BuildingTypes buildingType)
+    {
+        for (ResourceBuilding resourceBuilding : resourceBuildingManager)
+        {
+            if (resourceBuilding.getBuildingType() == buildingType)
+            {
+                return resourceBuilding.collectResources();
+            }
+        }
+        return 0;
+    }
+
+    public int getResources(BuildingTypes buildingType)
+    {
+        for (ResourceBuilding resourceBuilding : resourceBuildingManager)
+        {
+            if (resourceBuilding.getBuildingType() == buildingType)
+            {
+                return resourceBuilding.getResources();
+            }
+        }
+        return 0;
     }
 
     @Override
