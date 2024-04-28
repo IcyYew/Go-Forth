@@ -21,6 +21,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This activity is responsible for sign-up/user creation.
@@ -113,10 +115,15 @@ public class SignupActivity extends AppCompatActivity {
                                         }
                                     }
                                     //If no existing user is found, create a new user and switch to Main Activity
-                                    createNewPlayer(usernameString, passwordString); //Creates player with username and password given by user
-                                    Intent intent = new Intent(SignupActivity.this, SignupSuccessActivity.class);
-                                    startActivity(intent); //go to SignupSuccess activity
-
+                                    if(passwordCheck(passwordString)) {
+                                        createNewPlayer(usernameString, passwordString); //Creates player with username and password given by user
+                                        Intent intent = new Intent(SignupActivity.this, SignupSuccessActivity.class);
+                                        startActivity(intent); //go to SignupSuccess activity
+                                    }
+                                    else{
+                                        Toast toast = Toast.makeText(SignupActivity.this, "Invalid password, length needs to be >= 7, contain at least one lowercase character, one uppercase character, one special character, and one digit", Toast.LENGTH_LONG);
+                                        toast.show();
+                                    }
                                     return;
 
                                 } catch (JSONException e) {
@@ -178,5 +185,23 @@ public class SignupActivity extends AppCompatActivity {
 
         // add to volley request queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+    }
+    private static boolean passwordCheck(String password) {
+        if (password.length() >= 7) {
+            Pattern lower = Pattern.compile("[a-z]");
+            Pattern upper = Pattern.compile("[A-Z]");
+            Pattern digit = Pattern.compile("[0-9]");
+            Pattern special = Pattern.compile("[!@#$%^&*()_\\-+=|<>,./?{}\\[\\]~`:;']");
+
+            Matcher hasUpper = upper.matcher(password);
+            Matcher hasLower = lower.matcher(password);
+            Matcher hasDigit = digit.matcher(password);
+            Matcher hasSpecial = special.matcher(password);
+
+            return ((Matcher) hasSpecial).find() && ((Matcher) hasLower).find() && ((Matcher) hasDigit).find() && ((Matcher) hasUpper).find();
+        }
+        else {
+            return false;
+        }
     }
 }
