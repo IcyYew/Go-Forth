@@ -5,11 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/backgroundGif"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true" />
+
     <TextView
         android:id="@+id/msgResponse"
         android:layout_width="378dp"
-        android:layout_height="565dp"
+        android:layout_height="400dp"
         android:layout_marginTop="32dp"
+        android:background="#C0FFFFFF"
+        android:gravity="center_horizontal"
         android:text=""
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"

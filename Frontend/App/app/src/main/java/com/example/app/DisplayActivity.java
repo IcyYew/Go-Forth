@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.bumptech.glide.Glide;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -73,6 +75,12 @@ public class DisplayActivity extends AppCompatActivity {
         if (extras != null) {
             userID = extras.getInt("ID");
         }
+
+        ImageView backgroundGif = findViewById(R.id.backgroundGif);
+        Glide.with(this)
+                .asGif()
+                .load(R.raw.town)
+                .into(backgroundGif);
 
         List = new ArrayList<>();
 
