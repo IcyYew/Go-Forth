@@ -77,7 +77,7 @@ public class BuildingController {
         if (research.getLevel() < 5 && research.getPlatinumCost() <= player.getResources().getResource(ResourceType.PLATINUM)) {
             research.levelUpResearch(research.getLevel() + 1, player.getResearchManager());
             for (Building building : player.getBuildings().getOtherBuildings()) {
-                if (building.getLevel() == 1) {
+                if (building.getLevel() == 1 && research.getLevel() == 1) {
                     building.setWoodUpgradeCost((int)(building.getWoodUpgradeCost() * .97));
                     building.setStoneUpgradeCost((int)(building.getStoneUpgradeCost() * .97));
                 }
@@ -86,7 +86,7 @@ public class BuildingController {
                 }
             }
             for (Building building : player.getTroopBuildings().getTroopBuildings()) {
-                if (building.getLevel() == 1) {
+                if (building.getLevel() == 1 && research.getLevel() == 1) {
                     building.setWoodUpgradeCost((int)(building.getWoodUpgradeCost() * .97));
                     building.setStoneUpgradeCost((int)(building.getStoneUpgradeCost() * .97));
                 }
@@ -95,7 +95,7 @@ public class BuildingController {
                 }
             }
             for (Building building : player.getResourceBuildings().getResourceBuildings()) {
-                if (building.getLevel() == 1) {
+                if (building.getLevel() == 1 && research.getLevel() == 1) {
                     building.setWoodUpgradeCost((int)(building.getWoodUpgradeCost() * .97));
                     building.setStoneUpgradeCost((int)(building.getStoneUpgradeCost() * .97));
                 }
