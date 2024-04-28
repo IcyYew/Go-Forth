@@ -4,11 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +22,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.bumptech.glide.Glide;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,6 +46,10 @@ public class OverworldActivity extends AppCompatActivity {
     private ArrayList<Integer> resourceYCoords = new ArrayList<>();
     private ArrayList<String> resourceTypes = new ArrayList<>(); // To keep track of the type of resource (stone or wood)
     private LinearLayout gridLayout;
+    private HorizontalScrollView horizontal;
+    private ScrollView vertical;
+    private ImageView gifImageView;
+    private Handler handler;
     private int userID, playerRow, playerCol, originalRow, originalCol, wood, stone, power, enemyIndex, enemyID;
     private boolean isPlayerMoved = false; // To track whether the player has moved
     private Button collectButton, moveButton, fightButton, backButton;
@@ -59,6 +67,10 @@ public class OverworldActivity extends AppCompatActivity {
 
         // Initialize layout
         gridLayout = findViewById(R.id.gridLayout);
+        horizontal = findViewById(R.id.horizontalScrollView);
+        vertical = findViewById(R.id.scrollView);
+        gifImageView = findViewById(R.id.gifImageView);
+        handler = new Handler();
 
         // Initialize buttons
         collectButton = findViewById(R.id.collectButton);
@@ -73,7 +85,28 @@ public class OverworldActivity extends AppCompatActivity {
         // Set up the buttons
         collectButton.setOnClickListener(view -> collectResource());
         moveButton.setOnClickListener(view -> moveBase());
-        fightButton.setOnClickListener(view -> startFight(userID, enemyID));
+        fightButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Glide.with(OverworldActivity.this)
+                        .asGif()
+                        .load(R.raw.fight)
+                        .into(gifImageView);
+
+                // Make the ImageView visible
+                gifImageView.setVisibility(View.VISIBLE);
+
+                // Schedule to hide the GIF after 10 seconds
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        gifImageView.setVisibility(View.GONE);
+
+                        startFight(userID, enemyID);
+                    }
+                }, 9000); // 10 seconds in milliseconds
+            }
+        });
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -422,6 +455,8 @@ public class OverworldActivity extends AppCompatActivity {
             // Update the button visibility and text based on the current position
             updateCollectButton();
 
+            centerScreenOnUser();
+
             // Update the map to reflect the player's new position
             displayMap();
         }
@@ -589,6 +624,8 @@ public class OverworldActivity extends AppCompatActivity {
                             woodHeld.setText(woodText);
                             stoneHeld.setText(stoneText);
                             powerLevel.setText(powerText);
+
+                            centerScreenOnUser();
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Toast.makeText(OverworldActivity.this, "Error parsing JSON response", Toast.LENGTH_SHORT).show();
@@ -713,5 +750,23 @@ public class OverworldActivity extends AppCompatActivity {
     private boolean isEmptyTile(int row, int col) {
         // Check if the given position is free of other players and resources
         return !isUserPosition(row, col) && !isResourcePosition(row, col);
+    }
+
+    private void centerScreenOnUser() {
+        // Calculate the pixel positions of the user's current position
+        int userPixelX = dpToPx(GRID_ITEM_SIZE_DP * playerCol);
+        int userPixelY = dpToPx(GRID_ITEM_SIZE_DP * playerRow);
+
+        // Calculate the visible width and height of the screen
+        int visibleWidth = horizontal.getWidth();
+        int visibleHeight = vertical.getHeight();
+
+        // Calculate the scroll positions to center the user on the screen
+        int scrollX = userPixelX - (visibleWidth / 2) + (dpToPx(GRID_ITEM_SIZE_DP / 2));
+        int scrollY = userPixelY - (visibleHeight / 2) + (dpToPx(GRID_ITEM_SIZE_DP / 2));
+
+        // Adjust the scroll positions
+        horizontal.smoothScrollTo(scrollX, 0); // Scroll to the calculated X position
+        vertical.smoothScrollTo(0, scrollY); // Scroll to the calculated Y position
     }
 }

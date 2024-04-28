@@ -75,8 +75,7 @@ public class SignupActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 /* when login button is pressed, use intent to switch to Main Activity */
-                Intent intent = new Intent(SignupActivity.this, MainActivity.class);
-                intent.putExtra("ID", String.valueOf(userID));
+                Intent intent = new Intent(SignupActivity.this, LaunchActivity.class);
                 startActivity(intent);  // go to MainActivity
             }
         });
