@@ -61,7 +61,7 @@ public class ResourceManager {
     private void initializeResources() {
         resourceManager.add(new Wood(this, 1000));
         resourceManager.add(new Food(this, 5000));
-        resourceManager.add(new Platinum(this, 500));
+        resourceManager.add(new Platinum(this, 20000));
         resourceManager.add(new Stone(this, 1000));
     }
 

@@ -16,6 +16,8 @@ import troops.*;
 
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static troops.TroopTypes.ARCHER;
@@ -69,25 +71,30 @@ public class PlayerController {
     public String newPlayer(@RequestBody PlayerCreator created) {
 
         // Create empty player and store username and password to generate a player ID used in the managers
-        Player player = new Player();
-        Random rand = new Random();
-        player.setUserName(created.getUserName());
-        player.setPassword(created.getPassword());
-        // Save "empty" player to generate ID
-        player = playerRepository.save(player);
-        player.setTroops(new TroopManager(player.getPlayerID()));
-        player.setResources(new ResourceManager(player.getPlayerID()));
-        player.setResearchManager(new ResearchManager(player.getPlayerID()));
-        player.setBuildings(new BuildingManager(player.getPlayerID()));
-        player.setTroopBuildings(new TroopBuildingManager(player.getPlayerID()));
-        player.setResourceBuildings(new ResourceBuildingManager(player.getPlayerID()));
-        player.setLocationX(rand.nextInt(30));
-        player.setTotalKills(0);
-        player.setLocationY(rand.nextInt(30));
-        //Save fully created player into database
-        playerRepository.save(player);
-        // Return id of created player
-        return "New player of ID: " + player.getPlayerID();
+        if(!passwordCheck(created.getPassword())) {
+            return "Invalid password, length needs to be >= 7, contain at least one lowercase character, one uppercase character, one special character, and one digit";
+        }
+        else {
+            Player player = new Player();
+            Random rand = new Random();
+            player.setUserName(created.getUserName());
+            player.setPassword(created.getPassword());
+            // Save "empty" player to generate ID
+            player = playerRepository.save(player);
+            player.setTroops(new TroopManager(player.getPlayerID()));
+            player.setResources(new ResourceManager(player.getPlayerID()));
+            player.setResearchManager(new ResearchManager(player.getPlayerID()));
+            player.setBuildings(new BuildingManager(player.getPlayerID()));
+            player.setTroopBuildings(new TroopBuildingManager(player.getPlayerID()));
+            player.setResourceBuildings(new ResourceBuildingManager(player.getPlayerID()));
+            player.setLocationX(rand.nextInt(30));
+            player.setTotalKills(0);
+            player.setLocationY(rand.nextInt(30));
+            //Save fully created player into database
+            playerRepository.save(player);
+            // Return id of created player
+            return "New player of ID: " + player.getPlayerID();
+        }
     }
 
     // Returns sorted list of players based on power, descending order
@@ -318,6 +325,25 @@ public class PlayerController {
         }
         else {
             return null;
+        }
+    }
+
+    public static boolean passwordCheck(String password) {
+        if (password.length() >= 7) {
+            Pattern lower = Pattern.compile("[a-z]");
+            Pattern upper = Pattern.compile("[A-Z]");
+            Pattern digit = Pattern.compile("[0-9]");
+            Pattern special = Pattern.compile("[!@#$%^&*()_\\-+=|<>,./?{}\\[\\]~`:;']");
+
+            Matcher hasUpper = upper.matcher(password);
+            Matcher hasLower = lower.matcher(password);
+            Matcher hasDigit = digit.matcher(password);
+            Matcher hasSpecial = special.matcher(password);
+
+            return hasSpecial.find() && hasLower.find() && hasDigit.find() && hasUpper.find();
+        }
+        else {
+            return false;
         }
     }
 
