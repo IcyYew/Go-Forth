@@ -54,7 +54,7 @@ public class ResearchActivity extends AppCompatActivity {
     private TextView buildingSpeedLevelTextView;
     private TextView buildingSpeedBonusTextView;
 
-    // Variables to store current level and bonus for troop training and resource gathering
+    // Variables to store current level and bonus for troop training and resource gathering. Starts at 0.
     private int troopTrainingLevel = 0;
     private float troopTrainingBonus = 0.0f;
     private int researchCostLevel = 0;
