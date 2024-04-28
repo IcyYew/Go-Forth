@@ -157,7 +157,8 @@ public class BuildingManagementActivity extends AppCompatActivity {
             private int platinumToUpgrade;
 
 
-            Building(int buildingID, int buildingPower, int productionRate, String buildingName, int level, int foodToUpgrade, int woodToUpgrade, int stoneToUpgrade, int platinumToUpgrade) {
+            Building(int buildingID, int buildingPower, int productionRate, String buildingName, int level,
+                     int foodToUpgrade, int woodToUpgrade, int stoneToUpgrade, int platinumToUpgrade) {
                 this.buildingID = buildingID;
                 this.buildingPower = buildingPower;
                 this.productionRate = productionRate;
