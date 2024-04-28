@@ -1,12 +1,16 @@
 package com.example.app;
 
+import static java.lang.Thread.sleep;
+
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.content.Intent;
 import android.widget.Toast;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,9 +18,13 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * This activity is respnsible for resource management.
@@ -32,27 +40,27 @@ public class ResourceActivity extends AppCompatActivity {
 
     //Food UI
     private TextView foodHeld;
+    private TextView foodCollect;
     private Button addFood;
-    private Button removeFood;
-    private EditText foodPrompt;
 
     //Wood UI
     private TextView woodHeld;
+    private TextView woodCollect;
     private Button addWood;
-    private Button removeWood;
-    private EditText woodPrompt;
 
     //Stone UI
     private TextView stoneHeld;
+    private TextView stoneCollect;
     private Button addStone;
-    private Button removeStone;
-    private EditText stonePrompt;
 
     //Platinum UI
     private TextView platinumHeld;
+    private TextView platinumCollect;
     private Button addPlatinum;
-    private Button removePlatinum;
-    private EditText platinumPrompt;
+    
+    private Thread updateThread;
+
+    private boolean stopThread;
 
     /**
      * On the creation of this activity, TextViews and Buttons are initialized.
@@ -73,37 +81,47 @@ public class ResourceActivity extends AppCompatActivity {
         if (extras != null) {
             userID = extras.getInt("ID");
         }
-
+        
         //Initialize buttons
         Back = findViewById(R.id.Back);
 
-        foodHeld = findViewById(R.id.FoodAmount);
-        addFood = findViewById(R.id.FoodPlus);
-        removeFood = findViewById(R.id.FoodMinus);
-        foodPrompt = findViewById(R.id.FoodPrompt);
+        foodHeld = findViewById(R.id.foodAmount);
+        foodCollect = findViewById(R.id.foodCollect);
+        addFood = findViewById(R.id.foodCollectButton);
 
-        woodHeld = findViewById(R.id.WoodAmount);
-        addWood = findViewById(R.id.WoodPlus);
-        removeWood = findViewById(R.id.WoodMinus);
-        woodPrompt = findViewById(R.id.WoodPrompt);
+        woodHeld = findViewById(R.id.woodAmount);
+        woodCollect = findViewById(R.id.woodCollect);
+        addWood = findViewById(R.id.woodCollectButton);
 
-        stoneHeld = findViewById(R.id.StoneAmount);
-        addStone = findViewById(R.id.StonePlus);
-        removeStone = findViewById(R.id.StoneMinus);
-        stonePrompt = findViewById(R.id.StonePrompt);
+        stoneHeld = findViewById(R.id.stoneAmount);
+        stoneCollect = findViewById(R.id.stoneCollect);
+        addStone = findViewById(R.id.stoneCollectButton);
 
-        platinumHeld = findViewById(R.id.PlatinumAmount);
-        addPlatinum = findViewById(R.id.PlatinumPlus);
-        removePlatinum = findViewById(R.id.PlatinumMinus);
-        platinumPrompt = findViewById(R.id.PlatinumPrompt);
+        platinumHeld = findViewById(R.id.platinumAmount);
+        platinumCollect = findViewById(R.id.platCollect);
+        addPlatinum = findViewById(R.id.platCollectButton);
 
         Back = findViewById(R.id.Back);
-        updateAmount();
+        updateBuildingAmount();
+        updateCurrentStorage();
+
+        stopThread = false;
+
+        updateThread = new Thread(new UpdateThread());
+        updateThread.start();
 
         Back.setOnClickListener(new View.OnClickListener() {
             //Back button clicked
             @Override
             public void onClick(View v) {
+                //eventually use new collect function
+                stopThread = true;
+                updateThread.interrupt();
+                try {
+                    updateThread.join();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 Intent intent = new Intent(ResourceActivity.this, MainActivity.class);
                 intent.putExtra("ID", String.valueOf(userID));
                 startActivity(intent);
@@ -114,30 +132,15 @@ public class ResourceActivity extends AppCompatActivity {
             //Back add food clicked
             @Override
             public void onClick(View v) {
-                addResource(Integer.parseInt(foodPrompt.getText().toString()), "FOOD");
+                addResource("FARM");
             }
         });
 
-        removeFood.setOnClickListener(new View.OnClickListener() {
-            //Remove food clicked
-            @Override
-            public void onClick(View v) {
-                removeResource(Integer.parseInt(foodPrompt.getText().toString()), "FOOD");
-            }
-        });
         addWood.setOnClickListener(new View.OnClickListener() {
             //Add wood clicked
             @Override
             public void onClick(View v) {
-                addResource(Integer.parseInt(woodPrompt.getText().toString()), "WOOD");
-            }
-        });
-
-        removeWood.setOnClickListener(new View.OnClickListener() {
-            //Remove wood clicked
-            @Override
-            public void onClick(View v) {
-                removeResource(Integer.parseInt(woodPrompt.getText().toString()), "WOOD");
+                addResource("LUMBERYARD");
             }
         });
 
@@ -145,30 +148,15 @@ public class ResourceActivity extends AppCompatActivity {
             //Add stone clicked
             @Override
             public void onClick(View v) {
-                addResource(Integer.parseInt(stonePrompt.getText().toString()), "STONE");
+                        addResource("QUARRY");
             }
         });
 
-        removeStone.setOnClickListener(new View.OnClickListener() {
-            //Remove stone clicked
-            @Override
-            public void onClick(View v) {
-                removeResource(Integer.parseInt(stonePrompt.getText().toString()), "STONE");
-            }
-        });
         addPlatinum.setOnClickListener(new View.OnClickListener() {
             //Add platinum clicked
             @Override
             public void onClick(View v) {
-                addResource(Integer.parseInt(platinumPrompt.getText().toString()), "PLATINUM");
-            }
-        });
-
-        removePlatinum.setOnClickListener(new View.OnClickListener() {
-            //Remove platinum clicked
-            @Override
-            public void onClick(View v) {
-                removeResource(Integer.parseInt(platinumPrompt.getText().toString()), "PLATINUM");
+                addResource("PLATINUMMINE");
             }
         });
 
@@ -177,61 +165,65 @@ public class ResourceActivity extends AppCompatActivity {
     /**
      * Adds resources to the backend then updates the current count shown onscreen.
      *
-     * @param amount Amount of resources to add
      * @param resourceName Name of the resource to add
      */
-    private void addResource(int amount, String resourceName){
+    private void addResource(String resourceName){
         JSONObject jsonObject = new JSONObject(); //Initialize input JSON
         try {
-            jsonObject.put("resourceType", resourceName);
-            jsonObject.put("quantity", amount);
+            jsonObject.put("buildingType", resourceName);
+            jsonObject.put("playerID", userID);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        String url = "http://coms-309-048.class.las.iastate.edu:8080/players/addresource/" + userID;
+        String url = "http://coms-309-048.class.las.iastate.edu:8080/buildings/collectResources";
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonObject,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        updateAmount(); //update screen when backend is done updating
+                        updateBuildingAmount();
+                        updateCurrentStorage();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(ResourceActivity.this, "Error updating resources: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+                        updateBuildingAmount();
+                        updateCurrentStorage();                    }
                 });
 
         // add to volley queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 
-    /** Adds resources to the backend then updates the current count shown onscreen.
-     *
-     * @param amount Amount of resources to remove
-     * @param resourceName Name of resource to remove
-     */
-    private void removeResource(int amount, String resourceName){
-        JSONObject jsonObject = new JSONObject(); //Initialize input JSON
-        try {
-            jsonObject.put("resourceType", resourceName);
-            jsonObject.put("quantity", amount);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        String url = "http://coms-309-048.class.las.iastate.edu:8080/players/removeresource/" + userID;
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonObject,
+    private void updateBuildingAmount() {
+        String url = "http://coms-309-048.class.las.iastate.edu:8080/buildings/updateResources/" + String.valueOf(userID);
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        updateAmount(); //update screen when backend is done updating
-                    }
+                        try {
+                            //Get current resource values
+                            JSONObject resourceObject = response.getJSONObject("resourceBuildings");
+                            int food = resourceObject.getInt("farmresources");
+                            int wood = resourceObject.getInt("lumberyardresources");
+                            int stone = resourceObject.getInt("quarryresources");
+                            int platinum = resourceObject.getInt("platinummineresources");
+
+                            //print current resource values on screen.
+                            foodCollect.setText(String.valueOf(food));
+                            woodCollect.setText(String.valueOf(wood));
+                            stoneCollect.setText(String.valueOf(stone));
+                            platinumCollect.setText(String.valueOf(platinum));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(ResourceActivity.this, "Error parsing JSON response", Toast.LENGTH_SHORT).show();
+                        }                    }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(ResourceActivity.this, "Error updating resources: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ResourceActivity.this, "updateBuildingAmount: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -243,7 +235,7 @@ public class ResourceActivity extends AppCompatActivity {
      * This method gets the newly updated resource amount from the database.
      * It then displays the values on the corresponding TextView.
      */
-    private void updateAmount() {
+    private void updateCurrentStorage() {
         String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getPlayer/" + String.valueOf(userID);
 
         // makes JsonObjectRequest to get the current player. GETs the archerNum, warriorNum, mageNum, and cavalryNum
@@ -273,11 +265,31 @@ public class ResourceActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(ResourceActivity.this, "Error fetching player resources: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ResourceActivity.this, "updateCurrentStorage: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
         // add to volley queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
+
+    class UpdateThread implements Runnable {
+    public void run()
+    {
+        try {
+            while(!stopThread) {
+                updateThread.sleep(1000);
+                updateBuildingAmount();
+                //updateCurrentStorage();
+            }
+        }
+        catch (Exception e) {
+            if (Thread.interrupted()) try {
+                throw new InterruptedException();
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
+}
 }
