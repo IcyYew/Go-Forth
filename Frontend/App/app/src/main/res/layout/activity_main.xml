@@ -3,120 +3,82 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Title -->
+    <ImageView
+        android:id="@+id/backgroundGif"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true" />
 
-    <Button
-        android:id="@+id/ClanChat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/ResourceButton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:text="Clan Chat"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/titleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
-        android:text="Tech Crusaders"
-        android:textSize="32sp" />
-
-    <!-- Login Button -->
-    <Button
-        android:id="@+id/loginButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/titleTextView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:text="Login"
-        android:textSize="18sp" />
-
-    <!-- Signup Button -->
-    <Button
-        android:id="@+id/signupButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/loginButton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:text="Signup"
-        android:textSize="18sp" />
-
-    <!-- Troop Management Button -->
-    <Button
-        android:id="@+id/troopManagementButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/displayButton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:text="Troop Management"
-        android:textSize="18sp" />
-
-    <Button
+    <ImageView
         android:id="@+id/displayButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/signupButton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:text="Player Leaderboard"
-        android:textSize="18sp" />
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="260dp"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/leaderboard"
+        android:clickable="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false" />
 
-    <Button
+    <ImageView
+        android:id="@+id/globalChatButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="310dp"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/global"
+        android:clickable="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false" />
+
+    <ImageView
+        android:id="@+id/Clan"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="360dp"
+        android:layout_marginTop="5dp"
+        android:clickable="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:src="@drawable/clanb" />
+
+    <ImageView
+        android:id="@+id/troopManagementButton"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="475dp"
+        android:layout_marginStart="10dp"
+        android:clickable="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:src="@drawable/baracks" />
+
+    <ImageView
         android:id="@+id/ResourceButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/troopManagementButton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:text="Resource"
-        android:textSize="18sp" />
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="300dp"
+        android:layout_marginTop="300dp"
+        android:src="@drawable/wheat" />
 
-    <Button
+    <ImageView
+        android:id="@+id/ResearchButton"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="300dp"
+        android:layout_marginTop="475dp" />
+
+    <ImageView
         android:id="@+id/OverworldButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/ResourceButton"
+        android:layout_height="75dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:text="Overworld"
-        android:textSize="18sp" />
-
-    <Button
-        android:id="@+id/ResearchButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/OverworldButton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:text="Research"
-        android:textSize="18sp" />
-
-    <Button
-        android:id="@+id/globalChatButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Global Chat"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="16dp"/>
-
-    <!-- Button for Clan Chat -->
-    <Button
-        android:id="@+id/Clan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="Clan" />
+        android:layout_marginTop="750dp"
+        android:src="@drawable/go_forth"
+        android:clickable="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false" />
 
     <TextView
         android:id="@+id/ID"
