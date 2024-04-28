@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView globalChatButton;
     private ImageView clanButton;
     private ImageView researchButton;
+    private ImageView signoutButton;
     private int userID;
     private TextView UID;
     private String username;
@@ -54,18 +55,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         troopManagementButton = findViewById(R.id.troopManagementButton);
-
         displayButton = findViewById(R.id.displayButton);
-
         resourceButton = findViewById(R.id.ResourceButton);
-
         clanButton = findViewById(R.id.Clan);
-
         globalChatButton = findViewById(R.id.globalChatButton);
-
         overworldButton = findViewById(R.id.OverworldButton);
-
         researchButton = findViewById(R.id.ResearchButton);
+        signoutButton = findViewById(R.id.signout);
 
         UID = findViewById(R.id.ID);
 
@@ -114,6 +110,14 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                 }, 250); // 500 milliseconds delay
+            }
+        });
+
+        signoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, LaunchActivity.class);
+                startActivity(intent);
             }
         });
 

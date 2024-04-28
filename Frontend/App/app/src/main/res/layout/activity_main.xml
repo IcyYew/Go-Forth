@@ -14,7 +14,7 @@
         android:id="@+id/displayButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginStart="260dp"
+        android:layout_marginStart="210dp"
         android:layout_marginTop="5dp"
         android:src="@drawable/leaderboard"
         android:clickable="true"
@@ -25,7 +25,7 @@
         android:id="@+id/globalChatButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginStart="310dp"
+        android:layout_marginStart="260dp"
         android:layout_marginTop="5dp"
         android:src="@drawable/global"
         android:clickable="true"
@@ -36,12 +36,23 @@
         android:id="@+id/Clan"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginStart="360dp"
+        android:layout_marginStart="310dp"
         android:layout_marginTop="5dp"
         android:clickable="true"
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:src="@drawable/clanb" />
+
+    <ImageView
+        android:id="@+id/signout"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="360dp"
+        android:layout_marginTop="5dp"
+        android:clickable="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:src="@drawable/signout" />
 
     <ImageView
         android:id="@+id/troopManagementButton"
