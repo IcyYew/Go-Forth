@@ -82,6 +82,7 @@ public class PlayerController {
         player.setTroopBuildings(new TroopBuildingManager(player.getPlayerID()));
         player.setResourceBuildings(new ResourceBuildingManager(player.getPlayerID()));
         player.setLocationX(rand.nextInt(30));
+        player.setTotalKills(0);
         player.setLocationY(rand.nextInt(30));
         //Save fully created player into database
         playerRepository.save(player);
@@ -305,9 +306,11 @@ public class PlayerController {
         Player p1 = playerRepository.findById(playerID1).orElse(null);
         Player p2 = playerRepository.findById(playerID2).orElse(null);
         if (p1 != null && p2 != null) {
-            TroopCombatCalculator tcc = new TroopCombatCalculator(p1.troops, p2.troops);
+            TroopCombatCalculator tcc = new TroopCombatCalculator(p1.getTroops(), p2.getTroops());
             p1.updatePower();
             p2.updatePower();
+            p1.setTotalKills(p1.getTroops().getTotalTroopKills());
+            p2.setTotalKills(p2.getTroops().getTotalTroopKills());
             playerRepository.save(p1);
             playerRepository.save(p2);
 
