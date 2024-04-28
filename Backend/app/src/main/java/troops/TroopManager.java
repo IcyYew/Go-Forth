@@ -32,6 +32,8 @@ public class TroopManager {
     // A troop managers total troop power, useless in practice, temporarily in DB table
     private long totalTroopPower;
 
+    private int totalTroopKills;
+
     // Constructor for troopmanager, initalizes troops for a player of playerId, in practice this should only occur once per player
 
     /**
@@ -55,6 +57,14 @@ public class TroopManager {
         troopManager.add(new Archer(this, 0));
         troopManager.add(new Mage(this, 0));
         troopManager.add(new Cavalry(this, 0));
+    }
+
+    public int getTotalTroopKills() {
+        return totalTroopKills;
+    }
+
+    public void setTotalTroopKills(int totalTroopKills) {
+        this.totalTroopKills = totalTroopKills;
     }
 
     // Empty constructor to make Jpa happy
@@ -152,6 +162,7 @@ public class TroopManager {
                 "playerId=" + playerId +
                 ", troopManager=" + troopManager +
                 ", totalTroopPower=" + totalTroopPower +
+                ", totalTroopKills=" + totalTroopKills +
                 '}';
     }
 }

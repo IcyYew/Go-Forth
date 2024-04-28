@@ -86,7 +86,7 @@ public class Player {
     @Column(name="locationY")
     private int locationY;
 
-    @Column(name="kill-count")
+    @Column(name="total-kills")
     private int totalKills;
 
     @Column(name="archerFinalDate")
@@ -110,12 +110,6 @@ public class Player {
 
     }
 
-    public int getTotalKills() {
-        return this.totalKills;
-    }
-    public void setTotalKills(int totalKills) {
-        this.totalKills = totalKills;
-    }
 
 
     /**
@@ -195,6 +189,14 @@ public class Player {
         setLocationX(locationX);
         setLocationY(locationY);
         setTotalKills(totalKills);
+    }
+
+    public int getTotalKills() {
+        return totalKills;
+    }
+
+    public void setTotalKills(int totalKills) {
+        this.totalKills = totalKills;
     }
 
     /**
