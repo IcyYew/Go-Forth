@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 .load(R.raw.research)
                 .into(researchButton);
 
+        // TODO NEED TO TRY AND FIX BUTTON PRESS NOT CHANGING IMAGEVIEW
         clanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
