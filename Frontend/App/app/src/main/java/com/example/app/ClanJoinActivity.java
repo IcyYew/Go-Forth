@@ -82,7 +82,7 @@ public class ClanJoinActivity extends AppCompatActivity {
                                     JSONArray jsonArray = new JSONArray(response); //Array of clans
                                     for (int i = 0; i <= jsonArray.length(); i++) {
                                         JSONObject clanObject = jsonArray.getJSONObject(i); //Get clan at current i
-                                        if ((clanObject.getString("clanName")).equals((Name.getText().toString())) && clanObject.getInt("clanMemberNumber") != 50) { //If the clan exists
+                                        if ((clanObject.getString("clanName")).equals((Name.getText().toString())) && clanObject.getInt("clanMembersNumber") != 50) { //If the clan exists
                                             join(jsonArray.getJSONObject(i).getInt("clanID")); //join clan
                                             return; //exit
                                         }
