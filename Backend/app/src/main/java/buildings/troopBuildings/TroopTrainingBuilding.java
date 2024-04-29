@@ -54,8 +54,8 @@ public class TroopTrainingBuilding extends buildings.Building {
             this.power *= 1.5;
             setTrainingCapacity(level);
             setTrainingTime(level);
-            setStoneUpgradeCost(level);
-            setWoodUpgradeCost(level);
+            upgradeStoneUpgradeCost();
+            upgradeWoodUpgradeCost();
         }
         else {
             throw new Exception("Max level reached");

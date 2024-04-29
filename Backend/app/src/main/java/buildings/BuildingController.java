@@ -46,7 +46,6 @@ public class BuildingController {
        researchList.add(researchManager.getResearch("Research Cost"));
        researchList.add(researchManager.getResearch("Training Capacity"));
        researchList.add(researchManager.getResearch("Training Speed"));
-       researchList.add(researchManager.getResearch("Building Speed"));
        researchList.add(researchManager.getResearch("Building Cost"));
        return researchList;
     }
@@ -55,7 +54,9 @@ public class BuildingController {
     public void levelAttackBonus(@RequestBody ResearchLevelRequest researchLevelRequest) {
        Player player = playerRepository.getById(researchLevelRequest.getPlayerID());
        Research research = player.getResearchManager().getResearch(researchLevelRequest.getResearchName());
-       if (research.getLevel() < 5 && research.getPlatinumCost() <= player.getResources().getResource(ResourceType.PLATINUM)) {
+       if (research.getLevel() < 5
+               && research.getPlatinumCost() <= player.getResources().getResource(ResourceType.PLATINUM)
+               && player.getBuildings().getOtherBuilding(BuildingTypes.RESEARCHBUILDING).getLevel() >= 2) {
            research.levelUpResearch(research.getLevel() + 1, player.getResearchManager());
            player.getResources().removeResource(ResourceType.PLATINUM, (int)research.getPlatinumCost());
            player.getTroops().getTroop(ARCHER).setDamage(Math.ceil(player.getTroops().getTroop(ARCHER).getDamage() * (research.getLevel() * 1.05)));
@@ -67,18 +68,15 @@ public class BuildingController {
        playerRepository.save(player);
     }
 
-    @PostMapping("/buildings/research/levelresearch/buildingspeed")
-    public void levelBuildingSpeed(@RequestBody ResearchLevelRequest researchLevelRequest) {
-
-    }
-
     @PostMapping("/buildings/research/levelresearch/buildingcost")
     public void levelBuildingCost(@RequestBody ResearchLevelRequest researchLevelRequest) {
         Player player = playerRepository.getById(researchLevelRequest.getPlayerID());
         Research research = player.getResearchManager().getResearch(researchLevelRequest.getResearchName());
         Double multiplierCalc;
-        if (research.getLevel() < 5 && research.getPlatinumCost() <= player.getResources().getResource(ResourceType.PLATINUM)) {
+        if (research.getLevel() < 5 && research.getPlatinumCost() <= player.getResources().getResource(ResourceType.PLATINUM)
+                && player.getBuildings().getOtherBuilding(BuildingTypes.RESEARCHBUILDING).getLevel() >= 2) {
             research.levelUpResearch(research.getLevel() + 1, player.getResearchManager());
+            player.getResources().removeResource(ResourceType.PLATINUM, (int)research.getPlatinumCost());
             for (Building building : player.getBuildings().getOtherBuildings()) {
                 building.setWoodUpgradeCost((int)(building.getWoodUpgradeCost() * .93));
                 building.setStoneUpgradeCost((int)(building.getStoneUpgradeCost() * .93));
@@ -120,15 +118,15 @@ public class BuildingController {
        Research trainingSpeed = player.getResearchManager().getResearch("Training Speed");
        Research buildingCost = player.getResearchManager().getResearch("Building Cost");
        Research trainingCapacity = player.getResearchManager().getResearch("Training Capacity");
-       Research buildingSpeed = player.getResearchManager().getResearch("Building Speed");
-       if (research.getLevel() < 5 && research.getPlatinumCost() <= player.getResources().getResource(ResourceType.PLATINUM)) {
+       if (research.getLevel() < 5
+               && research.getPlatinumCost() <= player.getResources().getResource(ResourceType.PLATINUM)
+               && player.getBuildings().getOtherBuilding(BuildingTypes.RESEARCHBUILDING).getLevel() >= 1) {
            research.levelUpResearch(research.getLevel() + 1, player.getResearchManager());
            player.getResources().removeResource(ResourceType.PLATINUM,  (int)research.getPlatinumCost());
            attackBonus.setPlatinumCost(Math.ceil(attackBonus.getPlatinumCost() * .97));
            trainingSpeed.setPlatinumCost(Math.ceil(trainingSpeed.getPlatinumCost() * .97));
            buildingCost.setPlatinumCost(Math.ceil(buildingCost.getPlatinumCost() * .97));
            trainingCapacity.setPlatinumCost(Math.ceil(trainingCapacity.getPlatinumCost() * .97));
-           buildingSpeed.setPlatinumCost(Math.ceil(buildingSpeed.getPlatinumCost() * .97));
        }
        player.updatePower();
        playerRepository.save(player);
@@ -142,7 +140,9 @@ public class BuildingController {
        TroopTrainingBuilding mageTower = player.getTroopBuildings().getTrainingBuilding(BuildingTypes.MAGETOWER);
        TroopTrainingBuilding warriorSchool = player.getTroopBuildings().getTrainingBuilding(BuildingTypes.WARRIORSCHOOL);
        TroopTrainingBuilding stables = player.getTroopBuildings().getTrainingBuilding(BuildingTypes.STABLES);
-       if (research.getLevel() < 5 && research.getPlatinumCost() <= player.getResources().getResource(ResourceType.PLATINUM)) {
+       if (research.getLevel() < 5
+               && research.getPlatinumCost() <= player.getResources().getResource(ResourceType.PLATINUM)
+               && player.getBuildings().getOtherBuilding(BuildingTypes.RESEARCHBUILDING).getLevel() >= 1) {
            research.levelUpResearch(research.getLevel() + 1, player.getResearchManager());
            player.getResources().removeResource(ResourceType.PLATINUM,  (int)research.getPlatinumCost());
            archeryRange.setTrainingTime(Math.floor(archeryRange.getTrainingTime() * .95));
@@ -162,7 +162,9 @@ public class BuildingController {
        TroopTrainingBuilding mageTower = player.getTroopBuildings().getTrainingBuilding(BuildingTypes.MAGETOWER);
        TroopTrainingBuilding warriorSchool = player.getTroopBuildings().getTrainingBuilding(BuildingTypes.WARRIORSCHOOL);
        TroopTrainingBuilding stables = player.getTroopBuildings().getTrainingBuilding(BuildingTypes.STABLES);
-       if (research.getLevel() < 5 && research.getPlatinumCost() <= player.getResources().getResource(ResourceType.PLATINUM)) {
+       if (research.getLevel() < 5
+               && research.getPlatinumCost() <= player.getResources().getResource(ResourceType.PLATINUM)
+               && player.getBuildings().getOtherBuilding(BuildingTypes.RESEARCHBUILDING).getLevel() >= 3) {
            research.levelUpResearch(research.getLevel() + 1, player.getResearchManager());
            player.getResources().removeResource(ResourceType.PLATINUM,  (int)research.getPlatinumCost());
            archeryRange.setTrainingCapacity(archeryRange.getTrainingCapacity() + 10);
@@ -218,17 +220,18 @@ public class BuildingController {
         {
             Building building = player.getBuildingOfType(buildingRequest.getBuildingType());
             {
-                if (player.resources.getResource(ResourceType.WOOD) >= building.getWoodUpgradeCost() &&
-                        player.resources.getResource(ResourceType.STONE) >= building.getStoneUpgradeCost())
-                {
-                    player.resources.removeResource(ResourceType.STONE, building.getStoneUpgradeCost());
-                    player.resources.removeResource(ResourceType.WOOD, building.getWoodUpgradeCost());
-                    building.upgrade();
-                    return playerRepository.save(player);
-                }
-                else
-                {
-                    return null;
+                if (building.getLevel() < player.getBuildingOfType(BuildingTypes.MAINBUILDING).getLevel() || buildingRequest.getBuildingType() == BuildingTypes.MAINBUILDING) {
+                    if (player.resources.getResource(ResourceType.WOOD) >= building.getWoodUpgradeCost() &&
+                            player.resources.getResource(ResourceType.STONE) >= building.getStoneUpgradeCost()) {
+                        player.resources.removeResource(ResourceType.STONE, building.getStoneUpgradeCost());
+                        player.resources.removeResource(ResourceType.WOOD, building.getWoodUpgradeCost());
+                        building.upgrade();
+                        return playerRepository.save(player);
+                    } else {
+                        return player;
+                    }
+                } else {
+                    return player;
                 }
             }
         }

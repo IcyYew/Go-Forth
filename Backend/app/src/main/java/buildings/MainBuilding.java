@@ -20,7 +20,7 @@ public class MainBuilding extends OtherBuilding {
         setBuildingType(BuildingTypes.MAINBUILDING);
         setBuildingManager(buildingManager);
         setLevel(level);
-        setPower(100);
+        setPower(64);
         setStoneUpgradeCost(400);
         setWoodUpgradeCost(400);
     }

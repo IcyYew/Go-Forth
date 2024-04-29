@@ -20,7 +20,7 @@ public class LumberYard extends ResourceBuilding{
         super(BuildingTypes.LUMBERYARD, level, resourceBuildingManager);
         setResourceProductionRate(1);
         setTimeLastCollected(LocalDateTime.now());
-        setPower(30);
+        setPower(16);
         setStoneUpgradeCost(400);
         setWoodUpgradeCost(400);
         setResourceLimit(1000);

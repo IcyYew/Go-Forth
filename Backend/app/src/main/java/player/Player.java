@@ -286,8 +286,6 @@ public class Player {
         this.power += research.getResearch("Building Cost").getPower();
         this.power += research.getResearch("Research Cost").getPower();
         this.power += research.getResearch("Training Capacity").getPower();
-        this.power += research.getResearch("Building Speed").getPower();
-
         this.power += troopBuildings.calculateTotalTroopBuildingPower();
         this.power += resourceBuildings.calculateTotalResourceBuildingPower();
         this.power += buildings.calculateTotalOtherBuildingPower();

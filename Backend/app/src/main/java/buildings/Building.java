@@ -26,9 +26,9 @@ public abstract class Building {
 
     protected int level;
 
-    protected int stoneUpgradeCost = 1;
+    protected int stoneUpgradeCost;
 
-    protected int woodUpgradeCost = 1;
+    protected int woodUpgradeCost;
 
     protected int power;
 

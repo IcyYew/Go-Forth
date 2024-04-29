@@ -22,7 +22,7 @@ public class MageTower extends TroopTrainingBuilding {
         setTrainingCapacity(50);
         setTrainingTime(20);
         setTrainingCost(15);
-        setPower(50);
+        setPower(32);
         setStoneUpgradeCost(400);
         setWoodUpgradeCost(400);
     }
