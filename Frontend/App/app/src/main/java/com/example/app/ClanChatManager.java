@@ -7,6 +7,7 @@ import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 
+
 /**
  * Singleton WebSocketManager instance used for managing WebSocket connections
  * in the Android application.
