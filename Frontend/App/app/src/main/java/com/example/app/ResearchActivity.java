@@ -36,7 +36,6 @@ public class ResearchActivity extends AppCompatActivity {
     private ImageView buildingCostImageView;
     private ImageView attackBonusImageView;
     private ImageView troopCapacityImageView;
-
     private Button upgradeButton;
     private Button backButton;
 
@@ -289,7 +288,6 @@ public class ResearchActivity extends AppCompatActivity {
     private void upgradeTroopTraining() {
         if (troopTrainingLevel < 5) {
             levelUpRequest("trainingspeed");
-            troopTrainingLevel++;
             getBonus("Training Speed");
         } else {
             Toast.makeText(this, "MAX LEVEL REACHED", Toast.LENGTH_SHORT).show();
@@ -301,7 +299,6 @@ public class ResearchActivity extends AppCompatActivity {
     private void upgradeResearchCost() {
         if (researchCostLevel < 5) {
             levelUpRequest("researchcost");
-            researchCostLevel++;
             getBonus("Research Cost");
         } else {
             Toast.makeText(this, "MAX LEVEL REACHED", Toast.LENGTH_SHORT).show();
@@ -313,7 +310,6 @@ public class ResearchActivity extends AppCompatActivity {
     private void upgradeBuildingCost() {
         if (buildingCostLevel < 5) {
             levelUpRequest("buildingcost");
-            buildingCostLevel++;
             getBonus("Building Cost");
         } else {
             Toast.makeText(this, "MAX LEVEL REACHED", Toast.LENGTH_SHORT).show();
@@ -325,7 +321,6 @@ public class ResearchActivity extends AppCompatActivity {
     private void upgradeAttackBonus() {
         if (attackBonusLevel < 5) {
             levelUpRequest("attackbonus");
-            attackBonusLevel++;
             getBonus("Attack Bonus");
         } else {
             Toast.makeText(this, "MAX LEVEL REACHED", Toast.LENGTH_SHORT).show();
@@ -337,7 +332,6 @@ public class ResearchActivity extends AppCompatActivity {
     private void upgradeTroopCapacity() {
         if (troopCapacityLevel < 5) {
             levelUpRequest("trainingcapacity");
-            troopCapacityLevel++;
             getBonus("Training Capacity");
         } else {
             Toast.makeText(this, "MAX LEVEL REACHED", Toast.LENGTH_SHORT).show();
@@ -411,8 +405,9 @@ public class ResearchActivity extends AppCompatActivity {
             case "Training Speed":
                 troopTrainingBonus = (float)(Math.pow(0.95, troopTrainingLevel));
                 break;
-            case "Buildng Cost":
-                buildingCostBonus = 0; // TODO
+            case "Building Cost":
+                buildingCostBonus = (float)(Math.pow(0.93, buildingCostLevel));
+                Log.d("Building cost bonus", String.valueOf(buildingCostBonus));
                 break;
         }
     }
@@ -442,11 +437,17 @@ public class ResearchActivity extends AppCompatActivity {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, baseURL, body,
                 new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(JSONObject response) {getPlatinum();}
+                    public void onResponse(JSONObject response) {
+                        getPlatinum();
+                        getResearchLevels();
+                    }
                 },
                 new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {getPlatinum();}
+                    public void onErrorResponse(VolleyError error) {
+                        getPlatinum();
+                        getResearchLevels();
+                    }
                 });
 
         // add to volley queue

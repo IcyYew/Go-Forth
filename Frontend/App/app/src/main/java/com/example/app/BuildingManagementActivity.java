@@ -351,7 +351,7 @@ public class BuildingManagementActivity extends AppCompatActivity {
             statsString.append("Building Power:  ").append(List.get(Index).buildingPower).append("\n");
         }
         upgradeString.append("Wood to upgrade:   ").append(List.get(Index).woodToUpgrade).append(" (Currently have ").append(wood).append(")\n");
-        upgradeString.append("Stone to upgrade:  ").append(List.get(Index).woodToUpgrade).append(" (Currently have ").append(wood).append(")\n");
+        upgradeString.append("Stone to upgrade:  ").append(List.get(Index).stoneToUpgrade).append(" (Currently have ").append(stone).append(")\n");
         Glide.with(this).clear(BuildingGif);
         Glide.with(this)
                 .asGif()
