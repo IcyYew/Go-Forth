@@ -220,7 +220,7 @@ public class BuildingController {
         {
             Building building = player.getBuildingOfType(buildingRequest.getBuildingType());
             {
-                if (building.getLevel() < player.getBuildingOfType(BuildingTypes.MAINBUILDING).getLevel()) {
+                if (building.getLevel() < player.getBuildingOfType(BuildingTypes.MAINBUILDING).getLevel() || buildingRequest.getBuildingType() == BuildingTypes.MAINBUILDING) {
                     if (player.resources.getResource(ResourceType.WOOD) >= building.getWoodUpgradeCost() &&
                             player.resources.getResource(ResourceType.STONE) >= building.getStoneUpgradeCost()) {
                         player.resources.removeResource(ResourceType.STONE, building.getStoneUpgradeCost());
@@ -230,9 +230,7 @@ public class BuildingController {
                     } else {
                         return player;
                     }
-                }
-                else
-                {
+                } else {
                     return player;
                 }
             }
