@@ -227,16 +227,16 @@ public class BuildingController {
                         building.upgrade();
                         return playerRepository.save(player);
                     } else {
-                        throw new Exception("Insufficient resources for upgrade!");
+                        return null;
                     }
                 }
                 else
                 {
-                    throw new Exception("Upgrade main building first!");
+                    return null;
                 }
             }
         }
-        throw new Exception("Player not found!");
+        return null;
     }
 
     public static class ResearchLevelRequest {
