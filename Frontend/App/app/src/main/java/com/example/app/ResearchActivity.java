@@ -36,7 +36,6 @@ public class ResearchActivity extends AppCompatActivity {
     private ImageView buildingCostImageView;
     private ImageView attackBonusImageView;
     private ImageView troopCapacityImageView;
-    private ImageView buildingSpeedImageView;
 
     private Button upgradeButton;
     private Button backButton;
@@ -51,8 +50,7 @@ public class ResearchActivity extends AppCompatActivity {
     private TextView attackBonusBonusTextView;
     private TextView troopCapacityLevelTextView;
     private TextView troopCapacityBonusTextView;
-    private TextView buildingSpeedLevelTextView;
-    private TextView buildingSpeedBonusTextView;
+    private TextView platinumTextView;
 
     // Variables to store current level and bonus for troop training and resource gathering. Starts at 0.
     private int troopTrainingLevel = 0;
@@ -65,11 +63,10 @@ public class ResearchActivity extends AppCompatActivity {
     private float attackBonusBonus = 0.0f;
     private int troopCapacityLevel = 0;
     private float troopCapacityBonus = 0.0f;
-    private int buildingSpeedLevel = 0;
-    private float buildingSpeedBonus = 0.0f;
+    private int platinum = 0;
 
     // Variable to track the currently selected skill
-    private enum SelectedSkill { TROOP_TRAINING, RESEARCH_COST, BUILDING_COST, ATTACK_BONUS, TROOP_CAPACITY, BUILDING_SPEED }
+    private enum SelectedSkill { TROOP_TRAINING, RESEARCH_COST, BUILDING_COST, ATTACK_BONUS, TROOP_CAPACITY }
     private SelectedSkill selectedSkill = SelectedSkill.TROOP_TRAINING; // Default to troop training
 
     @Override
@@ -94,7 +91,6 @@ public class ResearchActivity extends AppCompatActivity {
         buildingCostImageView = findViewById(R.id.buildingCostImageView);
         attackBonusImageView = findViewById(R.id.attackBonusImageView);
         troopCapacityImageView = findViewById(R.id.troopCapacityImageView);
-        buildingSpeedImageView = findViewById(R.id.buildingSpeedImageView);
 
         troopTrainingLevelTextView = findViewById(R.id.troopTrainingLevelTextView);
         troopTrainingBonusTextView = findViewById(R.id.troopTrainingBonusTextView);
@@ -106,14 +102,15 @@ public class ResearchActivity extends AppCompatActivity {
         attackBonusBonusTextView = findViewById(R.id.attackBonusBonusTextView);
         troopCapacityLevelTextView = findViewById(R.id.troopCapacityLevelTextView);
         troopCapacityBonusTextView = findViewById(R.id.troopCapacityBonusTextView);
-        buildingSpeedLevelTextView = findViewById(R.id.buildingSpeedLevelTextView);
-        buildingSpeedBonusTextView = findViewById(R.id.buildingSpeedBonusTextView);
 
         upgradeButton = findViewById(R.id.upgradeButton);
         backButton = findViewById(R.id.backButton);
+        platinumTextView = findViewById(R.id.platinum);
 
         // Set initial visibility of images
         updateImageViewVisibility(1); // Set initial tier to 1
+
+        getPlatinum();
 
         getResearchLevels();
 
@@ -162,14 +159,6 @@ public class ResearchActivity extends AppCompatActivity {
             }
         });
 
-        buildingSpeedImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedSkill = SelectedSkill.BUILDING_SPEED;
-                showBuildingSpeedInfo();
-            }
-        });
-
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -199,9 +188,6 @@ public class ResearchActivity extends AppCompatActivity {
                         break;
                     case TROOP_CAPACITY:
                         upgradeTroopCapacity();
-                        break;
-                    case BUILDING_SPEED:
-                        upgradeBuildingSpeed();
                         break;
                 }
             }
@@ -268,16 +254,10 @@ public class ResearchActivity extends AppCompatActivity {
             troopCapacityImageView.setVisibility(View.VISIBLE);
             troopCapacityLevelTextView.setVisibility(View.VISIBLE);
             troopCapacityBonusTextView.setVisibility(View.VISIBLE);
-            buildingSpeedImageView.setVisibility(View.VISIBLE);
-            buildingSpeedLevelTextView.setVisibility(View.VISIBLE);
-            buildingSpeedBonusTextView.setVisibility(View.VISIBLE);
         } else {
             troopCapacityImageView.setVisibility(View.INVISIBLE);
             troopCapacityLevelTextView.setVisibility(View.INVISIBLE);
             troopCapacityBonusTextView.setVisibility(View.INVISIBLE);
-            buildingSpeedImageView.setVisibility(View.INVISIBLE);
-            buildingSpeedLevelTextView.setVisibility(View.INVISIBLE);
-            buildingSpeedBonusTextView.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -304,11 +284,6 @@ public class ResearchActivity extends AppCompatActivity {
     private void showTroopCapacityInfo() {
         troopCapacityLevelTextView.setText("Increased Troop Capacity Level: " + troopCapacityLevel);
         troopCapacityBonusTextView.setText("Increased Troop Capacity Bonus: +" + troopCapacityBonus + " troops");
-    }
-
-    private void showBuildingSpeedInfo() {
-        buildingSpeedLevelTextView.setText("Building Upgrade Speed Level: " + buildingSpeedLevel);
-        buildingSpeedBonusTextView.setText("Building Upgrade Speed Bonus: " + buildingSpeedBonus * 100 + "%");
     }
 
     private void upgradeTroopTraining() {
@@ -371,18 +346,6 @@ public class ResearchActivity extends AppCompatActivity {
         showTroopCapacityInfo();
     }
 
-    private void upgradeBuildingSpeed() {
-        if (buildingSpeedLevel < 5) {
-            levelUpRequest("buildingspeed");
-            buildingSpeedLevel++;
-            getBonus("Building Speed");
-        } else {
-            Toast.makeText(this, "MAX LEVEL REACHED", Toast.LENGTH_SHORT).show();
-        }
-
-        showBuildingSpeedInfo();
-    }
-
     private void getResearchLevels() {
         String url = "http://coms-309-048.class.las.iastate.edu:8080/buildings/research/getallresearch/" + userID;
 
@@ -412,10 +375,6 @@ public class ResearchActivity extends AppCompatActivity {
                                 troopTrainingLevel = researchObject.getInt("level");
                                 getBonus("Training Speed");
                                 showTroopTrainingInfo();
-                            } else if (researchObject.get("researchName").equals("Building Speed")) {
-                                buildingSpeedLevel = researchObject.getInt("level");
-                                getBonus("Building Speed");
-                                showBuildingSpeedInfo();
                             } else {
                                 buildingCostLevel = researchObject.getInt("level");
                                 getBonus("Building Cost");
@@ -452,9 +411,6 @@ public class ResearchActivity extends AppCompatActivity {
             case "Training Speed":
                 troopTrainingBonus = (float)(Math.pow(0.95, troopTrainingLevel));
                 break;
-            case "Building Speed":
-                buildingSpeedBonus = 0; // TODO
-                break;
             case "Buildng Cost":
                 buildingCostBonus = 0; // TODO
                 break;
@@ -478,9 +434,6 @@ public class ResearchActivity extends AppCompatActivity {
             case "trainingspeed":
                 body = createResearchJSON("Training Speed");
                 break;
-            case "buildingspeed":
-                body = createResearchJSON("Building Speed");
-                break;
             case "buildingcost":
                 body = createResearchJSON("Building Cost");
                 break;
@@ -489,11 +442,11 @@ public class ResearchActivity extends AppCompatActivity {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, baseURL, body,
                 new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(JSONObject response) {}
+                    public void onResponse(JSONObject response) {getPlatinum();}
                 },
                 new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {}
+                    public void onErrorResponse(VolleyError error) {getPlatinum();}
                 });
 
         // add to volley queue
@@ -508,5 +461,39 @@ public class ResearchActivity extends AppCompatActivity {
         } catch (JSONException e) {}
 
         return research;
+    }
+
+    /**
+     * Uses the /players/getPlayer/{userID} endpoint to get the troop counts of the currently selected user.
+     */
+    private void getPlatinum() {
+        // use the /players/getplayer/{userID} endpoint
+        String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getPlayer/" + String.valueOf(userID);
+
+        // makes JsonObjectRequest to get the current player. GETs the archerNum, warriorNum, mageNum, and cavalryNum
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONObject resourceObject = response.getJSONObject("resources");
+                            platinum = resourceObject.getInt("platinum");
+
+                            platinumTextView.setText("Platinum: " + platinum);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(ResearchActivity.this, "Error parsing JSON response", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(ResearchActivity.this, "Error fetching player data: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        // add to volley queue
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 }
