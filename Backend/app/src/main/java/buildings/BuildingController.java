@@ -228,12 +228,12 @@ public class BuildingController {
                         building.upgrade();
                         return playerRepository.save(player);
                     } else {
-                        return null;
+                        return player;
                     }
                 }
                 else
                 {
-                    return null;
+                    return player;
                 }
             }
         }
