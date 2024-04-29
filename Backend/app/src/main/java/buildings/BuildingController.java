@@ -218,21 +218,24 @@ public class BuildingController {
         {
             Building building = player.getBuildingOfType(buildingRequest.getBuildingType());
             {
-                if (player.resources.getResource(ResourceType.WOOD) >= building.getWoodUpgradeCost() &&
-                        player.resources.getResource(ResourceType.STONE) >= building.getStoneUpgradeCost())
-                {
-                    player.resources.removeResource(ResourceType.STONE, building.getStoneUpgradeCost());
-                    player.resources.removeResource(ResourceType.WOOD, building.getWoodUpgradeCost());
-                    building.upgrade();
-                    return playerRepository.save(player);
+                if (building.getLevel() < player.getBuildingOfType(BuildingTypes.MAINBUILDING).getLevel()) {
+                    if (player.resources.getResource(ResourceType.WOOD) >= building.getWoodUpgradeCost() &&
+                            player.resources.getResource(ResourceType.STONE) >= building.getStoneUpgradeCost()) {
+                        player.resources.removeResource(ResourceType.STONE, building.getStoneUpgradeCost());
+                        player.resources.removeResource(ResourceType.WOOD, building.getWoodUpgradeCost());
+                        building.upgrade();
+                        return playerRepository.save(player);
+                    } else {
+                        throw new Exception("Insufficient resources for upgrade!");
+                    }
                 }
                 else
                 {
-                    return null;
+                    throw new Exception("Upgrade main building first!");
                 }
             }
         }
-        return null;
+        throw new Exception("Player not found!");
     }
 
     public static class ResearchLevelRequest {

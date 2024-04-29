@@ -22,7 +22,7 @@ public class WarriorSchool extends TroopTrainingBuilding{
         setTrainingCapacity(50);
         setTrainingTime(40);
         setTrainingCost(25);
-        setPower(50);
+        setPower(32);
         setStoneUpgradeCost(400);
         setWoodUpgradeCost(400);
     }

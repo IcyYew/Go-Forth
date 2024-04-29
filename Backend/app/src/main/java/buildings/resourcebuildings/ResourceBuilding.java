@@ -46,8 +46,8 @@ public abstract class ResourceBuilding extends Building
             this.power *= 1.5;
             this.resourceLimit *= 1.5;
             resourceProductionRate += 1;
-            setStoneUpgradeCost(level);
-            setWoodUpgradeCost(level);
+            upgradeStoneUpgradeCost();
+            upgradeWoodUpgradeCost();
         }
         else
         {

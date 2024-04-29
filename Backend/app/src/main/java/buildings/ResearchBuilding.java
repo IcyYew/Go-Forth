@@ -18,7 +18,7 @@ public class ResearchBuilding extends OtherBuilding{
         setBuildingType(BuildingTypes.RESEARCHBUILDING);
         setBuildingManager(buildingManager);
         setLevel(level);
-        setPower(50);
+        setPower(32);
         setStoneUpgradeCost(400);
         setWoodUpgradeCost(400);
     }

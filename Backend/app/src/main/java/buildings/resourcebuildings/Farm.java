@@ -24,7 +24,7 @@ public class Farm extends ResourceBuilding {
         super(BuildingTypes.FARM, level, resourceBuildingManager);
         setResourceProductionRate(1);
         setTimeLastCollected(LocalDateTime.now());
-        setPower(30);
+        setPower(16);
         setStoneUpgradeCost(400);
         setWoodUpgradeCost(400);
         setResourceLimit(1000);

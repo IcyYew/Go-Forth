@@ -19,7 +19,7 @@ public class Quarry extends ResourceBuilding{
         super(BuildingTypes.QUARRY, level, resourceBuildingManager);
         setResourceProductionRate(1);
         setTimeLastCollected(LocalDateTime.now());
-        setPower(30);
+        setPower(16);
         setStoneUpgradeCost(400);
         setWoodUpgradeCost(400);
         setResourceLimit(1000);
