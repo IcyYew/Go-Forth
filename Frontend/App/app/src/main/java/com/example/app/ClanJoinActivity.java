@@ -86,7 +86,7 @@ public class ClanJoinActivity extends AppCompatActivity {
                                             join(jsonArray.getJSONObject(i).getInt("clanID")); //join clan
                                             return; //exit
                                         }
-                                        else if(clanObject.getInt("clanMemberNumber") != 50){
+                                        else if(clanObject.getInt("clanMembersNumber") != 50){
                                             Toast toast = Toast.makeText(ClanJoinActivity.this, "Clan Does not Exist", Toast.LENGTH_SHORT);
                                             toast.show();
                                         }
