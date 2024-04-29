@@ -34,8 +34,6 @@ public abstract class Building {
 
     protected double costMultiplier = 0;
 
-    protected int buildingUpgradeTime;
-
     public Building()
     {
 
