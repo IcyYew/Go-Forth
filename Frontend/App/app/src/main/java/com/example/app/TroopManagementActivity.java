@@ -390,7 +390,7 @@ public class TroopManagementActivity extends AppCompatActivity {
         getTrainingTime(cavalry);
 
         try {
-            Thread.sleep(100);
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -548,16 +548,16 @@ public class TroopManagementActivity extends AppCompatActivity {
             Duration knightDuration = Duration.between(now, knightFinal);
 
             if (archersToTrainCount > 0) {
-                totalDifference += archerDuration.toMillis() - 5000;
+                totalDifference += archerDuration.toMillis() - 2000;
             }
             if (magesToTrainCount > 0) {
-                totalDifference += mageDuration.toMillis() - 5000;
+                totalDifference += mageDuration.toMillis() - 2000;
             }
             if (cavalryToTrainCount > 0) {
-                totalDifference += cavalryDuration.toMillis() - 5000;
+                totalDifference += cavalryDuration.toMillis() - 2000;
             }
             if (knightsToTrainCount > 0) {
-                totalDifference += knightDuration.toMillis() - 5000;
+                totalDifference += knightDuration.toMillis() - 2000;
             }
         }
 
