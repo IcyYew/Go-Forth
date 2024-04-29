@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
         researchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ResearchActivity.class);
+                Intent intent = new Intent(MainActivity.this, BuildingManagementActivity.class);
                 intent.putExtra("ID", userID);
                 startActivity(intent);
             }

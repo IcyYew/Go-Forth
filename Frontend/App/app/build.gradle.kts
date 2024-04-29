@@ -67,4 +67,6 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation("com.android.volley:volley:1.2.1")
     implementation("org.java-websocket:Java-WebSocket:1.5.6")
+    implementation("com.github.bumptech.glide:glide:4.11.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.11.0")
 }
