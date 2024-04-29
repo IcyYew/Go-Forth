@@ -59,6 +59,7 @@ public class TroopManagementActivity extends AppCompatActivity {
     private TextView magesCountTextView;
     private TextView cavalryCountTextView;
     private TextView trainingTimeValue;
+    private TextView foodCountTextView;
 
     // checkboxes
     private CheckBox archersCheckbox;
@@ -108,6 +109,7 @@ public class TroopManagementActivity extends AppCompatActivity {
         magesToTrainCountTextView = findViewById(R.id.magesToTrainCount);
         cavalryToTrainCountTextView = findViewById(R.id.cavalryToTrainCount);
         trainingTimeValue = findViewById(R.id.trainingTimeValue);
+        foodCountTextView = findViewById(R.id.foodRemainingCount);
 
         archersToTrainCountTextView.setText(String.valueOf(archersToTrainCount));
         knightsToTrainCountTextView.setText(String.valueOf(knightsToTrainCount));
@@ -274,6 +276,10 @@ public class TroopManagementActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
+                            JSONObject resourceObject = response.getJSONObject("resources");
+                            int foodCount = resourceObject.getInt("food");
+                            foodCountTextView.setText(String.valueOf(foodCount));
+
                             JSONObject troopsObject = response.getJSONObject("troops");
                             int archersCount = troopsObject.getInt("archerNum");
                             int knightsCount = troopsObject.getInt("warriorNum");
@@ -384,7 +390,7 @@ public class TroopManagementActivity extends AppCompatActivity {
         getTrainingTime(cavalry);
 
         try {
-            Thread.sleep(100);
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -542,16 +548,16 @@ public class TroopManagementActivity extends AppCompatActivity {
             Duration knightDuration = Duration.between(now, knightFinal);
 
             if (archersToTrainCount > 0) {
-                totalDifference += archerDuration.toMillis() - 5000;
+                totalDifference += archerDuration.toMillis() - 2000;
             }
             if (magesToTrainCount > 0) {
-                totalDifference += mageDuration.toMillis() - 5000;
+                totalDifference += mageDuration.toMillis() - 2000;
             }
             if (cavalryToTrainCount > 0) {
-                totalDifference += cavalryDuration.toMillis() - 5000;
+                totalDifference += cavalryDuration.toMillis() - 2000;
             }
             if (knightsToTrainCount > 0) {
-                totalDifference += knightDuration.toMillis() - 5000;
+                totalDifference += knightDuration.toMillis() - 2000;
             }
         }
 

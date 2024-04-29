@@ -235,7 +235,8 @@ public class ClanActivity extends AppCompatActivity {
                             JSONArray jsonArray = new JSONArray(response);
                             JSONObject playerObject = jsonArray.getJSONObject(userID - 1);
                             clanID = playerObject.getInt("clanMembershipID"); //Put players clan into clan ID
-                            ClanName.setText("Clan ID: " + Integer.toString(clanID)); //Set clanname
+                            if(clanID != 0) getClanName(clanID - 1);
+                            else ClanName.setText("No Clan");
                             }
                          catch (JSONException e) {
                             e.printStackTrace();
@@ -252,4 +253,32 @@ public class ClanActivity extends AppCompatActivity {
         // add to the request queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
+
+    private void getClanName(int ID){
+            String url = "http://coms-309-048.class.las.iastate.edu:8080/clan/getallclans"; //URL to get all players
+            StringRequest request = new StringRequest(Request.Method.GET, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                JSONArray jsonArray = new JSONArray(response); //Array of clans
+                                JSONObject clanObject = jsonArray.getJSONObject(ID);
+                                ClanName.setText("Clan: " + clanObject.getString("clanName")); //Set clanname
+                                ClanName.append("\n ID: ");
+                                ClanName.append(Integer.toString(ID + 1));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(getApplicationContext(), "Error fetching clans: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+            // add to the request queue
+            VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+        }
 }

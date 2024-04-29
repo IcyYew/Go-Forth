@@ -62,17 +62,6 @@
         android:src="@drawable/attack_bonus"
         android:clickable="true" />
 
-    <!-- Building Speed ImageView -->
-    <ImageView
-        android:id="@+id/buildingSpeedImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/troopCapacityBonusTextView"
-        android:layout_marginTop="32dp"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/building_speed"
-        android:clickable="true" />
-
     <!-- Upgrade Button -->
     <Button
         android:id="@+id/upgradeButton"
@@ -91,6 +80,17 @@
         android:layout_below="@id/researchCostBonusTextView"
         android:layout_marginTop="40dp"
         android:text="Back" />
+
+    <TextView
+        android:id="@+id/platinum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/upgradeButton"
+        android:layout_below="@id/researchCostBonusTextView"
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="0dp"
+        android:text="Platinum: "/>
 
     <!-- Troop Training Level TextView -->
     <TextView
@@ -200,28 +200,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="8dp"
         android:text="All Troops Attack Bonus: 0.0%"
-        android:textAppearance="?android:textAppearanceMedium" />
-
-    <!-- Building Speed Level TextView -->
-    <TextView
-        android:id="@+id/buildingSpeedLevelTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/buildingSpeedImageView"
-        android:layout_marginTop="8dp"
-        android:layout_centerHorizontal="true"
-        android:text="Building Upgrade Speed Level: 0"
-        android:textAppearance="?android:textAppearanceMedium" />
-
-    <!-- Building Speed Bonus TextView -->
-    <TextView
-        android:id="@+id/buildingSpeedBonusTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/buildingSpeedLevelTextView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
-        android:text="Building Upgrade Speed Bonus: 0.0%"
         android:textAppearance="?android:textAppearanceMedium" />
 
 </RelativeLayout>

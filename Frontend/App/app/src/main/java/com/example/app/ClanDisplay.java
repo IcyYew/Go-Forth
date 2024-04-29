@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.TextView;
 
@@ -15,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONArray;
@@ -66,7 +64,7 @@ public class ClanDisplay extends AppCompatActivity {
 
         Name = findViewById(R.id.Name);
 
-        ID = findViewById(R.id.ID);
+        ID = findViewById(R.id.Kills);
 
         Text = findViewById(R.id.Text);
 
@@ -134,7 +132,7 @@ public class ClanDisplay extends AppCompatActivity {
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 //Prints clan ID and clan name
                                 JSONObject playerObject = jsonArray.getJSONObject(i);
-                                List.add(new Clan(playerObject.getInt("clanID"), (int) playerObject.getDouble("power"), playerObject.getString("clanName")));
+                                List.add(new Clan(playerObject.getInt("clanID"), (int) playerObject.getDouble("totalClanPower"), playerObject.getString("clanName")));
                                 /*
                                 clansString.append("Clan ID: ").append(playerObject.getInt("clanID")).append("\n");
                                 clansString.append("Clan name: ").append(playerObject.getString("clanName")).append("\n");

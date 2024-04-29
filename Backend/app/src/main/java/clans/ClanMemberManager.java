@@ -1,5 +1,6 @@
 package clans;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import player.Player;
 
@@ -18,8 +19,6 @@ public class ClanMemberManager {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer clanID;
 
-    @OneToOne(mappedBy = "memberManager", cascade = CascadeType.ALL)
-    private Clan clan;
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<Player> memberManager;
@@ -39,6 +38,14 @@ public class ClanMemberManager {
      */
     public ClanMemberManager() {
 
+    }
+
+    public Integer getClanID() {
+        return clanID;
+    }
+
+    public void setClanID(Integer clanID) {
+        this.clanID = clanID;
     }
 
     /**
