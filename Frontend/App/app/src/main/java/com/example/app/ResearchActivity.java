@@ -2,6 +2,7 @@ package com.example.app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +13,18 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Collections;
 
 /**
  * Activity used for research functionality.
@@ -41,7 +54,7 @@ public class ResearchActivity extends AppCompatActivity {
     private TextView buildingSpeedLevelTextView;
     private TextView buildingSpeedBonusTextView;
 
-    // Variables to store current level and bonus for troop training and resource gathering
+    // Variables to store current level and bonus for troop training and resource gathering. Starts at 0.
     private int troopTrainingLevel = 0;
     private float troopTrainingBonus = 0.0f;
     private int researchCostLevel = 0;
@@ -101,6 +114,8 @@ public class ResearchActivity extends AppCompatActivity {
 
         // Set initial visibility of images
         updateImageViewVisibility(1); // Set initial tier to 1
+
+        getResearchLevels();
 
         // Set click listeners for images
         troopTrainingImageView.setOnClickListener(new View.OnClickListener() {
@@ -297,18 +312,10 @@ public class ResearchActivity extends AppCompatActivity {
     }
 
     private void upgradeTroopTraining() {
-        if (troopTrainingLevel < 2) {
+        if (troopTrainingLevel < 5) {
+            levelUpRequest("trainingspeed");
             troopTrainingLevel++;
-            troopTrainingBonus = troopTrainingLevel * 0.03f;
-        } else if (troopTrainingLevel == 2) {
-            troopTrainingLevel++;
-            troopTrainingBonus = 0.10f;
-        } else if (troopTrainingLevel == 3) {
-            troopTrainingLevel++;
-            troopTrainingBonus = 0.13f;
-        } else if (troopTrainingLevel == 4) {
-            troopTrainingLevel++;
-            troopTrainingBonus = 0.17f;
+            getBonus("Training Speed");
         } else {
             Toast.makeText(this, "MAX LEVEL REACHED", Toast.LENGTH_SHORT).show();
         }
@@ -317,12 +324,10 @@ public class ResearchActivity extends AppCompatActivity {
     }
 
     private void upgradeResearchCost() {
-        if (researchCostLevel == 0) {
+        if (researchCostLevel < 5) {
+            levelUpRequest("researchcost");
             researchCostLevel++;
-            researchCostBonus = 0.01f;
-        } else if (researchCostLevel < 5) {
-            researchCostLevel++;
-            researchCostBonus = (researchCostLevel - 1) * 0.03f;
+            getBonus("Research Cost");
         } else {
             Toast.makeText(this, "MAX LEVEL REACHED", Toast.LENGTH_SHORT).show();
         }
@@ -331,18 +336,10 @@ public class ResearchActivity extends AppCompatActivity {
     }
 
     private void upgradeBuildingCost() {
-        if (buildingCostLevel < 2) {
+        if (buildingCostLevel < 5) {
+            levelUpRequest("buildingcost");
             buildingCostLevel++;
-            buildingCostBonus = buildingCostLevel * 0.03f;
-        } else if (buildingCostLevel == 2) {
-            buildingCostLevel++;
-            buildingCostBonus = 0.10f;
-        } else if (buildingCostLevel == 3) {
-            buildingCostLevel++;
-            buildingCostBonus = 0.14f;
-        } else if (buildingCostLevel == 4) {
-            buildingCostLevel++;
-            buildingCostBonus = 0.17f;
+            getBonus("Building Cost");
         } else {
             Toast.makeText(this, "MAX LEVEL REACHED", Toast.LENGTH_SHORT).show();
         }
@@ -351,18 +348,10 @@ public class ResearchActivity extends AppCompatActivity {
     }
 
     private void upgradeAttackBonus() {
-        if (attackBonusLevel < 2) {
+        if (attackBonusLevel < 5) {
+            levelUpRequest("attackbonus");
             attackBonusLevel++;
-            attackBonusBonus = attackBonusLevel * 0.03f;
-        } else if (attackBonusLevel == 2) {
-            attackBonusLevel++;
-            attackBonusBonus = 0.11f;
-        } else if (attackBonusLevel == 3) {
-            attackBonusLevel++;
-            attackBonusBonus = 0.16f;
-        } else if (attackBonusLevel == 4) {
-            attackBonusLevel++;
-            attackBonusBonus = 0.20f;
+            getBonus("Attack Bonus");
         } else {
             Toast.makeText(this, "MAX LEVEL REACHED", Toast.LENGTH_SHORT).show();
         }
@@ -371,21 +360,10 @@ public class ResearchActivity extends AppCompatActivity {
     }
 
     private void upgradeTroopCapacity() {
-        if (troopCapacityLevel == 0) {
+        if (troopCapacityLevel < 5) {
+            levelUpRequest("trainingcapacity");
             troopCapacityLevel++;
-            troopCapacityBonus = 5;
-        } else if (troopCapacityLevel == 1) {
-            troopCapacityLevel++;
-            troopCapacityBonus = 15;
-        } else if (troopCapacityLevel == 2) {
-            troopCapacityLevel++;
-            troopCapacityBonus = 30;
-        } else if (troopCapacityLevel == 3) {
-            troopCapacityLevel++;
-            troopCapacityBonus = 45;
-        } else if (troopCapacityLevel == 4) {
-            troopCapacityLevel++;
-            troopCapacityBonus = 65;
+            getBonus("Training Capacity");
         } else {
             Toast.makeText(this, "MAX LEVEL REACHED", Toast.LENGTH_SHORT).show();
         }
@@ -394,22 +372,141 @@ public class ResearchActivity extends AppCompatActivity {
     }
 
     private void upgradeBuildingSpeed() {
-        if (buildingSpeedLevel < 2) {
+        if (buildingSpeedLevel < 5) {
+            levelUpRequest("buildingspeed");
             buildingSpeedLevel++;
-            buildingSpeedBonus = buildingSpeedLevel * 0.03f;
-        } else if (buildingSpeedLevel == 2) {
-            buildingSpeedLevel++;
-            buildingSpeedBonus = 0.12f;
-        } else if (buildingSpeedLevel == 3) {
-            buildingSpeedLevel++;
-            buildingSpeedBonus = 0.18f;
-        } else if (buildingSpeedLevel == 4) {
-            buildingSpeedLevel++;
-            buildingSpeedBonus = 0.25f;
+            getBonus("Building Speed");
         } else {
             Toast.makeText(this, "MAX LEVEL REACHED", Toast.LENGTH_SHORT).show();
         }
 
         showBuildingSpeedInfo();
+    }
+
+    private void getResearchLevels() {
+        String url = "http://coms-309-048.class.las.iastate.edu:8080/buildings/research/getallresearch/" + userID;
+
+        // make a StringRequest to get the users from the server. Converts JSONArray into StringBuilder.
+        StringRequest request = new StringRequest(Request.Method.GET, url,
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.d("Display response", response);
+                    try {
+                        JSONArray jsonArray = new JSONArray(response);
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject researchObject = jsonArray.getJSONObject(i);
+                            if (researchObject.get("researchName").equals("Attack Bonus")) {
+                                attackBonusLevel = researchObject.getInt("level");
+                                getBonus("Attack Bonus");
+                                showAttackBonusInfo();
+                            } else if (researchObject.get("researchName").equals("Research Cost")) {
+                                researchCostLevel = researchObject.getInt("level");
+                                getBonus("Research Cost");
+                                showResearchCostInfo();
+                            } else if (researchObject.get("researchName").equals("Training Capacity")) {
+                                troopCapacityLevel = researchObject.getInt("level");
+                                getBonus("Training Capacity");
+                                showTroopCapacityInfo();
+                            } else if (researchObject.get("researchName").equals("Training Speed")) {
+                                troopTrainingLevel = researchObject.getInt("level");
+                                getBonus("Training Speed");
+                                showTroopTrainingInfo();
+                            } else if (researchObject.get("researchName").equals("Building Speed")) {
+                                buildingSpeedLevel = researchObject.getInt("level");
+                                getBonus("Building Speed");
+                                showBuildingSpeedInfo();
+                            } else {
+                                buildingCostLevel = researchObject.getInt("level");
+                                getBonus("Building Cost");
+                                showBuildingCostInfo();
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(getApplicationContext(), "Error fetching players: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        // add to the request queue
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+    }
+
+    private void getBonus(String type) {
+        switch (type) {
+            case "Attack Bonus":
+                attackBonusBonus = (float)(attackBonusLevel * 1.05);
+                break;
+            case "Research Cost":
+                researchCostBonus = (float)(Math.pow(0.97, researchCostLevel));
+                break;
+            case "Training Capacity":
+                troopCapacityBonus = troopCapacityLevel * 10;
+                break;
+            case "Training Speed":
+                troopTrainingBonus = (float)(Math.pow(0.95, troopTrainingLevel));
+                break;
+            case "Building Speed":
+                buildingSpeedBonus = 0; // TODO
+                break;
+            case "Buildng Cost":
+                buildingCostBonus = 0; // TODO
+                break;
+        }
+    }
+
+    private void levelUpRequest(String type) {
+        String baseURL = "http://coms-309-048.class.las.iastate.edu:8080/buildings/research/levelresearch/" + type;
+
+        JSONObject body = new JSONObject();
+        switch (type) {
+            case "attackbonus":
+                body = createResearchJSON("Attack Bonus");
+                break;
+            case "researchcost":
+                body = createResearchJSON("Research Cost");
+                break;
+            case "trainingcapacity":
+                body = createResearchJSON("Training Capacity");
+                break;
+            case "trainingspeed":
+                body = createResearchJSON("Training Speed");
+                break;
+            case "buildingspeed":
+                body = createResearchJSON("Building Speed");
+                break;
+            case "buildingcost":
+                body = createResearchJSON("Building Cost");
+                break;
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, baseURL, body,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {}
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {}
+                });
+
+        // add to volley queue
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+    }
+
+    private JSONObject createResearchJSON(String type) {
+        JSONObject research = new JSONObject();
+        try {
+            research.put("researchName", type);
+            research.put("playerID", userID);
+        } catch (JSONException e) {}
+
+        return research;
     }
 }

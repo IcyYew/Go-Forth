@@ -1,21 +1,26 @@
 package player;
 
-import buildings.Building;
+import buildings.BuildingController;
 import buildings.BuildingManager;
 import buildings.BuildingTypes;
+import buildings.Research.Research;
+import buildings.Research.ResearchManager;
+import buildings.Research.ResearchRepository;
+import buildings.resourcebuildings.ResourceBuildingManager;
 import buildings.troopBuildings.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import resources.ResourceManager;
-import resources.ResourceRepository;
 import resources.ResourceType;
 import troops.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static troops.TroopTypes.ARCHER;
 
 /**
  * A REST controller for managing a player's information
@@ -66,20 +71,30 @@ public class PlayerController {
     public String newPlayer(@RequestBody PlayerCreator created) {
 
         // Create empty player and store username and password to generate a player ID used in the managers
-        Player player = new Player();
-        Random rand = new Random();
-        player.setUserName(created.getUserName());
-        player.setPassword(created.getPassword());
-        // Save "empty" player to generate ID
-        player = playerRepository.save(player);
-        player.setTroops(new TroopManager(player.getPlayerID()));
-        player.setResources(new ResourceManager(player.getPlayerID()));
-        player.setLocationX(rand.nextInt(20));
-        player.setLocationY(rand.nextInt(20));
-        //Save fully created player into database
-        playerRepository.save(player);
-        // Return id of created player
-        return "New player of ID: " + player.getPlayerID();
+        if(!passwordCheck(created.getPassword())) {
+            return "Invalid password, length needs to be >= 7, contain at least one lowercase character, one uppercase character, one special character, and one digit";
+        }
+        else {
+            Player player = new Player();
+            Random rand = new Random();
+            player.setUserName(created.getUserName());
+            player.setPassword(created.getPassword());
+            // Save "empty" player to generate ID
+            player = playerRepository.save(player);
+            player.setTroops(new TroopManager(player.getPlayerID()));
+            player.setResources(new ResourceManager(player.getPlayerID()));
+            player.setResearchManager(new ResearchManager(player.getPlayerID()));
+            player.setBuildings(new BuildingManager(player.getPlayerID()));
+            player.setTroopBuildings(new TroopBuildingManager(player.getPlayerID()));
+            player.setResourceBuildings(new ResourceBuildingManager(player.getPlayerID()));
+            player.setLocationX(rand.nextInt(30));
+            player.setTotalKills(0);
+            player.setLocationY(rand.nextInt(30));
+            //Save fully created player into database
+            playerRepository.save(player);
+            // Return id of created player
+            return "New player of ID: " + player.getPlayerID();
+        }
     }
 
     // Returns sorted list of players based on power, descending order
@@ -119,31 +134,80 @@ public class PlayerController {
         }
     }
 
-    @GetMapping("/players/calculateTrainingTime/{playerID}")
-    public String calculateTrainingTime(@PathVariable int playerID, @RequestBody TroopRequest troopRequest)
+    @PostMapping("/players/changePlayerLocation/{playerID}")
+    public Player changePlayerLocation(@PathVariable int playerID, @RequestBody LocationRequest locationRequest)
     {
         Player player = playerRepository.findById(playerID).orElse(null);
         if (player != null)
         {
+            player.setLocationX(locationRequest.getLocationX());
+            player.setLocationY(locationRequest.getLocationY());
+            return playerRepository.save(player);
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    @PostMapping("/players/calculateTrainingTime/{playerID}")
+    public Player calculateTrainingTime(@PathVariable int playerID, @RequestBody TroopRequest troopRequest)
+    {
+        Player player = playerRepository.findById(playerID).orElse(null);
+        if (player != null)
+        {
+            Troop troop = player.troops.getTroop(troopRequest.getTroopType());
             String formattedTime;
             switch (troopRequest.getTroopType())
             {
                 case ARCHER:
-                    formattedTime = player.troopBuildings.trainTroops(BuildingTypes.ARCHERYRANGE, troopRequest.getQuantity());
-                    player.setArcherFinalDate(formattedTime);
-                    return formattedTime;
+                    if (player.resources.getResource(ResourceType.FOOD) >= player.troopBuildings.getTrainingBuilding(BuildingTypes.ARCHERYRANGE).getTrainingCost() * troopRequest.getQuantity())
+                    {
+                        player.resources.removeResource(ResourceType.FOOD, player.troopBuildings.getTrainingBuilding(BuildingTypes.ARCHERYRANGE).getTrainingCost() * troopRequest.getQuantity());
+                        formattedTime = player.troopBuildings.trainTroops(BuildingTypes.ARCHERYRANGE, troopRequest.getQuantity());
+                        player.setArcherFinalDate(formattedTime);
+                        return playerRepository.save(player);
+                    }
+                    else
+                    {
+                        throw new RuntimeException("Not Enough Food!");
+                    }
                 case MAGE:
-                    formattedTime = player.troopBuildings.trainTroops(BuildingTypes.MAGETOWER, troopRequest.getQuantity());
-                    player.setMageFinalDate(formattedTime);
-                    return formattedTime;
+                    if (player.resources.getResource(ResourceType.FOOD) >= player.troopBuildings.getTrainingBuilding(BuildingTypes.MAGETOWER).getTrainingCost() * troopRequest.getQuantity())
+                    {
+                        player.resources.removeResource(ResourceType.FOOD, player.troopBuildings.getTrainingBuilding(BuildingTypes.MAGETOWER).getTrainingCost() * troopRequest.getQuantity());
+                        formattedTime = player.troopBuildings.trainTroops(BuildingTypes.MAGETOWER, troopRequest.getQuantity());
+                        player.setMageFinalDate(formattedTime);
+                        return playerRepository.save(player);
+                    }
+                    else
+                    {
+                        throw new RuntimeException("Not Enough Food!");
+                    }
                 case CAVALRY:
-                    formattedTime = player.troopBuildings.trainTroops(BuildingTypes.STABLES, troopRequest.getQuantity());
-                    player.setCavalryFinalDate(formattedTime);
-                    return formattedTime;
+                    if (player.resources.getResource(ResourceType.FOOD) >= player.troopBuildings.getTrainingBuilding(BuildingTypes.STABLES).getTrainingCost() * troopRequest.getQuantity())
+                    {
+                        player.resources.removeResource(ResourceType.FOOD, player.troopBuildings.getTrainingBuilding(BuildingTypes.STABLES).getTrainingCost() * troopRequest.getQuantity());
+                        formattedTime = player.troopBuildings.trainTroops(BuildingTypes.STABLES, troopRequest.getQuantity());
+                        player.setCavalryFinalDate(formattedTime);
+                        return playerRepository.save(player);
+                    }
+                    else
+                    {
+                        throw new RuntimeException("Not Enough Food!");
+                    }
                 case WARRIOR:
-                    formattedTime = player.troopBuildings.trainTroops(BuildingTypes.WARRIORSCHOOL, troopRequest.getQuantity());
-                    player.setCavalryFinalDate(formattedTime);
-                    return formattedTime;
+                    if (player.resources.getResource(ResourceType.FOOD) >= player.troopBuildings.getTrainingBuilding(BuildingTypes.WARRIORSCHOOL).getTrainingCost() * troopRequest.getQuantity())
+                    {
+                        player.resources.removeResource(ResourceType.FOOD, player.troopBuildings.getTrainingBuilding(BuildingTypes.WARRIORSCHOOL).getTrainingCost() * troopRequest.getQuantity());
+                        formattedTime = player.troopBuildings.trainTroops(BuildingTypes.WARRIORSCHOOL, troopRequest.getQuantity());
+                        player.setWarriorFinalDate(formattedTime);
+                        return playerRepository.save(player);
+                    }
+                    else
+                    {
+                        throw new RuntimeException("Not Enough Food!");
+                    }
             }
         }
         return null;
@@ -249,9 +313,11 @@ public class PlayerController {
         Player p1 = playerRepository.findById(playerID1).orElse(null);
         Player p2 = playerRepository.findById(playerID2).orElse(null);
         if (p1 != null && p2 != null) {
-            TroopCombatCalculator tcc = new TroopCombatCalculator(p1.troops, p2.troops);
+            TroopCombatCalculator tcc = new TroopCombatCalculator(p1.getTroops(), p2.getTroops());
             p1.updatePower();
             p2.updatePower();
+            p1.setTotalKills(p1.getTroops().getTotalTroopKills());
+            p2.setTotalKills(p2.getTroops().getTotalTroopKills());
             playerRepository.save(p1);
             playerRepository.save(p2);
 
@@ -262,6 +328,51 @@ public class PlayerController {
         }
     }
 
+    public static boolean passwordCheck(String password) {
+        if (password.length() >= 7) {
+            Pattern lower = Pattern.compile("[a-z]");
+            Pattern upper = Pattern.compile("[A-Z]");
+            Pattern digit = Pattern.compile("[0-9]");
+            Pattern special = Pattern.compile("[!@#$%^&*()_\\-+=|<>,./?{}\\[\\]~`:;']");
+
+            Matcher hasUpper = upper.matcher(password);
+            Matcher hasLower = lower.matcher(password);
+            Matcher hasDigit = digit.matcher(password);
+            Matcher hasSpecial = special.matcher(password);
+
+            return hasSpecial.find() && hasLower.find() && hasDigit.find() && hasUpper.find();
+        }
+        else {
+            return false;
+        }
+    }
+
+    public static class LocationRequest {
+        private int locationX;
+        private int locationY;
+
+        public LocationRequest(int locationX, int locationY)
+        {
+            setLocationX(locationX);
+            setLocationY(locationY);
+        }
+
+        public int getLocationX() {
+            return locationX;
+        }
+
+        public void setLocationX(int locationX) {
+            this.locationX = locationX;
+        }
+
+        public int getLocationY() {
+            return locationY;
+        }
+
+        public void setLocationY(int locationY) {
+            this.locationY = locationY;
+        }
+    }
     // Class used for managing resource requests
 
     /**

@@ -7,6 +7,8 @@ import buildings.troopBuildings.TroopBuildingManager;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
+import java.time.LocalDateTime;
+
 /**
  * Class for the Farm building.
  * The farm produces food at a rate which is based on its building level.
@@ -20,6 +22,16 @@ public class Farm extends ResourceBuilding {
     public Farm(int level, ResourceBuildingManager resourceBuildingManager)
     {
         super(BuildingTypes.FARM, level, resourceBuildingManager);
-        setResourceProductionRate(10);
+        setResourceProductionRate(1);
+        setTimeLastCollected(LocalDateTime.now());
+        setPower(30);
+        setStoneUpgradeCost(400);
+        setWoodUpgradeCost(400);
+        setResourceLimit(1000);
+    }
+
+    public Farm()
+    {
+
     }
 }

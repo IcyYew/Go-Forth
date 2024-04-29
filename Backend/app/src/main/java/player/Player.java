@@ -1,8 +1,14 @@
 package player;
 
+import buildings.Building;
 import buildings.BuildingManager;
+import buildings.BuildingTypes;
+import buildings.OtherBuilding;
+import buildings.Research.ResearchManager;
+import buildings.resourcebuildings.ResourceBuilding;
 import buildings.resourcebuildings.ResourceBuildingManager;
 import buildings.troopBuildings.TroopBuildingManager;
+import buildings.troopBuildings.TroopTrainingBuilding;
 import jakarta.persistence.*;
 import resources.ResourceManager;
 import troops.TroopManager;
@@ -35,23 +41,36 @@ public class Player {
      * Represents a player's resources
      */
     @ManyToOne(cascade = CascadeType.ALL)
-    ResourceManager resources;
+    public ResourceManager resources;
 
     //Troop manager storing and managing a players troops
     /**
      * Represents a player's troops
      */
     @ManyToOne(cascade = CascadeType.ALL)
-    TroopManager troops;
+    public TroopManager troops;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    BuildingManager buildings;
+    ResearchManager research;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    TroopBuildingManager troopBuildings;
+    public BuildingManager buildings;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    ResourceBuildingManager resourceBuildings;
+    public TroopBuildingManager troopBuildings;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    public ResourceBuildingManager resourceBuildings;
+
+
+
+    public ResearchManager getResearchManager() {
+        return research;
+    }
+
+    public void setResearchManager(ResearchManager researchManager) {
+        this.research= researchManager;
+    }
 
     @Column(name="clan-permissions-level")
     private Integer clanPermissions = 0;
@@ -85,6 +104,9 @@ public class Player {
 
     @Column(name="locationY")
     private int locationY;
+
+    @Column(name="total-kills")
+    private int totalKills;
 
     @Column(name="archerFinalDate")
     private String archerFinalDate = "a";
@@ -171,19 +193,29 @@ public class Player {
      * @param password
      */
     public Player(ResourceManager resources, TroopManager troops, BuildingManager buildings,
-                  TroopBuildingManager troopBuildings, ResourceBuildingManager resourceBuildings,
-                  int playerID, double power, String userName, String password, int locationX, int locationY) {
+                  TroopBuildingManager troopBuildings, ResourceBuildingManager resourceBuildings, ResearchManager researchManager,
+                  int playerID, double power, String userName, String password, int locationX, int locationY, int totalKills) {
         setResources(resources);
         setTroops(troops);
         setBuildings(buildings);
         setTroopBuildings(troopBuildings);
         setResourceBuildings(resourceBuildings);
+        setResearchManager(researchManager);
         setPlayerID(playerID);
         setPower(power);
         setUserName(userName);
         setPassword(password);
         setLocationX(locationX);
         setLocationY(locationY);
+        setTotalKills(totalKills);
+    }
+
+    public int getTotalKills() {
+        return totalKills;
+    }
+
+    public void setTotalKills(int totalKills) {
+        this.totalKills = totalKills;
     }
 
     /**
@@ -247,7 +279,18 @@ public class Player {
      * Updates a player's power
      */
     public void updatePower() {
-        this.power = troops.calculateTotalTroopPower();
+        this.power = 0;
+        this.power += troops.calculateTotalTroopPower();
+        this.power += research.getResearch("Attack Bonus").getPower();
+        this.power += research.getResearch("Training Speed").getPower();
+        this.power += research.getResearch("Building Cost").getPower();
+        this.power += research.getResearch("Research Cost").getPower();
+        this.power += research.getResearch("Training Capacity").getPower();
+        this.power += research.getResearch("Building Speed").getPower();
+
+        this.power += troopBuildings.calculateTotalTroopBuildingPower();
+        this.power += resourceBuildings.calculateTotalResourceBuildingPower();
+        this.power += buildings.calculateTotalOtherBuildingPower();
     }
 
     /**
@@ -330,6 +373,32 @@ public class Player {
         this.resourceBuildings = resourceBuildings;
     }
 
+    public Building getBuildingOfType(BuildingTypes buildingType)
+    {
+        for (ResourceBuilding resourceBuilding : resourceBuildings.resourceBuildingManager)
+        {
+            if (resourceBuilding.getBuildingType() == buildingType)
+            {
+                return resourceBuilding;
+            }
+        }
+        for (TroopTrainingBuilding troopTrainingBuilding : troopBuildings.troopBuildingManager)
+        {
+            if (troopTrainingBuilding.getBuildingType() == buildingType)
+            {
+                return troopTrainingBuilding;
+            }
+        }
+        for (OtherBuilding otherBuilding : buildings.buildingManager)
+        {
+            if (otherBuilding.getBuildingType() == buildingType)
+            {
+                return otherBuilding;
+            }
+        }
+        return null;
+    }
+
     /**
      * Returns a string of player info
      * @return A string of the player's info
@@ -346,6 +415,7 @@ public class Player {
                 "buildings=" + buildings +
                 ", playerID=" + playerID +
                 ", power=" + power +
+                ", research=" + research +
                 '}';
     }
 }

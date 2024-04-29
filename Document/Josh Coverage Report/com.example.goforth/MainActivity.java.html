@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MainActivity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">com.example.goforth</a> &gt; <span class="el_source">MainActivity.java</span></div><h1>MainActivity.java</h1><pre class="source lang-java linenums">package com.example.goforth;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Objects;
+
+/**
+ * Activity responsible for main menu functionality.
+ *
+ * @author Josh Dwight
+ * @author Nicholas Lynch
+ */
+<span class="fc" id="L29">public class MainActivity extends AppCompatActivity {</span>
+    private Button loginButton;
+    private Button signupButton;
+    private Button troopManagementButton;
+    private Button displayButton;
+    private Button resourceButton;
+    private Button overworldButton;
+    private Button globalChatButton;
+    private Button clanButton;
+    private Button researchButton;
+    public int userID;
+    private TextView UID;
+    private String username;
+
+    /**
+     * onCreate sets onClickListeners to all of the buttons and gets the extras
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  &lt;b&gt;&lt;i&gt;Note: Otherwise it is null.&lt;/i&gt;&lt;/b&gt;
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="fc" id="L52">        super.onCreate(savedInstanceState);</span>
+<span class="fc" id="L53">        setContentView(R.layout.activity_main);</span>
+
+        //UI initialization
+<span class="fc" id="L56">        loginButton = findViewById(R.id.loginButton);</span>
+
+<span class="fc" id="L58">        signupButton = findViewById(R.id.signupButton);</span>
+
+<span class="fc" id="L60">        troopManagementButton = findViewById(R.id.troopManagementButton);</span>
+
+<span class="fc" id="L62">        displayButton = findViewById(R.id.displayButton);</span>
+
+<span class="fc" id="L64">        resourceButton = findViewById(R.id.ResourceButton);</span>
+
+<span class="fc" id="L66">        clanButton = findViewById(R.id.Clan);</span>
+
+<span class="fc" id="L68">        globalChatButton = findViewById(R.id.globalChatButton);</span>
+
+<span class="fc" id="L70">        overworldButton = findViewById(R.id.OverworldButton);</span>
+
+<span class="fc" id="L72">        researchButton = findViewById(R.id.ResearchButton);</span>
+
+<span class="fc" id="L74">        UID = findViewById(R.id.ID);</span>
+
+        // gets extras and sets userID to whatever we got from the extras. IF there were no extras, empty userID
+<span class="fc" id="L77">        Bundle extras = getIntent().getExtras();</span>
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">        if (extras == null) {</span>
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">            if (userID == 0) {</span>
+<span class="fc" id="L80">                userID = 0;</span>
+<span class="fc" id="L81">                UID.setText(&quot;User ID: &quot;);</span>
+            }
+        } else {
+<span class="nc" id="L84">            String number = Objects.requireNonNull(extras.getString(&quot;ID&quot;));</span>
+<span class="nc" id="L85">            userID = Integer.parseInt(number);</span>
+<span class="nc" id="L86">            UID.setText(&quot;User ID: &quot; + number);</span>
+        }
+
+        //Login button pressed..
+<span class="fc" id="L90">        loginButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+                //Toast toast = Toast.makeText(MainActivity.this, &quot;Login Pressed&quot;, Toast.LENGTH_SHORT);
+                //toast.show(); .
+
+<span class="nc" id="L96">                Intent intent = new Intent(MainActivity.this, LoginActivity.class);</span>
+<span class="nc" id="L97">                intent.putExtra(&quot;ID&quot;, userID);</span>
+<span class="nc" id="L98">                startActivity(intent);</span>
+<span class="nc" id="L99">            }</span>
+        });
+
+<span class="fc" id="L102">        clanButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L105">                Intent intent = new Intent(MainActivity.this, ClanActivity.class);</span>
+<span class="nc" id="L106">                intent.putExtra(&quot;ID&quot;, Integer.toString(userID));</span>
+<span class="nc" id="L107">                startActivity(intent);</span>
+<span class="nc" id="L108">            }</span>
+        });
+
+        //Signup button pressed
+<span class="fc" id="L112">        signupButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+                //Toast toast = Toast.makeText(MainActivity.this, &quot;Signup Pressed&quot;, Toast.LENGTH_SHORT);
+                //toast.show();
+
+<span class="nc" id="L118">                Intent intent = new Intent(MainActivity.this, SignupActivity.class);</span>
+<span class="nc" id="L119">                intent.putExtra(&quot;ID&quot;, userID);</span>
+<span class="nc" id="L120">                startActivity(intent);</span>
+<span class="nc" id="L121">            }</span>
+        });
+
+        //Resource button pressed
+<span class="fc" id="L125">        resourceButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L128">                Intent intent = new Intent(MainActivity.this, ResourceActivity.class);</span>
+<span class="nc" id="L129">                intent.putExtra(&quot;ID&quot;, userID);</span>
+<span class="nc" id="L130">                startActivity(intent);</span>
+<span class="nc" id="L131">            }</span>
+        });
+
+        //Troop Management pressed
+<span class="fc" id="L135">        troopManagementButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="fc" id="L138">                Intent intent = new Intent(MainActivity.this, TroopManagementActivity.class);</span>
+<span class="fc" id="L139">                intent.putExtra(&quot;ID&quot;, userID);</span>
+<span class="fc" id="L140">                startActivity(intent);</span>
+<span class="fc" id="L141">            }</span>
+        });
+
+        // display users button pressed
+<span class="fc" id="L145">        displayButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L148">                Intent intent = new Intent(MainActivity.this, DisplayActivity.class);</span>
+<span class="nc" id="L149">                intent.putExtra(&quot;ID&quot;, userID);</span>
+<span class="nc" id="L150">                startActivity(intent);</span>
+<span class="nc" id="L151">            }</span>
+        });
+
+<span class="fc" id="L154">        overworldButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L157">                Intent intent = new Intent(MainActivity.this, OverworldActivity.class);</span>
+<span class="nc" id="L158">                intent.putExtra(&quot;ID&quot;, userID);</span>
+<span class="nc" id="L159">                startActivity(intent);</span>
+<span class="nc" id="L160">            }</span>
+        });
+
+<span class="fc" id="L163">        researchButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L166">                Intent intent = new Intent(MainActivity.this, ResearchActivity.class);</span>
+<span class="nc" id="L167">                intent.putExtra(&quot;ID&quot;, userID);</span>
+<span class="nc" id="L168">                startActivity(intent);</span>
+<span class="nc" id="L169">            }</span>
+        });
+
+<span class="fc" id="L172">        globalChatButton.setOnClickListener(view -&gt; {</span>
+<span class="nc" id="L173">            String url = &quot;http://coms-309-048.class.las.iastate.edu:8080/players/getPlayer/&quot; + String.valueOf(userID);</span>
+
+            // makes JsonObjectRequest to get the current player. GETs the archerNum, warriorNum, mageNum, and cavalryNum
+<span class="nc" id="L176">            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,</span>
+<span class="nc" id="L177">                    new Response.Listener&lt;JSONObject&gt;() {</span>
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+<span class="nc" id="L181">                                username = response.getString(&quot;userName&quot;);</span>
+
+<span class="nc" id="L183">                                Log.d(&quot;Username&quot;, username);</span>
+
+<span class="nc" id="L185">                                String domain = &quot;ws://coms-309-048.class.las.iastate.edu:8080/chat/globalchat/&quot;;</span>
+
+<span class="nc" id="L187">                                String serverUrl = domain + username;</span>
+
+<span class="nc" id="L189">                                Log.d(&quot;URL&quot;, serverUrl);</span>
+
+                                // Establish WebSocket connection and set listener
+<span class="nc" id="L192">                                WebSocketManager1.getInstance().connectWebSocket(serverUrl);</span>
+<span class="nc" id="L193">                            } catch (JSONException e) {</span>
+<span class="nc" id="L194">                                e.printStackTrace();</span>
+<span class="nc" id="L195">                                Toast.makeText(MainActivity.this, &quot;Error parsing JSON response&quot;, Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L196">                            }</span>
+<span class="nc" id="L197">                        }</span>
+                    },
+<span class="nc" id="L199">                    new Response.ErrorListener() {</span>
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+<span class="nc" id="L202">                            Toast.makeText(MainActivity.this, &quot;Error fetching player data: &quot; + error.getMessage(), Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L203">                        }</span>
+                    });
+
+            // add to volley queue
+<span class="nc" id="L207">            VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);</span>
+
+            // got to chat activity
+<span class="nc" id="L210">            Intent intent = new Intent(this, ChatActivity1.class);</span>
+<span class="nc" id="L211">            intent.putExtra(&quot;ID&quot;, userID);</span>
+<span class="nc" id="L212">            startActivity(intent);</span>
+<span class="nc" id="L213">        });</span>
+
+<span class="fc" id="L215">        clanButton.setOnClickListener(view -&gt; {</span>
+<span class="nc" id="L216">            Intent intent = new Intent(MainActivity.this, ClanActivity.class);</span>
+<span class="nc" id="L217">            intent.putExtra(&quot;ID&quot;, Integer.toString(userID));</span>
+<span class="nc" id="L218">            startActivity(intent);</span>
+<span class="nc" id="L219">        });</span>
+<span class="fc" id="L220">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span>Generated by the Android Gradle plugin 8.3.2</div></body></html>

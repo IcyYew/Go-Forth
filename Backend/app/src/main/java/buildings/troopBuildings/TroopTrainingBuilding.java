@@ -1,8 +1,11 @@
 package buildings.troopBuildings;
 
 import buildings.BuildingTypes;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,15 +17,26 @@ public class TroopTrainingBuilding extends buildings.Building {
     protected double trainingTime;
     protected int trainingCapacity;
     protected double trainingTimeTotal;
-    protected int stoneTrainingCost;
-    protected int woodTrainingCost;
+    protected int trainingCost;
     protected LocalDateTime trainingTimeStarted;
     protected LocalDateTime trainingTimeFinished;
-    protected TroopBuildingManager troopBuildingManager;
+    @ManyToOne
+    @JoinColumn(name = "troop_building_manager")
+    private TroopBuildingManager troopBuildingManager;
+
 
     public TroopTrainingBuilding(BuildingTypes buildingTypes, int level, TroopBuildingManager troopBuildingManager)
     {
-        super(buildingTypes, level, troopBuildingManager);
+        setBuildingType(buildingTypes);
+        setLevel(level);
+        setTroopBuildingManager(troopBuildingManager);
+        setTrainingTimeStarted(LocalDateTime.now());
+        setTrainingTimeFinished(LocalDateTime.now());
+    }
+
+    public TroopTrainingBuilding()
+    {
+
     }
 
     public String trainBatch(int quantity) {
@@ -37,6 +51,7 @@ public class TroopTrainingBuilding extends buildings.Building {
     public void upgrade() throws Exception {
         if (this.level <= 5) {
             this.level++;
+            this.power *= 1.5;
             setTrainingCapacity(level);
             setTrainingTime(level);
             setStoneUpgradeCost(level);
@@ -75,22 +90,6 @@ public class TroopTrainingBuilding extends buildings.Building {
         this.trainingTimeTotal = trainingTimeTotal;
     }
 
-    public int getStoneTrainingCost() {
-        return stoneTrainingCost;
-    }
-
-    public void setStoneTrainingCost(int stoneTrainingCost) {
-        this.stoneTrainingCost = stoneTrainingCost;
-    }
-
-    public int getWoodTrainingCost() {
-        return woodTrainingCost;
-    }
-
-    public void setWoodTrainingCost(int woodTrainingCost) {
-        this.woodTrainingCost = woodTrainingCost;
-    }
-
     public LocalDateTime getTrainingTimeStarted() {
         return trainingTimeStarted;
     }
@@ -105,5 +104,21 @@ public class TroopTrainingBuilding extends buildings.Building {
 
     public void setTrainingTimeFinished(LocalDateTime trainingTimeFinished) {
         this.trainingTimeFinished = trainingTimeFinished;
+    }
+
+    public TroopBuildingManager getTroopBuildingManager() {
+        return troopBuildingManager;
+    }
+
+    public void setTroopBuildingManager(TroopBuildingManager troopBuildingManager) {
+        this.troopBuildingManager = troopBuildingManager;
+    }
+
+    public int getTrainingCost() {
+        return trainingCost;
+    }
+
+    public void setTrainingCost(int trainingCost) {
+        this.trainingCost = trainingCost;
     }
 }

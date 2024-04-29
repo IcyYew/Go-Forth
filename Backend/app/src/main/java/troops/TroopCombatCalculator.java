@@ -17,6 +17,8 @@ public class TroopCombatCalculator {
     final double ptsPerMovementSpeed = 3.0;
     // Only three results defined here but a tie can result in one favoring the attacker or defender
     private enum Result  {ATTACKER_WIN, DEFENDER_WIN, TIE}
+    private int killsp1;
+    private int killsp2;
 
     Result result = Result.TIE;
 
@@ -123,71 +125,122 @@ public class TroopCombatCalculator {
         switch (type) {
             // Tie with attacker advantage, attacker loses 40% of troops they had prior to battle, defender loses 50%
             case 0:
+                killsp2 += (int) (attacker.getTroopNum(ARCHER) * 0.4);
                 attacker.removeTroop(ARCHER, (int)(attacker.getTroopNum(ARCHER) * 0.4));
+                killsp1 += (int) (defender.getTroopNum(ARCHER) * 0.5);
                 defender.removeTroop(ARCHER, (int)(defender.getTroopNum(ARCHER) * 0.5));
+                killsp2 += (int) (attacker.getTroopNum(WARRIOR) * 0.4);
                 attacker.removeTroop(WARRIOR, (int)(attacker.getTroopNum(WARRIOR) * 0.4));
+                killsp1 += (int) (defender.getTroopNum(WARRIOR) * 0.5);
                 defender.removeTroop(WARRIOR, (int)(defender.getTroopNum(WARRIOR) * 0.5));
+                killsp2 += (int) (attacker.getTroopNum(MAGE) * 0.4);
                 attacker.removeTroop(MAGE, (int)(attacker.getTroopNum(MAGE) * 0.4));
+                killsp1 += (int) (defender.getTroopNum(MAGE) * 0.5);
                 defender.removeTroop(MAGE, (int)(defender.getTroopNum(MAGE) * 0.5));
+                killsp2 += (int) (attacker.getTroopNum(CAVALRY) * 0.4);
                 attacker.removeTroop(CAVALRY, (int)(attacker.getTroopNum(CAVALRY) * 0.4));
+                killsp1 += (int) (defender.getTroopNum(CAVALRY) * 0.5);
                 defender.removeTroop(CAVALRY, (int)(defender.getTroopNum(CAVALRY) * 0.5));
                 break;
             // Attacker win, attacker loses 30% of troops they had prior to battle, defender loses 70%
             case 1:
+                killsp2 += (int) (attacker.getTroopNum(ARCHER) * 0.3);
                 attacker.removeTroop(ARCHER, (int)(attacker.getTroopNum(ARCHER) * 0.3));
+                killsp1 += (int) (defender.getTroopNum(ARCHER) * 0.7);
                 defender.removeTroop(ARCHER, (int)(defender.getTroopNum(ARCHER) * 0.7));
+                killsp2 += (int) (attacker.getTroopNum(WARRIOR) * 0.3);
                 attacker.removeTroop(WARRIOR, (int)(attacker.getTroopNum(WARRIOR) * 0.3));
+                killsp1 += (int) (defender.getTroopNum(WARRIOR) * 0.7);
                 defender.removeTroop(WARRIOR, (int)(defender.getTroopNum(WARRIOR) * 0.7));
+                killsp2 += (int) (attacker.getTroopNum(MAGE) * 0.3);
                 attacker.removeTroop(MAGE, (int)(attacker.getTroopNum(MAGE) * 0.3));
+                killsp1 += (int) (defender.getTroopNum(MAGE) * 0.7);
                 defender.removeTroop(MAGE, (int)(defender.getTroopNum(MAGE) * 0.7));
+                killsp2 += (int) (attacker.getTroopNum(CAVALRY) * 0.3);
                 attacker.removeTroop(CAVALRY, (int)(attacker.getTroopNum(CAVALRY) * 0.3));
+                killsp1 += (int) (defender.getTroopNum(CAVALRY) * 0.7);
                 defender.removeTroop(CAVALRY, (int)(defender.getTroopNum(CAVALRY) * 0.7));
                 break;
             // Overwhelming attacker win, attacker loses 10% of troops they had prior to battle, defender loses 80%
             case 2:
+                killsp2 += (int) (attacker.getTroopNum(ARCHER) * 0.01);
                 attacker.removeTroop(ARCHER, (int)(attacker.getTroopNum(ARCHER) * 0.01));
+                killsp1 += (int) (defender.getTroopNum(ARCHER));
                 defender.removeTroop(ARCHER, defender.getTroopNum(ARCHER));
+                killsp2 += (int) (attacker.getTroopNum(WARRIOR) * 0.01);
                 attacker.removeTroop(WARRIOR, (int)(attacker.getTroopNum(WARRIOR) * 0.01));
+                killsp1 += (int) (defender.getTroopNum(WARRIOR));
                 defender.removeTroop(WARRIOR, defender.getTroopNum(WARRIOR));
+                killsp2 += (int) (attacker.getTroopNum(MAGE) * 0.01);
                 attacker.removeTroop(MAGE, (int)(attacker.getTroopNum(MAGE) * 0.01));
+                killsp1 += (int) (defender.getTroopNum(MAGE));
                 defender.removeTroop(MAGE, defender.getTroopNum(MAGE));
+                killsp2 += (int) (attacker.getTroopNum(CAVALRY) * 0.01);
                 attacker.removeTroop(CAVALRY, (int)(attacker.getTroopNum(CAVALRY) * 0.01));
+                killsp1 += (int) (defender.getTroopNum(CAVALRY));
                 defender.removeTroop(CAVALRY, defender.getTroopNum(CAVALRY));
                 break;
             // Tie with defender advantage, defender loses 40% of troops they had prior to battle, attacker loses 50%
             case 3:
+                killsp2 += (int) (attacker.getTroopNum(ARCHER) * 0.5);
                 attacker.removeTroop(ARCHER, (int)(attacker.getTroopNum(ARCHER) * 0.5));
+                killsp1 += (int) (defender.getTroopNum(ARCHER) * 0.4);
                 defender.removeTroop(ARCHER, (int)(defender.getTroopNum(ARCHER) * 0.4));
+                killsp2 += (int) (attacker.getTroopNum(WARRIOR) * 0.5);
                 attacker.removeTroop(WARRIOR, (int)(attacker.getTroopNum(WARRIOR) * 0.5));
+                killsp1 += (int) (defender.getTroopNum(WARRIOR) * 0.4);
                 defender.removeTroop(WARRIOR, (int)(defender.getTroopNum(WARRIOR) * 0.4));
+                killsp2 += (int) (attacker.getTroopNum(MAGE) * 0.5);
                 attacker.removeTroop(MAGE, (int)(attacker.getTroopNum(MAGE) * 0.5));
+                killsp1 += (int) (defender.getTroopNum(MAGE) * 0.4);
                 defender.removeTroop(MAGE, (int)(defender.getTroopNum(MAGE) * 0.4));
+                killsp2 += (int) (attacker.getTroopNum(CAVALRY) * 0.5);
                 attacker.removeTroop(CAVALRY, (int)(attacker.getTroopNum(CAVALRY) * 0.5));
+                killsp1 += (int) (defender.getTroopNum(CAVALRY) * 0.4);
                 defender.removeTroop(CAVALRY, (int)(defender.getTroopNum(CAVALRY) * 0.4));
                 break;
             // Defender win, defender loses 30% of troops they had prior to battle, attacker loses 70%
             case 4:
+                killsp2 += (int) (attacker.getTroopNum(ARCHER) * 0.7);
                 attacker.removeTroop(ARCHER, (int)(attacker.getTroopNum(ARCHER) * 0.7));
+                killsp1 += (int) (defender.getTroopNum(ARCHER) * 0.3);
                 defender.removeTroop(ARCHER, (int)(defender.getTroopNum(ARCHER) * 0.3));
+                killsp2 += (int) (attacker.getTroopNum(WARRIOR) * 0.7);
                 attacker.removeTroop(WARRIOR, (int)(attacker.getTroopNum(WARRIOR) * 0.7));
+                killsp1 += (int) (defender.getTroopNum(ARCHER) * 0.3);
                 defender.removeTroop(WARRIOR, (int)(defender.getTroopNum(WARRIOR) * 0.3));
+                killsp2 += (int) (attacker.getTroopNum(ARCHER) * 0.7);
                 attacker.removeTroop(MAGE, (int)(attacker.getTroopNum(MAGE) * 0.7));
+                killsp1 += (int) (defender.getTroopNum(ARCHER) * 0.3);
                 defender.removeTroop(MAGE, (int)(defender.getTroopNum(MAGE) * 0.3));
+                killsp2 += (int) (attacker.getTroopNum(ARCHER) * 0.7);
                 attacker.removeTroop(CAVALRY, (int)(attacker.getTroopNum(CAVALRY) * 0.7));
+                killsp1 += (int) (defender.getTroopNum(ARCHER) * 0.3);
                 defender.removeTroop(CAVALRY, (int)(defender.getTroopNum(CAVALRY) * 0.3));
                 break;
             // Overwhelming defender win, defender loses 10% of troops they had prior to battle, attacker loses 80%
             case 5:
+                killsp2 += (int) (attacker.getTroopNum(ARCHER));
                 attacker.removeTroop(ARCHER, attacker.getTroopNum(ARCHER));
+                killsp1 += (int) (defender.getTroopNum(ARCHER) * 0.01);
                 defender.removeTroop(ARCHER, (int)(defender.getTroopNum(ARCHER) * 0.01));
+                killsp2 += (int) (attacker.getTroopNum(ARCHER));
                 attacker.removeTroop(WARRIOR, attacker.getTroopNum(WARRIOR));
+                killsp1 += (int) (defender.getTroopNum(ARCHER) * 0.01);
                 defender.removeTroop(WARRIOR, (int)(defender.getTroopNum(WARRIOR) * 0.01));
+                killsp2 += (int) (attacker.getTroopNum(ARCHER));
                 attacker.removeTroop(MAGE, attacker.getTroopNum(MAGE));
+                killsp1 += (int) (defender.getTroopNum(ARCHER) * 0.01);
                 defender.removeTroop(MAGE, (int)(defender.getTroopNum(MAGE) * 0.01));
+                killsp2 += (int) (attacker.getTroopNum(ARCHER));
                 attacker.removeTroop(CAVALRY, attacker.getTroopNum(CAVALRY));
+                killsp1 += (int) (defender.getTroopNum(ARCHER) * 0.01);
                 defender.removeTroop(CAVALRY, (int)(defender.getTroopNum(CAVALRY) * 0.01));
                 break;
         }
+        attacker.setTotalTroopKills(killsp1 + attacker.getTotalTroopKills());
+        defender.setTotalTroopKills(killsp2 + defender.getTotalTroopKills());
+
     }
 
     // Basic points based calculation to derive battle result

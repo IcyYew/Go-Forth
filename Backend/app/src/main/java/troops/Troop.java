@@ -38,7 +38,7 @@ public abstract class Troop {
 
     // Useless stuffs below, not removing for now
     // !!!! implement food consumption
-    private int damage;
+    private double damage;
     private int health;
     private int movementSpeed;
     private int attackSpeed;
@@ -110,7 +110,7 @@ public abstract class Troop {
      * Sets the damage of Troop.
      * @param damage The troopType of Troop.
      */
-    public void setDamage(int damage) {
+    public void setDamage(double damage) {
         this.damage = damage;
     }
 
@@ -160,7 +160,7 @@ public abstract class Troop {
      * Gets the damage of a Troop. Implemented in the concrete class.
      * @return Returns the damage value.
      */
-    public abstract int getDamage();
+    public abstract double getDamage();
 
     /**
      * Gets the movement speed of a Troop. Implemented in the concrete class.

@@ -70,8 +70,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //goes to MainActivity with userID
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                intent.putExtra("ID", String.valueOf(userID));
+                Intent intent = new Intent(LoginActivity.this, LaunchActivity.class);
                 startActivity(intent);
             }
         });

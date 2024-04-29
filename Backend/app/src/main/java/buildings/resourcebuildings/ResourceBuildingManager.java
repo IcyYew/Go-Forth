@@ -3,10 +3,13 @@ package buildings.resourcebuildings;
 import buildings.BuildingTypes;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
+import resources.Resource;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+@JsonSerialize(using = ResourceBuildingManagerSerializer.class)
 @Entity
 public class ResourceBuildingManager
 {
@@ -15,12 +18,13 @@ public class ResourceBuildingManager
     private Integer playerId;
 
     @OneToMany(mappedBy = "resourceBuildingManager", cascade = CascadeType.ALL)
-    private List<ResourceBuilding> resourceBuildingManager;
+    public List<ResourceBuilding> resourceBuildingManager;
 
     public ResourceBuildingManager(Integer playerId)
     {
         this.playerId = playerId;
         this.resourceBuildingManager = new ArrayList<>();
+        initializeResourceBuildings();
     }
 
     public ResourceBuildingManager()
@@ -57,5 +61,65 @@ public class ResourceBuildingManager
                 resourceBuilding.upgrade();
             }
         }
+    }
+
+    public List<ResourceBuilding> getResourceBuildings()
+    {
+        return resourceBuildingManager;
+    }
+
+    public ResourceBuilding getResourceBuilding(BuildingTypes buildingType)
+    {
+        for (ResourceBuilding resourceBuilding : resourceBuildingManager)
+        {
+            if (resourceBuilding.getBuildingType() == buildingType)
+            {
+                return resourceBuilding;
+            }
+        }
+        return null;
+    }
+
+    public long calculateTotalResourceBuildingPower()
+    {
+        long power = 0;
+        for (ResourceBuilding resourceBuilding : resourceBuildingManager)
+        {
+            power += resourceBuilding.getPower();
+        }
+        return power;
+    }
+
+    public int collectResources(BuildingTypes buildingType)
+    {
+        for (ResourceBuilding resourceBuilding : resourceBuildingManager)
+        {
+            if (resourceBuilding.getBuildingType() == buildingType)
+            {
+                return resourceBuilding.collectResources();
+            }
+        }
+        return 0;
+    }
+
+    public int getResources(BuildingTypes buildingType)
+    {
+        for (ResourceBuilding resourceBuilding : resourceBuildingManager)
+        {
+            if (resourceBuilding.getBuildingType() == buildingType)
+            {
+                return resourceBuilding.getResources();
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "TroopManager{" +
+                "playerId=" + playerId +
+                ", troopManager=" + resourceBuildingManager +
+                '}';
     }
 }

@@ -1,6 +1,7 @@
 package com.example.app;
 
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -22,6 +23,9 @@ import com.android.volley.toolbox.StringRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 /**
@@ -39,6 +43,12 @@ public class TroopManagementActivity extends AppCompatActivity {
     private int magesToTrainCount = 0;
     private int cavalryToTrainCount = 0;
 
+    // stores end times
+    private String archerFinalDate;
+    private String warriorFinalDate;
+    private String mageFinalDate;
+    private String cavalryFinalDate;
+
     // textviews
     private TextView archersToTrainCountTextView;
     private TextView knightsToTrainCountTextView;
@@ -49,6 +59,7 @@ public class TroopManagementActivity extends AppCompatActivity {
     private TextView magesCountTextView;
     private TextView cavalryCountTextView;
     private TextView trainingTimeValue;
+    private TextView foodCountTextView;
 
     // checkboxes
     private CheckBox archersCheckbox;
@@ -62,6 +73,7 @@ public class TroopManagementActivity extends AppCompatActivity {
     private long timeLeftInMillis = 0;
     private SharedPreferences prefs;
     private static final String PREF_NAME = "troop_training_timer";
+    private boolean wasTraining;
     /**
      * onCreate sets onClickListeners to all of the buttons and initializes UI elements. Also gets extras.
      *
@@ -88,18 +100,21 @@ public class TroopManagementActivity extends AppCompatActivity {
         magesToTrainCount = prefs.getInt("magesToTrainCount", 0);
         cavalryToTrainCount = prefs.getInt("cavalryToTrainCount", 0);
 
+        //wasTraining = false; // use this to clear wasTraining if stuffs fucked
+        wasTraining = prefs.getBoolean("wasTraining", false);
+
         // UI initialization
         archersToTrainCountTextView = findViewById(R.id.archersToTrainCount);
         knightsToTrainCountTextView = findViewById(R.id.knightsToTrainCount);
         magesToTrainCountTextView = findViewById(R.id.magesToTrainCount);
         cavalryToTrainCountTextView = findViewById(R.id.cavalryToTrainCount);
         trainingTimeValue = findViewById(R.id.trainingTimeValue);
+        foodCountTextView = findViewById(R.id.foodRemainingCount);
 
         archersToTrainCountTextView.setText(String.valueOf(archersToTrainCount));
         knightsToTrainCountTextView.setText(String.valueOf(knightsToTrainCount));
         magesToTrainCountTextView.setText(String.valueOf(magesToTrainCount));
         cavalryToTrainCountTextView.setText(String.valueOf(cavalryToTrainCount));
-
 
         archersCheckbox = findViewById(R.id.archersCheckbox);
         knightsCheckbox = findViewById(R.id.knightsCheckbox);
@@ -111,13 +126,16 @@ public class TroopManagementActivity extends AppCompatActivity {
         // get troop data from server
         getPlayerData();
 
-        // Load remaining time from SharedPreferences
-        timeLeftInMillis = prefs.getLong("millisLeft", 0);
+        if (wasTraining) {
+            getUpdatedTime();
+        } else {
+            timeLeftInMillis = 0;
+        }
+
         updateCountdownText();
         if (timeLeftInMillis != 0) {
             startCountdownTimer();
         }
-
 
         // back button pressed
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -218,6 +236,7 @@ public class TroopManagementActivity extends AppCompatActivity {
         knightsToTrainCount = 0;
         magesToTrainCount = 0;
         cavalryToTrainCount = 0;
+        wasTraining = false;
 
         archersToTrainCountTextView.setText(String.valueOf(archersToTrainCount));
         knightsToTrainCountTextView.setText(String.valueOf(knightsToTrainCount));
@@ -257,6 +276,10 @@ public class TroopManagementActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
+                            JSONObject resourceObject = response.getJSONObject("resources");
+                            int foodCount = resourceObject.getInt("food");
+                            foodCountTextView.setText(String.valueOf(foodCount));
+
                             JSONObject troopsObject = response.getJSONObject("troops");
                             int archersCount = troopsObject.getInt("archerNum");
                             int knightsCount = troopsObject.getInt("warriorNum");
@@ -355,12 +378,24 @@ public class TroopManagementActivity extends AppCompatActivity {
      *
      * @return time
      */
-    private long calculateTotalTrainingTime() {
-        int archerTime = archersToTrainCount * 1; // 1 second per archer
-        int knightTime = knightsToTrainCount * 2; // 2 seconds per knight
-        int mageTime = magesToTrainCount * 3; // 3 seconds per mage
-        int cavalryTime = cavalryToTrainCount * 4; // 4 seconds per cavalry
-        return (archerTime + knightTime + mageTime + cavalryTime) * 1000; // Convert to milliseconds
+    private void calculateTotalTrainingTime() {
+        JSONObject archers = createTroopJSON("ARCHER", archersToTrainCount);
+        JSONObject warriors = createTroopJSON("WARRIOR", knightsToTrainCount);
+        JSONObject mages = createTroopJSON("MAGE", magesToTrainCount);
+        JSONObject cavalry = createTroopJSON("CAVALRY", cavalryToTrainCount);
+
+        getTrainingTime(archers);
+        getTrainingTime(warriors);
+        getTrainingTime(mages);
+        getTrainingTime(cavalry);
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        getUpdatedTime();
     }
 
     /**
@@ -379,28 +414,8 @@ public class TroopManagementActivity extends AppCompatActivity {
      */
     private void startCountdownTimer() {
         // Calculate total training time based on troops count
-        totalTimeInMillis = calculateTotalTrainingTime();
-        if (timeLeftInMillis == 0) {
-            Log.d("Unhappy", String.valueOf(timeLeftInMillis));
-            timeLeftInMillis = totalTimeInMillis;
-        }
-
-        // Start countdown timer
-        countDownTimer = new CountDownTimer(timeLeftInMillis, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                timeLeftInMillis = millisUntilFinished;
-                updateCountdownText();
-            }
-
-            @Override
-            public void onFinish() {
-                // Reset countdown timer variables
-                timeLeftInMillis = 0;
-                updateCountdownText();
-                confirmTraining();
-            }
-        }.start();
+        calculateTotalTrainingTime();
+        wasTraining = true;
     }
 
     /**
@@ -411,7 +426,7 @@ public class TroopManagementActivity extends AppCompatActivity {
         super.onPause();
         // Save remaining time to SharedPreferences
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putLong("millisLeft", timeLeftInMillis);
+        editor.putBoolean("wasTraining", wasTraining);
         editor.apply();
         // Cancel the countdown timer
         if (countDownTimer != null) {
@@ -419,4 +434,133 @@ public class TroopManagementActivity extends AppCompatActivity {
         }
     }
 
+    private void getTrainingTime(JSONObject troopJSON) {
+        String url = "http://coms-309-048.class.las.iastate.edu:8080/players/calculateTrainingTime/" + userID;
+        // make a JsonObjectRequest to POST to server
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, troopJSON,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            if (troopJSON.get("troopType").equals("ARCHER")){
+                                archerFinalDate = response.getString("archerFinalDate");
+                            } else if (troopJSON.get("troopType").equals("WARRIOR")) {
+                                warriorFinalDate = response.getString("warriorFinalDate");
+                            } else if (troopJSON.get("troopType").equals("MAGE")) {
+                                mageFinalDate = response.getString("mageFinalDate");
+                            } else {
+                                cavalryFinalDate = response.getString("cavalryFinalDate");
+                            }
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(TroopManagementActivity.this, "Error calculating time: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        // add to volley queue
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+    }
+
+    private void getUpdatedTime() {
+        // use the /players/getplayer/{userID} endpoint
+        String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getPlayer/" + String.valueOf(userID);
+
+        // makes JsonObjectRequest to get the current player. GETs the archerNum, warriorNum, mageNum, and cavalryNum
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            archerFinalDate = response.getString("archerFinalDate");
+                            warriorFinalDate = response.getString("warriorFinalDate");
+                            mageFinalDate = response.getString("mageFinalDate");
+                            cavalryFinalDate = response.getString("cavalryFinalDate");
+
+                            Log.d("Archer end", "Archer end time: " + archerFinalDate);
+                            Log.d("Warrior end", "Warrior end time: " + warriorFinalDate);
+                            Log.d("Mage end", "Mage end time: " + mageFinalDate);
+                            Log.d("Cavalry end", "Cavalry end time: " + cavalryFinalDate);
+
+                            totalTimeInMillis = doTimeStuff();
+
+                            Log.d("Total Time", "Total time = " + totalTimeInMillis);
+
+                            if (timeLeftInMillis == 0) {
+                                timeLeftInMillis = totalTimeInMillis;
+                            }
+
+                            // Start countdown timer
+                            countDownTimer = new CountDownTimer(timeLeftInMillis, 1000) {
+                                @Override
+                                public void onTick(long millisUntilFinished) {
+                                    timeLeftInMillis = millisUntilFinished;
+                                    updateCountdownText();
+                                }
+
+                                @Override
+                                public void onFinish() {
+                                    // Reset countdown timer variables
+                                    timeLeftInMillis = 0;
+                                    updateCountdownText();
+                                    confirmTraining();
+                                }
+                            }.start();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(TroopManagementActivity.this, "Error parsing JSON response", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(TroopManagementActivity.this, "Error fetching player data: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        // add to volley queue
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+    }
+
+    private long doTimeStuff() {
+        DateTimeFormatter format;
+        LocalDateTime now;
+        long totalDifference = 0;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            format = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+            LocalDateTime archerFinal = LocalDateTime.parse(archerFinalDate, format);
+            LocalDateTime mageFinal = LocalDateTime.parse(mageFinalDate, format);
+            LocalDateTime cavalryFinal = LocalDateTime.parse(cavalryFinalDate, format);
+            LocalDateTime knightFinal = LocalDateTime.parse(warriorFinalDate, format);
+
+            now = LocalDateTime.now();
+
+            Duration archerDuration = Duration.between(now, archerFinal);
+            Duration mageDuration = Duration.between(now, mageFinal);
+            Duration cavalryDuration = Duration.between(now, cavalryFinal);
+            Duration knightDuration = Duration.between(now, knightFinal);
+
+            if (archersToTrainCount > 0) {
+                totalDifference += archerDuration.toMillis() - 5000;
+            }
+            if (magesToTrainCount > 0) {
+                totalDifference += mageDuration.toMillis() - 5000;
+            }
+            if (cavalryToTrainCount > 0) {
+                totalDifference += cavalryDuration.toMillis() - 5000;
+            }
+            if (knightsToTrainCount > 0) {
+                totalDifference += knightDuration.toMillis() - 5000;
+            }
+        }
+
+        return totalDifference;
+    }
 }

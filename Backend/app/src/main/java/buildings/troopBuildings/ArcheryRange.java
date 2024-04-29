@@ -20,14 +20,42 @@ import static troops.TroopTypes.ARCHER;
 
 @Entity
 @DiscriminatorValue("ARCHERYRANGE")
-public class ArcheryRange extends TroopTrainingBuilding{
+public class ArcheryRange extends TroopTrainingBuilding {
+
 
     public ArcheryRange(int level, TroopBuildingManager troopBuildingManager)
     {
         super(BuildingTypes.ARCHERYRANGE, level, troopBuildingManager);
         setTrainingCapacity(50);
         setTrainingTime(10);
-        setStoneTrainingCost(30);
-        setWoodTrainingCost(40);
+        setTrainingCost(10);
+        setPower(50);
+        setStoneUpgradeCost(400);
+        setWoodUpgradeCost(400);
+    }
+
+    public ArcheryRange()
+    {
+
+    }
+
+    @Override
+    public double getTrainingTime() {
+        return super.getTrainingTime();
+    }
+
+    @Override
+    public void setTrainingTime(double trainingTime) {
+        super.setTrainingTime(trainingTime);
+    }
+
+    @Override
+    public int getTrainingCapacity() {
+        return super.getTrainingCapacity();
+    }
+
+    @Override
+    public void setTrainingCapacity(int trainingCapacity) {
+        super.setTrainingCapacity(trainingCapacity);
     }
 }

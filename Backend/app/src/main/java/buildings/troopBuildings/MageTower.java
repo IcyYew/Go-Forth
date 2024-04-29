@@ -14,14 +14,22 @@ import static troops.TroopTypes.MAGE;
 
 @Entity
 @DiscriminatorValue("MAGETOWER")
-public class MageTower extends TroopTrainingBuilding{
+public class MageTower extends TroopTrainingBuilding {
 
     public MageTower(int level, TroopBuildingManager troopBuildingManager)
     {
         super(BuildingTypes.MAGETOWER, level, troopBuildingManager);
         setTrainingCapacity(50);
         setTrainingTime(20);
-        setStoneTrainingCost(20);
-        setWoodTrainingCost(50);
+        setTrainingCost(15);
+        setPower(50);
+        setStoneUpgradeCost(400);
+        setWoodUpgradeCost(400);
     }
+
+    public MageTower()
+    {
+
+    }
+
 }
