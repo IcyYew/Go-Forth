@@ -76,6 +76,7 @@ public class BuildingController {
         if (research.getLevel() < 5 && research.getPlatinumCost() <= player.getResources().getResource(ResourceType.PLATINUM)
                 && player.getBuildings().getOtherBuilding(BuildingTypes.RESEARCHBUILDING).getLevel() >= 2) {
             research.levelUpResearch(research.getLevel() + 1, player.getResearchManager());
+            player.getResources().removeResource(ResourceType.PLATINUM, (int)research.getPlatinumCost());
             for (Building building : player.getBuildings().getOtherBuildings()) {
                 building.setWoodUpgradeCost((int)(building.getWoodUpgradeCost() * .93));
                 building.setStoneUpgradeCost((int)(building.getStoneUpgradeCost() * .93));
