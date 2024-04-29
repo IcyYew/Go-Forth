@@ -277,10 +277,9 @@ public class ResourceActivity extends AppCompatActivity {
     class UpdateThread implements Runnable {
     public void run()
     {
-        while(System.currentTimeMillis() % 1000 != 0){}
         try {
             while(!stopThread) {
-                Thread.sleep(1000);
+                Thread.sleep(500);
                 updateBuildingAmount();
                 //updateCurrentStorage();
             }

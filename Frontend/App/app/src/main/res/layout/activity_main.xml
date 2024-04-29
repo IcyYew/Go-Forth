@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -7,8 +8,9 @@
         android:id="@+id/backgroundGif"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:adjustViewBounds="true" />
+        android:adjustViewBounds="true"
+        android:focusable="auto"
+        android:scaleType="centerCrop" />
 
     <ImageView
         android:id="@+id/displayButton"
@@ -91,13 +93,25 @@
         android:focusable="false"
         android:focusableInTouchMode="false" />
 
+
     <TextView
-        android:id="@+id/ID"
+        android:id="@+id/Kills"
         android:layout_width="151dp"
         android:layout_height="60dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:text="TextView"
         android:textSize="24dp" />
+
+    <ImageView
+        android:id="@+id/BuildingButton"
+        android:layout_width="150dp"
+        android:layout_height="110dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="300dp"
+        android:clickable="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        app:srcCompat="@drawable/building" />
 
 </RelativeLayout>

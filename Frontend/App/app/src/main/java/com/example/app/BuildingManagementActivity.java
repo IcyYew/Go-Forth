@@ -59,6 +59,8 @@ public class BuildingManagementActivity extends AppCompatActivity {
 
     ImageView BuildingGif;
 
+    private int mainLevel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,11 +102,6 @@ public class BuildingManagementActivity extends AppCompatActivity {
 
 
 
-
-
-        /**
-         * Goes back to ClanActivity
-         */
         Back.setOnClickListener(new View.OnClickListener() {
             //Back button clicked
             @Override
@@ -130,7 +127,7 @@ public class BuildingManagementActivity extends AppCompatActivity {
         });
 
         /**
-         * Moves left through the list
+         * Moves right through the list
          */
         Right.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,13 +156,14 @@ public class BuildingManagementActivity extends AppCompatActivity {
         Upgrade.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(List.get(Index).level == 5){
+                if(List.get(Index).level == 5  || (List.get(Index).level == mainLevel && !(List.get(Index).buildingName.equals("MAINBUILDING")))){
                     Toast.makeText(getApplicationContext(), "Building max level", Toast.LENGTH_SHORT).show();
                 }
-                else if(List.get(Index).woodToUpgrade > wood && List.get(Index).stoneToUpgrade > stone){
+                else if(List.get(Index).woodToUpgrade > wood || List.get(Index).stoneToUpgrade > stone){
                     Toast.makeText(getApplicationContext(), "Insufficient funds", Toast.LENGTH_SHORT).show();
                 }
                 else{
+                    if(List.get(Index).buildingName.equals("MAINBUILDING")) mainLevel++;
                     upgradeCurrent();
                 }
             }
@@ -244,8 +242,9 @@ public class BuildingManagementActivity extends AppCompatActivity {
                                     else if(name.equals("RESEARCHBUILDING")){
                                         List.add(new Building(buildingObject.getInt("power"),
                                                 0, name,
-                                                buildingObject.getInt("power"), buildingObject.getInt("woodUpgradeCost"),
+                                                buildingObject.getInt("level"), buildingObject.getInt("woodUpgradeCost"),
                                                 buildingObject.getInt("stoneUpgradeCost"), 0, "Research"));
+                                                mainLevel = buildingObject.getInt("level");
                                     }
                                 }
                                 updateDisplay();
