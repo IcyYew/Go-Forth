@@ -59,6 +59,7 @@ public class TroopManagementActivity extends AppCompatActivity {
     private TextView magesCountTextView;
     private TextView cavalryCountTextView;
     private TextView trainingTimeValue;
+    private TextView foodCountTextView;
 
     // checkboxes
     private CheckBox archersCheckbox;
@@ -108,6 +109,7 @@ public class TroopManagementActivity extends AppCompatActivity {
         magesToTrainCountTextView = findViewById(R.id.magesToTrainCount);
         cavalryToTrainCountTextView = findViewById(R.id.cavalryToTrainCount);
         trainingTimeValue = findViewById(R.id.trainingTimeValue);
+        foodCountTextView = findViewById(R.id.foodRemainingCount);
 
         archersToTrainCountTextView.setText(String.valueOf(archersToTrainCount));
         knightsToTrainCountTextView.setText(String.valueOf(knightsToTrainCount));
@@ -274,6 +276,10 @@ public class TroopManagementActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
+                            JSONObject resourceObject = response.getJSONObject("resources");
+                            int foodCount = resourceObject.getInt("food");
+                            foodCountTextView.setText(String.valueOf(foodCount));
+
                             JSONObject troopsObject = response.getJSONObject("troops");
                             int archersCount = troopsObject.getInt("archerNum");
                             int knightsCount = troopsObject.getInt("warriorNum");
