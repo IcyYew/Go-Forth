@@ -279,7 +279,7 @@ public class ResourceActivity extends AppCompatActivity {
     {
         try {
             while(!stopThread) {
-                Thread.sleep(500);
+                Thread.sleep(1000);
                 updateBuildingAmount();
                 //updateCurrentStorage();
             }

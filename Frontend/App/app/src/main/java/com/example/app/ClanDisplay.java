@@ -132,7 +132,7 @@ public class ClanDisplay extends AppCompatActivity {
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 //Prints clan ID and clan name
                                 JSONObject playerObject = jsonArray.getJSONObject(i);
-                                List.add(new Clan(playerObject.getInt("clanID"), (int) playerObject.getDouble("power"), playerObject.getString("clanName")));
+                                List.add(new Clan(playerObject.getInt("clanID"), (int) playerObject.getDouble("totalClanPower"), playerObject.getString("clanName")));
                                 /*
                                 clansString.append("Clan ID: ").append(playerObject.getInt("clanID")).append("\n");
                                 clansString.append("Clan name: ").append(playerObject.getString("clanName")).append("\n");

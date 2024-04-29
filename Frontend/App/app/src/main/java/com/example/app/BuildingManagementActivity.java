@@ -163,7 +163,8 @@ public class BuildingManagementActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Insufficient funds", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    if(List.get(Index).buildingName.equals("MAINBUILDING")) mainLevel++;
+                    if(List.get(Index).buildingName.equals("MAINBUILDING"))
+                        mainLevel++;
                     upgradeCurrent();
                 }
             }
@@ -234,6 +235,7 @@ public class BuildingManagementActivity extends AppCompatActivity {
                                                 buildingObject.getInt("stoneUpgradeCost"), buildingObject.getInt("trainingCapacity"), "Training"));
                                     }
                                     else if(name.equals("MAINBUILDING")){
+                                        mainLevel = buildingObject.getInt("level");
                                         List.add(new Building(buildingObject.getInt("power"),
                                                 0, name,
                                                 buildingObject.getInt("level"), buildingObject.getInt("woodUpgradeCost"),
@@ -244,7 +246,6 @@ public class BuildingManagementActivity extends AppCompatActivity {
                                                 0, name,
                                                 buildingObject.getInt("level"), buildingObject.getInt("woodUpgradeCost"),
                                                 buildingObject.getInt("stoneUpgradeCost"), 0, "Research"));
-                                                mainLevel = buildingObject.getInt("level");
                                     }
                                 }
                                 updateDisplay();
