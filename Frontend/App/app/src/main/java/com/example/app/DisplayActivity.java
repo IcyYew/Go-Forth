@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
 
@@ -26,9 +24,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * Activity that displays the current users (assuming there are any)
@@ -52,7 +48,7 @@ public class DisplayActivity extends AppCompatActivity {
 
     private Button Name;
 
-    private Button ID;
+    private Button Kills;
 
     private boolean power;
 
@@ -92,7 +88,7 @@ public class DisplayActivity extends AppCompatActivity {
 
         Name = findViewById(R.id.Name);
 
-        ID = findViewById(R.id.ID);
+        Kills = findViewById(R.id.Kills);
 
         fillList();
 
@@ -121,10 +117,10 @@ public class DisplayActivity extends AppCompatActivity {
             }
         });
 
-        ID.setOnClickListener(new View.OnClickListener() {
+        Kills.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Collections.sort(List, new sortByID());
+                Collections.sort(List, new sortByKills());
                 displayUsers();
             }
         });
@@ -147,7 +143,7 @@ public class DisplayActivity extends AppCompatActivity {
                             JSONArray jsonArray = new JSONArray(response);
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject playerObject = jsonArray.getJSONObject(i);
-                                List.add(new User(playerObject.getInt("playerID"), (int) playerObject.getDouble("power"), playerObject.getString("userName")));
+                                List.add(new User(playerObject.getInt("playerID"), (int) playerObject.getDouble("power"), playerObject.getString("userName"), playerObject.getInt("totalKills")));
                                 /*
                                 playersString.append("Player ID: ").append(playerObject.getInt("playerID")).append("\n");
                                 playersString.append("Player name: ").append(playerObject.getString("userName")).append("\n");
@@ -182,16 +178,18 @@ public class DisplayActivity extends AppCompatActivity {
      */
     private class User {
 
+        private int totalKills;
         private int userID;
 
         private int userPower;
 
         private String name;
 
-        User(int userID, int userPower, String name) {
+        User(int userID, int userPower, String name, int totalKills) {
             this.userID = userID;
             this.userPower = userPower;
             this.name = name;
+            this.totalKills = totalKills;
         }
 
     }
@@ -210,10 +208,10 @@ public class DisplayActivity extends AppCompatActivity {
         }
     }
 
-    private class sortByID implements Comparator<User> {
+    private class sortByKills implements Comparator<User> {
         public int compare(User a, User b) {
             power = false;
-            return a.userID - b.userID;
+            return a.totalKills - b.totalKills;
         }
     }
 
@@ -222,7 +220,7 @@ public class DisplayActivity extends AppCompatActivity {
         for(int i = 0; i < List.size(); i++){
             if(power) playersString.append("Rank: ").append(i + 1);
             else playersString.append(i + 1).append(":");
-            playersString.append(" User: ").append(List.get(i).name).append(" ID: ").append(List.get(i).userID).append(" Power: ").append(List.get(i).userPower);
+            playersString.append(" User: ").append(List.get(i).name).append(" Total Kills: ").append(List.get(i).totalKills).append(" Power: ").append(List.get(i).userPower).append(" ID: ").append(List.get(i).userID);
             playersString.append("\n");
         }
         users.setText(playersString.toString());

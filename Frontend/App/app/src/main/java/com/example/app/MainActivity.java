@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.TextView;
@@ -38,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageView clanButton;
     private ImageView researchButton;
     private ImageView signoutButton;
+
+    private ImageView BuildingButton;
     private int userID;
     private TextView UID;
     private String username;
@@ -62,8 +63,9 @@ public class MainActivity extends AppCompatActivity {
         overworldButton = findViewById(R.id.OverworldButton);
         researchButton = findViewById(R.id.ResearchButton);
         signoutButton = findViewById(R.id.signout);
+        BuildingButton = findViewById(R.id.BuildingButton);
 
-        UID = findViewById(R.id.ID);
+        UID = findViewById(R.id.Kills);
 
         // gets extras and sets userID to whatever we got from the extras. IF there were no extras, empty userID
         Bundle extras = getIntent().getExtras();
@@ -130,6 +132,17 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        //Building button pressed
+        BuildingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, BuildingManagementActivity.class);
+                intent.putExtra("ID", userID);
+                startActivity(intent);
+            }
+        });
+
 
         //Troop Management pressed
         troopManagementButton.setOnClickListener(new View.OnClickListener() {
