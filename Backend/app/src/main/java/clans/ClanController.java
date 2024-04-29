@@ -25,6 +25,9 @@ public class ClanController {
 
     @GetMapping("/clan/getallclans")
     public List<Clan> clanList() {
+        for (Clan clan : clanRepository.findAll()) {
+            clan.calculateTotalClanPower();
+        }
         return clanRepository.findAll();
     }
 
@@ -36,6 +39,7 @@ public class ClanController {
 
     @GetMapping("/clans/getclan/{clanID}")
     public Clan getClan(@PathVariable int clanID) {
+        clanRepository.findById(clanID).orElse(null).calculateTotalClanPower();
         return clanRepository.findById(clanID).orElse(null);
     }
 

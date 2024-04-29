@@ -1,5 +1,7 @@
 package clans;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import player.Player;
@@ -13,6 +15,7 @@ import java.util.List;
  * Contains table information and getters and setters for the Clan.
  */
 @Entity
+@JsonSerialize(using = ClanSerializer.class)
 public class Clan {
 
 
@@ -24,7 +27,7 @@ public class Clan {
     private String clanName;
 
     @Column(name="clan-power")
-    private double totalClanPower;
+    private double totalClanPower = 0;
 
     @Column(name="num-members")
     private int clanMembersNumber;
@@ -104,6 +107,38 @@ public class Clan {
         }
     }
 
+    public double getTotalClanPower() {
+        return totalClanPower;
+    }
+
+    public void setTotalClanPower(double totalClanPower) {
+        this.totalClanPower = totalClanPower;
+    }
+
+    public int getClanMembersNumber() {
+        return clanMembersNumber;
+    }
+
+    public void setClanMembersNumber(int clanMembersNumber) {
+        this.clanMembersNumber = clanMembersNumber;
+    }
+
+    public int getClanMembersMax() {
+        return clanMembersMax;
+    }
+
+    public void setClanMembersMax(int clanMembersMax) {
+        this.clanMembersMax = clanMembersMax;
+    }
+
+    public ClanMemberManager getMemberManager() {
+        return memberManager;
+    }
+
+    public void setMemberManager(ClanMemberManager memberManager) {
+        this.memberManager = memberManager;
+    }
+
     /**
      * Sets the clan's ID.
      * @param clanID The integer ID being used for this clan.
@@ -128,7 +163,7 @@ public class Clan {
     public String toString() {
         return "Clan{" +
                 "clanID=" + clanID +
-                ", clanName='" + clanName + '\'' +
+                ", clanName" + clanName +
                 ", totalClanPower=" + totalClanPower +
                 ", clanMembersNumber=" + clanMembersNumber +
                 ", clanMembersMax=" + clanMembersMax +
