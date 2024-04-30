@@ -116,89 +116,6 @@
             android:layout_marginTop="8dp"/>
     </LinearLayout>
 
-    <!-- Troop Levels Section -->
-    <TextView
-        android:id="@+id/troopLevelsLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Troop Levels"
-        android:textColor="@color/white"
-        android:layout_below="@id/troopTypesLayout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"/>
-
-    <LinearLayout
-        android:id="@+id/troopLevelsLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/troopLevelsLabel"
-        android:layout_centerHorizontal="true"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Archers: "
-            android:textColor="@color/white"
-            android:layout_marginTop="8dp"/>
-
-        <TextView
-            android:id="@+id/archersLevel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1"
-            android:textColor="@color/white"
-            android:layout_marginTop="8dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Knights: "
-            android:textColor="@color/white"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"/>
-
-        <TextView
-            android:id="@+id/knightsLevel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1"
-            android:textColor="@color/white"
-            android:layout_marginTop="8dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Mages: "
-            android:textColor="@color/white"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"/>
-
-        <TextView
-            android:id="@+id/magesLevel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1"
-            android:textColor="@color/white"
-            android:layout_marginTop="8dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cavalry: "
-            android:textColor="@color/white"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"/>
-
-        <TextView
-            android:id="@+id/cavalryLevel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1"
-            android:textColor="@color/white"
-            android:layout_marginTop="8dp"/>
-    </LinearLayout>
-
     <!-- Food Remaining Section -->
     <TextView
         android:id="@+id/foodRemainingLabel"
@@ -206,7 +123,7 @@
         android:layout_height="wrap_content"
         android:text="Food Remaining"
         android:textColor="@color/white"
-        android:layout_below="@id/troopLevelsLayout"
+        android:layout_below="@id/troopTypesLayout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"/>
 

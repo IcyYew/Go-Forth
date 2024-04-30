@@ -22,6 +22,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -44,6 +45,7 @@ public class TroopManagementActivity extends AppCompatActivity {
     private int knightsToTrainCount = 0;
     private int magesToTrainCount = 0;
     private int cavalryToTrainCount = 0;
+    private int capacity = 0;
 
     // stores end times
     private String archerFinalDate;
@@ -76,6 +78,10 @@ public class TroopManagementActivity extends AppCompatActivity {
     private SharedPreferences prefs;
     private static final String PREF_NAME = "troop_training_timer";
     private boolean wasTraining;
+    private int archersCount;
+    private int knightsCount;
+    private int magesCount;
+    private int cavalryCount;
     /**
      * onCreate sets onClickListeners to all of the buttons and initializes UI elements. Also gets extras.
      *
@@ -133,6 +139,7 @@ public class TroopManagementActivity extends AppCompatActivity {
 
         // get troop data from server
         getPlayerData();
+        getCapacity();
 
         if (wasTraining) {
             getUpdatedTime();
@@ -208,21 +215,57 @@ public class TroopManagementActivity extends AppCompatActivity {
      */
     private void trainTroops(int amount) {
         if (archersCheckbox.isChecked()) {
-            archersToTrainCount += amount;
+            if ((amount + archersToTrainCount > capacity)) {
+                archersToTrainCount = capacity;
+                Toast.makeText(TroopManagementActivity.this, "Archer capacity Reached.", Toast.LENGTH_SHORT).show();
+            } else if ((amount + archersToTrainCount + archersCount) > capacity) {
+                archersToTrainCount += capacity - archersCount;
+                Toast.makeText(TroopManagementActivity.this, "Archer capacity Reached.", Toast.LENGTH_SHORT).show();
+            } else {
+                archersToTrainCount += amount;
+            }
             archersToTrainCountTextView.setText(String.valueOf(archersToTrainCount));
         }
+
         if (knightsCheckbox.isChecked()) {
-            knightsToTrainCount += amount;
+            if ((amount + knightsToTrainCount > capacity)) {
+                knightsToTrainCount = capacity;
+                Toast.makeText(TroopManagementActivity.this, "Warrior capacity Reached.", Toast.LENGTH_SHORT).show();
+            } else if ((amount + knightsToTrainCount + knightsCount) > capacity) {
+                knightsToTrainCount += capacity - knightsCount;
+                Toast.makeText(TroopManagementActivity.this, "Warrior capacity Reached.", Toast.LENGTH_SHORT).show();
+            } else {
+                knightsToTrainCount += amount;
+            }
             knightsToTrainCountTextView.setText(String.valueOf(knightsToTrainCount));
         }
+
         if (magesCheckbox.isChecked()) {
-            magesToTrainCount += amount;
+            if ((amount + magesToTrainCount > capacity)) {
+                magesToTrainCount = capacity;
+                Toast.makeText(TroopManagementActivity.this, "Mage capacity Reached.", Toast.LENGTH_SHORT).show();
+            } else if ((amount + magesToTrainCount + magesCount) > capacity) {
+                magesToTrainCount += capacity - magesCount;
+                Toast.makeText(TroopManagementActivity.this, "Mage capacity Reached.", Toast.LENGTH_SHORT).show();
+            } else {
+                magesToTrainCount += amount;
+            }
             magesToTrainCountTextView.setText(String.valueOf(magesToTrainCount));
         }
+
         if (cavalryCheckbox.isChecked()) {
-            cavalryToTrainCount += amount;
+            if ((amount + cavalryToTrainCount > capacity)) {
+                cavalryToTrainCount = capacity;
+                Toast.makeText(TroopManagementActivity.this, "Cavalry capacity Reached.", Toast.LENGTH_SHORT).show();
+            } else if ((amount + cavalryToTrainCount + cavalryCount) > capacity) {
+                cavalryToTrainCount += capacity - cavalryCount;
+                Toast.makeText(TroopManagementActivity.this, "Cavalry capacity Reached.", Toast.LENGTH_SHORT).show();
+            } else {
+                cavalryToTrainCount += amount;
+            }
             cavalryToTrainCountTextView.setText(String.valueOf(cavalryToTrainCount));
         }
+
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt("archersToTrainCount", archersToTrainCount);
         editor.putInt("knightsToTrainCount", knightsToTrainCount);
@@ -289,10 +332,10 @@ public class TroopManagementActivity extends AppCompatActivity {
                             foodCountTextView.setText(String.valueOf(foodCount));
 
                             JSONObject troopsObject = response.getJSONObject("troops");
-                            int archersCount = troopsObject.getInt("archerNum");
-                            int knightsCount = troopsObject.getInt("warriorNum");
-                            int magesCount = troopsObject.getInt("mageNum");
-                            int cavalryCount = troopsObject.getInt("cavalryNum");
+                            archersCount = troopsObject.getInt("archerNum");
+                            knightsCount = troopsObject.getInt("warriorNum");
+                            magesCount = troopsObject.getInt("mageNum");
+                            cavalryCount = troopsObject.getInt("cavalryNum");
 
                             archersCountTextView.setText(String.valueOf(archersCount));
                             knightsCountTextView.setText(String.valueOf(knightsCount));
@@ -312,6 +355,40 @@ public class TroopManagementActivity extends AppCompatActivity {
                 });
 
         // add to volley queue
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+    }
+
+    private void getCapacity() {
+        String url = "http://coms-309-048.class.las.iastate.edu:8080/buildings/research/getallresearch/" + userID;
+
+        // make a StringRequest to get the users from the server. Converts JSONArray into StringBuilder.
+        StringRequest request = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray jsonArray = new JSONArray(response);
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject researchObject = jsonArray.getJSONObject(i);
+                                if (researchObject.get("researchName").equals("Training Capacity")) {
+                                    int troopCapacityLevel;
+                                    troopCapacityLevel = researchObject.getInt("level");
+                                    capacity = 10 * (troopCapacityLevel + 1);
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), "Error fetching players: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        // add to the request queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 
