@@ -86,15 +86,6 @@ public class ClanJoinActivity extends AppCompatActivity {
                                             join(jsonArray.getJSONObject(i).getInt("clanID")); //join clan
                                             return; //exit
                                         }
-                                        else if(clanObject.getInt("clanMembersNumber") != 50){
-                                            Toast toast = Toast.makeText(ClanJoinActivity.this, "Clan Does not Exist", Toast.LENGTH_SHORT);
-                                            toast.show();
-                                        }
-                                        else{
-                                            Toast toast = Toast.makeText(ClanJoinActivity.this, "Clan is full", Toast.LENGTH_SHORT);
-                                            toast.show();
-                                        }
-
                                         }
 
                                 } catch (JSONException e) {
@@ -154,6 +145,11 @@ public class ClanJoinActivity extends AppCompatActivity {
         // add to volley request queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
         //goes to ClanActivity with userID
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         Intent intent = new Intent(ClanJoinActivity.this, ClanActivity.class);
         intent.putExtra("ID", String.valueOf(userID));
         startActivity(intent);
