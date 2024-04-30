@@ -265,7 +265,7 @@ public class ClanActivity extends AppCompatActivity {
                                 JSONObject clanObject = jsonArray.getJSONObject(ID);
                                 ClanName.setText("Clan: " + clanObject.getString("clanName")); //Set clanname
                                 ClanName.append("\n ID: ");
-                                ClanName.append(Integer.toString(ID + 1));
+                                ClanName.append(Integer.toString(ID));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

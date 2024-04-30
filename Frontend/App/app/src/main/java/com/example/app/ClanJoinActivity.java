@@ -99,8 +99,6 @@ public class ClanJoinActivity extends AppCompatActivity {
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
-                                } catch (InterruptedException e) {
-                                    throw new RuntimeException(e);
                                 }
                                 //username does not exist
 
@@ -124,7 +122,7 @@ public class ClanJoinActivity extends AppCompatActivity {
      * Join a clan
      * @param ID ID of the clan to join
      */
-    private void join(int ID) throws InterruptedException {
+    private void join(int ID) {
         String url = "http://coms-309-048.class.las.iastate.edu:8080/clans/addmember";
 
         // Create a JSONObject with the clan's details
@@ -156,7 +154,6 @@ public class ClanJoinActivity extends AppCompatActivity {
         // add to volley request queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
         //goes to ClanActivity with userID
-        Thread.sleep(500);
         Intent intent = new Intent(ClanJoinActivity.this, ClanActivity.class);
         intent.putExtra("ID", String.valueOf(userID));
         startActivity(intent);

@@ -98,8 +98,6 @@ public class ClanCreateActivity extends AppCompatActivity {
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
-                                } catch (InterruptedException e) {
-                                    throw new RuntimeException(e);
                                 }
                             }
                         },
@@ -123,7 +121,7 @@ public class ClanCreateActivity extends AppCompatActivity {
      * Creates a new clan and goes back to ClanActivity
      * @param clanname name of the new clan
      */
-    private void createNewClan(String clanname) throws InterruptedException {
+    private void createNewClan(String clanname) {
         String url = "http://coms-309-048.class.las.iastate.edu:8080/clans/createclan"; //URL to create clan
 
         // Create a JSONObject with the clan's details
@@ -154,7 +152,6 @@ public class ClanCreateActivity extends AppCompatActivity {
 
         // add to volley request queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
-        Thread.sleep(500);
         Intent intent = new Intent(ClanCreateActivity.this, ClanActivity.class);
         intent.putExtra("ID", String.valueOf(userID));
         startActivity(intent);
