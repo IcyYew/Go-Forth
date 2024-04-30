@@ -1,0 +1,370 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > TroopCombatCalculator</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">troops</a>
+</div>
+
+<h1>Coverage Summary for Class: TroopCombatCalculator (troops)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TroopCombatCalculator</td>
+<td class="coverageStat">
+  <span class="percent">
+    83.3%
+  </span>
+  <span class="absValue">
+    (5/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    45.6%
+  </span>
+  <span class="absValue">
+    (52/114)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">TroopCombatCalculator$Result</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    85.7%
+  </span>
+  <span class="absValue">
+    (6/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    46.1%
+  </span>
+  <span class="absValue">
+    (53/115)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package troops;
+&nbsp;
+&nbsp;import static troops.TroopTypes.*;
+&nbsp;
+&nbsp;/**
+&nbsp; * The class for Troop Combat Calculation.
+&nbsp; * This class calculates the outcomes of battles in the game.
+&nbsp; * The calculation uses a points system that takes into account the attributes of each type of troop in combat.
+&nbsp; * There are several different potential outcomes for a fight based on the point calculation.
+&nbsp; * @author Michael Geltz
+&nbsp; */
+&nbsp;public class TroopCombatCalculator {
+&nbsp;    // Player v Player combat is based on a points system calculated with the below values
+<b class="fc">&nbsp;    final double ptsPerDamage = 2.5;</b>
+<b class="fc">&nbsp;    final double ptsPerHealth = 2.0;</b>
+<b class="fc">&nbsp;    final double ptsPerAttackSpeed = 3.0;</b>
+<b class="fc">&nbsp;    final double ptsPerMovementSpeed = 3.0;</b>
+&nbsp;    // Only three results defined here but a tie can result in one favoring the attacker or defender
+<b class="fc">&nbsp;    private enum Result  {ATTACKER_WIN, DEFENDER_WIN, TIE}</b>
+&nbsp;
+<b class="fc">&nbsp;    Result result = Result.TIE;</b>
+&nbsp;
+&nbsp;    // Takes in two different players troops, directly calls the battle method, a better way of doing this
+&nbsp;    // to be implemented eventually
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructor for the Troop Combat Calculator.
+&nbsp;     * Calls the battle method with the attack and defender parameters.
+&nbsp;     * @param attacker TroopManager for the attacking player.
+&nbsp;     * @param defender TroopManager for the defending player.
+&nbsp;     */
+<b class="fc">&nbsp;    public TroopCombatCalculator(TroopManager attacker, TroopManager defender) {</b>
+<b class="fc">&nbsp;        battle(attacker, defender);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Battle class to calculate who won a battle, who is attacker and defender is entirely arbitrary
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Method which determines the outcome of a battle.
+&nbsp;     * First, the point total for each player&#39;s army is calculated by calling the calculatePlayerPoints method for each.
+&nbsp;     * Next, the point totals are compared and the percentage difference is calculated.
+&nbsp;     * Then, the percentage difference is used to determine which of the 5 battle outcomes occurs.
+&nbsp;     * Finally, calls the troopDeaths method to determine the losses for each player.
+&nbsp;     * @param attacker TroopManager for the attacking player.
+&nbsp;     * @param defender TroopManager for the defending player.
+&nbsp;     */
+&nbsp;    public void battle(TroopManager attacker, TroopManager defender) {
+<b class="fc">&nbsp;        double attackerPts = 0;</b>
+<b class="fc">&nbsp;        double defenderPts = 0;</b>
+<b class="fc">&nbsp;        double ptsDiffPercent = 0;</b>
+&nbsp;        // Battle system gives our 5 different &quot;types&quot; of battle result depending on how the points-based calculation fairs
+<b class="fc">&nbsp;        int type = 0;</b>
+&nbsp;
+<b class="fc">&nbsp;        attackerPts = calculatePlayerPoints(attacker);</b>
+<b class="fc">&nbsp;        defenderPts = calculatePlayerPoints(defender);</b>
+&nbsp;
+&nbsp;        // Take absolute difference of two point values to figure out how advantaged the battle was
+<b class="fc">&nbsp;        double ptsDifference = Math.abs(attackerPts - defenderPts);</b>
+<b class="fc">&nbsp;        if(attackerPts &gt; defenderPts) {</b>
+<b class="nc">&nbsp;            ptsDiffPercent = defenderPts / attackerPts;</b>
+&nbsp;        }
+&nbsp;        else {
+<b class="fc">&nbsp;            ptsDiffPercent = attackerPts / defenderPts;</b>
+&nbsp;        }
+&nbsp;        // The points differences defined in the logic below are not very good, need to do substantial testing or
+&nbsp;
+&nbsp;        // a different method of determining battle types, this is mostly for testing
+&nbsp;        // Tie with slight attacker advantage
+<b class="fc">&nbsp;        if (ptsDiffPercent &gt;= .85 &amp;&amp; attackerPts &gt;= defenderPts) {</b>
+<b class="nc">&nbsp;            type = 0;</b>
+<b class="nc">&nbsp;            result = Result.TIE;</b>
+&nbsp;        }
+&nbsp;        // Attacker win
+<b class="fc">&nbsp;        else if (ptsDiffPercent &lt; .85 &amp;&amp; ptsDiffPercent &gt; .35 &amp;&amp; attackerPts &gt;= defenderPts) {</b>
+<b class="nc">&nbsp;            type = 1;</b>
+<b class="nc">&nbsp;            result = Result.ATTACKER_WIN;</b>
+&nbsp;        }
+&nbsp;        // Overwhelming attacker victory
+<b class="fc">&nbsp;        else if (ptsDiffPercent &lt;= .35 &amp;&amp; attackerPts &gt;= defenderPts) {</b>
+<b class="nc">&nbsp;            type = 2;</b>
+<b class="nc">&nbsp;            result = Result.ATTACKER_WIN;</b>
+&nbsp;        }
+&nbsp;        // Tie with slight defender advantage
+<b class="fc">&nbsp;        else if (ptsDiffPercent &gt;= .85 &amp;&amp; attackerPts &lt;= defenderPts) {</b>
+<b class="nc">&nbsp;            type = 3;</b>
+<b class="nc">&nbsp;            result = Result.TIE;</b>
+&nbsp;        }
+&nbsp;        // Defender win
+<b class="fc">&nbsp;        else if (ptsDiffPercent &lt; .85 &amp;&amp; ptsDiffPercent &gt; .35 &amp;&amp; attackerPts &lt;= defenderPts) {</b>
+<b class="nc">&nbsp;            type = 4;</b>
+<b class="nc">&nbsp;            result = Result.DEFENDER_WIN;</b>
+&nbsp;        }
+&nbsp;        // Overwhelming defender win
+<b class="fc">&nbsp;        else if (ptsDiffPercent &lt;= .35 &amp;&amp; attackerPts &lt;= defenderPts) {</b>
+<b class="nc">&nbsp;             type = 5;</b>
+<b class="nc">&nbsp;             result = Result.DEFENDER_WIN;</b>
+&nbsp;        }
+&nbsp;        // Update player troops based on battle result
+<b class="fc">&nbsp;        troopDeaths(attacker, defender, type);</b>
+&nbsp;    }
+&nbsp;    // Returns result enum in String format
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Method to return the result of a battle.
+&nbsp;     * @return Returns a String result.
+&nbsp;     */
+&nbsp;    public String getResult() {
+<b class="fc">&nbsp;        return result.toString();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Update troops for both attacker and defender based on battle result or &quot;type&quot;
+&nbsp;    // Pretty messy system of doing this, could be made to look nicer in a couple of separate methods but this
+&nbsp;    // works and I don&#39;t see it as prudent to change for now
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Method for updating the troop quantities for each player based on the outcome determined by the battle method.
+&nbsp;     * A better outcome for the attacker and therefore a worse outcome for the defender will result in few losses for the attacker and more losses for the defender, and vice versa.
+&nbsp;     * @param attacker TroopManager for the attacking player.
+&nbsp;     * @param defender TroopManager for the defending player.
+&nbsp;     * @param type The outcome determined by the battle Method.
+&nbsp;     */
+&nbsp;    public void troopDeaths(TroopManager attacker, TroopManager defender, int type) {
+<b class="fc">&nbsp;        switch (type) {</b>
+&nbsp;            // Tie with attacker advantage, attacker loses 40% of troops they had prior to battle, defender loses 50%
+&nbsp;            case 0:
+<b class="fc">&nbsp;                attacker.removeTroop(ARCHER, (int)(attacker.getTroopNum(ARCHER) * 0.4));</b>
+<b class="fc">&nbsp;                defender.removeTroop(ARCHER, (int)(defender.getTroopNum(ARCHER) * 0.5));</b>
+<b class="fc">&nbsp;                attacker.removeTroop(WARRIOR, (int)(attacker.getTroopNum(WARRIOR) * 0.4));</b>
+<b class="fc">&nbsp;                defender.removeTroop(WARRIOR, (int)(defender.getTroopNum(WARRIOR) * 0.5));</b>
+<b class="fc">&nbsp;                attacker.removeTroop(MAGE, (int)(attacker.getTroopNum(MAGE) * 0.4));</b>
+<b class="fc">&nbsp;                defender.removeTroop(MAGE, (int)(defender.getTroopNum(MAGE) * 0.5));</b>
+<b class="fc">&nbsp;                attacker.removeTroop(CAVALRY, (int)(attacker.getTroopNum(CAVALRY) * 0.4));</b>
+<b class="fc">&nbsp;                defender.removeTroop(CAVALRY, (int)(defender.getTroopNum(CAVALRY) * 0.5));</b>
+<b class="fc">&nbsp;                break;</b>
+&nbsp;            // Attacker win, attacker loses 30% of troops they had prior to battle, defender loses 70%
+&nbsp;            case 1:
+<b class="nc">&nbsp;                attacker.removeTroop(ARCHER, (int)(attacker.getTroopNum(ARCHER) * 0.3));</b>
+<b class="nc">&nbsp;                defender.removeTroop(ARCHER, (int)(defender.getTroopNum(ARCHER) * 0.7));</b>
+<b class="nc">&nbsp;                attacker.removeTroop(WARRIOR, (int)(attacker.getTroopNum(WARRIOR) * 0.3));</b>
+<b class="nc">&nbsp;                defender.removeTroop(WARRIOR, (int)(defender.getTroopNum(WARRIOR) * 0.7));</b>
+<b class="nc">&nbsp;                attacker.removeTroop(MAGE, (int)(attacker.getTroopNum(MAGE) * 0.3));</b>
+<b class="nc">&nbsp;                defender.removeTroop(MAGE, (int)(defender.getTroopNum(MAGE) * 0.7));</b>
+<b class="nc">&nbsp;                attacker.removeTroop(CAVALRY, (int)(attacker.getTroopNum(CAVALRY) * 0.3));</b>
+<b class="nc">&nbsp;                defender.removeTroop(CAVALRY, (int)(defender.getTroopNum(CAVALRY) * 0.7));</b>
+<b class="nc">&nbsp;                break;</b>
+&nbsp;            // Overwhelming attacker win, attacker loses 10% of troops they had prior to battle, defender loses 80%
+&nbsp;            case 2:
+<b class="nc">&nbsp;                attacker.removeTroop(ARCHER, (int)(attacker.getTroopNum(ARCHER) * 0.01));</b>
+<b class="nc">&nbsp;                defender.removeTroop(ARCHER, defender.getTroopNum(ARCHER));</b>
+<b class="nc">&nbsp;                attacker.removeTroop(WARRIOR, (int)(attacker.getTroopNum(WARRIOR) * 0.01));</b>
+<b class="nc">&nbsp;                defender.removeTroop(WARRIOR, defender.getTroopNum(WARRIOR));</b>
+<b class="nc">&nbsp;                attacker.removeTroop(MAGE, (int)(attacker.getTroopNum(MAGE) * 0.01));</b>
+<b class="nc">&nbsp;                defender.removeTroop(MAGE, defender.getTroopNum(MAGE));</b>
+<b class="nc">&nbsp;                attacker.removeTroop(CAVALRY, (int)(attacker.getTroopNum(CAVALRY) * 0.01));</b>
+<b class="nc">&nbsp;                defender.removeTroop(CAVALRY, defender.getTroopNum(CAVALRY));</b>
+<b class="nc">&nbsp;                break;</b>
+&nbsp;            // Tie with defender advantage, defender loses 40% of troops they had prior to battle, attacker loses 50%
+&nbsp;            case 3:
+<b class="nc">&nbsp;                attacker.removeTroop(ARCHER, (int)(attacker.getTroopNum(ARCHER) * 0.5));</b>
+<b class="nc">&nbsp;                defender.removeTroop(ARCHER, (int)(defender.getTroopNum(ARCHER) * 0.4));</b>
+<b class="nc">&nbsp;                attacker.removeTroop(WARRIOR, (int)(attacker.getTroopNum(WARRIOR) * 0.5));</b>
+<b class="nc">&nbsp;                defender.removeTroop(WARRIOR, (int)(defender.getTroopNum(WARRIOR) * 0.4));</b>
+<b class="nc">&nbsp;                attacker.removeTroop(MAGE, (int)(attacker.getTroopNum(MAGE) * 0.5));</b>
+<b class="nc">&nbsp;                defender.removeTroop(MAGE, (int)(defender.getTroopNum(MAGE) * 0.4));</b>
+<b class="nc">&nbsp;                attacker.removeTroop(CAVALRY, (int)(attacker.getTroopNum(CAVALRY) * 0.5));</b>
+<b class="nc">&nbsp;                defender.removeTroop(CAVALRY, (int)(defender.getTroopNum(CAVALRY) * 0.4));</b>
+<b class="nc">&nbsp;                break;</b>
+&nbsp;            // Defender win, defender loses 30% of troops they had prior to battle, attacker loses 70%
+&nbsp;            case 4:
+<b class="nc">&nbsp;                attacker.removeTroop(ARCHER, (int)(attacker.getTroopNum(ARCHER) * 0.7));</b>
+<b class="nc">&nbsp;                defender.removeTroop(ARCHER, (int)(defender.getTroopNum(ARCHER) * 0.3));</b>
+<b class="nc">&nbsp;                attacker.removeTroop(WARRIOR, (int)(attacker.getTroopNum(WARRIOR) * 0.7));</b>
+<b class="nc">&nbsp;                defender.removeTroop(WARRIOR, (int)(defender.getTroopNum(WARRIOR) * 0.3));</b>
+<b class="nc">&nbsp;                attacker.removeTroop(MAGE, (int)(attacker.getTroopNum(MAGE) * 0.7));</b>
+<b class="nc">&nbsp;                defender.removeTroop(MAGE, (int)(defender.getTroopNum(MAGE) * 0.3));</b>
+<b class="nc">&nbsp;                attacker.removeTroop(CAVALRY, (int)(attacker.getTroopNum(CAVALRY) * 0.7));</b>
+<b class="nc">&nbsp;                defender.removeTroop(CAVALRY, (int)(defender.getTroopNum(CAVALRY) * 0.3));</b>
+<b class="nc">&nbsp;                break;</b>
+&nbsp;            // Overwhelming defender win, defender loses 10% of troops they had prior to battle, attacker loses 80%
+&nbsp;            case 5:
+<b class="nc">&nbsp;                attacker.removeTroop(ARCHER, attacker.getTroopNum(ARCHER));</b>
+<b class="nc">&nbsp;                defender.removeTroop(ARCHER, (int)(defender.getTroopNum(ARCHER) * 0.01));</b>
+<b class="nc">&nbsp;                attacker.removeTroop(WARRIOR, attacker.getTroopNum(WARRIOR));</b>
+<b class="nc">&nbsp;                defender.removeTroop(WARRIOR, (int)(defender.getTroopNum(WARRIOR) * 0.01));</b>
+<b class="nc">&nbsp;                attacker.removeTroop(MAGE, attacker.getTroopNum(MAGE));</b>
+<b class="nc">&nbsp;                defender.removeTroop(MAGE, (int)(defender.getTroopNum(MAGE) * 0.01));</b>
+<b class="nc">&nbsp;                attacker.removeTroop(CAVALRY, attacker.getTroopNum(CAVALRY));</b>
+<b class="nc">&nbsp;                defender.removeTroop(CAVALRY, (int)(defender.getTroopNum(CAVALRY) * 0.01));</b>
+&nbsp;                break;
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    // Basic points based calculation to derive battle result
+&nbsp;
+&nbsp;    /**
+&nbsp;     * This method calculates the player&#39;s points total to be used in combat.
+&nbsp;     * The total strength of a player&#39;s army is calculated using the number of each troop type in the army and the attributes of each troop type.
+&nbsp;     * @param player TroopManager for the current player&#39;s troops.
+&nbsp;     * @return Returns a double representing the player&#39;s army&#39;s strength.
+&nbsp;     */
+&nbsp;    public double calculatePlayerPoints(TroopManager player) {
+<b class="fc">&nbsp;        double playerPts = 0;</b>
+<b class="fc">&nbsp;        Archer archer = new Archer();</b>
+<b class="fc">&nbsp;        Warrior warrior = new Warrior();</b>
+<b class="fc">&nbsp;        Mage mage = new Mage();</b>
+<b class="fc">&nbsp;        Cavalry cavalry = new Cavalry();</b>
+&nbsp;
+<b class="fc">&nbsp;        int archers = player.getTroopNum(ARCHER);</b>
+<b class="fc">&nbsp;        int warriors = player.getTroopNum(WARRIOR);</b>
+<b class="fc">&nbsp;        int mages = player.getTroopNum(MAGE);</b>
+<b class="fc">&nbsp;        int cavalryNum = player.getTroopNum(CAVALRY);</b>
+&nbsp;
+&nbsp;        // Player points updated by the muliplication of the following three parameters for all troop types:
+&nbsp;        // 1) amount of (insert troop type) possessed by the player
+&nbsp;        // 2) (insert troop types)&#39;s stat
+&nbsp;        // 3) points awarded for that stat
+<b class="fc">&nbsp;        playerPts += (archers * archer.getAttackSpeed() * ptsPerAttackSpeed) + (archers * archer.getHealth() * ptsPerHealth) + (archers * archer.getDamage() * ptsPerDamage) +</b>
+<b class="fc">&nbsp;                (archers * archer.getMovementSpeed() * ptsPerMovementSpeed);</b>
+<b class="fc">&nbsp;        playerPts += (warriors * warrior.getAttackSpeed() * ptsPerAttackSpeed) + (warriors * warrior.getHealth() * ptsPerHealth) + (warriors * warrior.getDamage() * ptsPerDamage) +</b>
+<b class="fc">&nbsp;                (warriors * warrior.getMovementSpeed() * ptsPerMovementSpeed);</b>
+<b class="fc">&nbsp;        playerPts += (mages * mage.getAttackSpeed() * ptsPerAttackSpeed) + (mages * mage.getHealth() * ptsPerHealth) + (mages * mage.getDamage() * ptsPerDamage) +</b>
+<b class="fc">&nbsp;                (mages * mage.getMovementSpeed() * ptsPerMovementSpeed);</b>
+<b class="fc">&nbsp;        playerPts += (cavalryNum * cavalry.getAttackSpeed() * ptsPerAttackSpeed) + (cavalryNum * cavalry.getHealth() * ptsPerHealth) + (cavalryNum * cavalry.getDamage() * ptsPerDamage) +</b>
+<b class="fc">&nbsp;                (cavalryNum * cavalry.getMovementSpeed() * ptsPerMovementSpeed);</b>
+&nbsp;
+<b class="fc">&nbsp;        return playerPts;</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    //seems a bit too complex atm, maybe implement later
+&nbsp;    public double calculateWeaknessVariable(TroopManager attacker, TroopManager defender) {
+<b class="nc">&nbsp;        int archers = attacker.getTroopNum(ARCHER);</b>
+<b class="nc">&nbsp;        int warriors = attacker.getTroopNum(WARRIOR);</b>
+<b class="nc">&nbsp;        int mages = attacker.getTroopNum(MAGE);</b>
+<b class="nc">&nbsp;        int cavalryNum = attacker.getTroopNum(CAVALRY);</b>
+&nbsp;
+<b class="nc">&nbsp;        return 0;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-04-29 22:53</div>
+</div>
+</body>
+</html>
