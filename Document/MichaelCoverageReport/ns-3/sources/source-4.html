@@ -1,0 +1,188 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > TroopBuildingManager</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">buildings.troopBuildings</a>
+</div>
+
+<h1>Coverage Summary for Class: TroopBuildingManager (buildings.troopBuildings)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TroopBuildingManager</td>
+<td class="coverageStat">
+  <span class="percent">
+    16.7%
+  </span>
+  <span class="absValue">
+    (1/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    5%
+  </span>
+  <span class="absValue">
+    (1/20)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">TroopBuildingManager$HibernateInstantiator$iSvH3iIx</td>
+  </tr>
+  <tr>
+    <td class="name">TroopBuildingManager$HibernateProxy$rTAE0Ceb</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    16.7%
+  </span>
+  <span class="absValue">
+    (1/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    5%
+  </span>
+  <span class="absValue">
+    (1/20)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package buildings.troopBuildings;
+&nbsp;
+&nbsp;import buildings.BuildingTypes;
+&nbsp;import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+&nbsp;import jakarta.persistence.*;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Entity
+<b class="fc">&nbsp;public class TroopBuildingManager</b>
+&nbsp;{
+&nbsp;    @Id
+&nbsp;    @GeneratedValue(strategy = GenerationType.IDENTITY)
+&nbsp;    private Integer playerId;
+&nbsp;
+&nbsp;    @OneToMany(mappedBy = &quot;troopBuildingManager&quot;, cascade = CascadeType.ALL)
+&nbsp;    private List&lt;TroopTrainingBuilding&gt; troopBuildingManager;
+&nbsp;
+&nbsp;    private void initializeTroopBuildings()
+&nbsp;    {
+<b class="nc">&nbsp;        troopBuildingManager.add(new ArcheryRange(1, this));</b>
+<b class="nc">&nbsp;        troopBuildingManager.add(new MageTower(1, this));</b>
+<b class="nc">&nbsp;        troopBuildingManager.add(new Stables(1, this));</b>
+<b class="nc">&nbsp;        troopBuildingManager.add(new WarriorSchool(1, this));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public int getLevel(BuildingTypes buildingType)
+&nbsp;    {
+<b class="nc">&nbsp;        for (TroopTrainingBuilding troopTrainingBuilding : troopBuildingManager)</b>
+&nbsp;        {
+<b class="nc">&nbsp;            if (troopTrainingBuilding.getBuildingType() == buildingType)</b>
+&nbsp;            {
+<b class="nc">&nbsp;                return troopTrainingBuilding.getLevel();</b>
+&nbsp;            }
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        return 0;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String trainTroops(BuildingTypes buildingType, int quantity)
+&nbsp;    {
+<b class="nc">&nbsp;        for (TroopTrainingBuilding troopTrainingBuilding : troopBuildingManager)</b>
+&nbsp;        {
+<b class="nc">&nbsp;            if (troopTrainingBuilding.getBuildingType() == buildingType)</b>
+&nbsp;            {
+<b class="nc">&nbsp;                return troopTrainingBuilding.trainBatch(quantity);</b>
+&nbsp;            }
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void upgradeBuilding(BuildingTypes buildingType) throws Exception
+&nbsp;    {
+<b class="nc">&nbsp;        for (TroopTrainingBuilding troopTrainingBuilding : troopBuildingManager)</b>
+&nbsp;        {
+<b class="nc">&nbsp;            if (troopTrainingBuilding.getBuildingType() == buildingType)</b>
+&nbsp;            {
+<b class="nc">&nbsp;                troopTrainingBuilding.upgrade();</b>
+&nbsp;            }
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String toString()
+&nbsp;    {
+<b class="nc">&nbsp;        return &quot;TroopManager{&quot; +</b>
+&nbsp;                &quot;playerId=&quot; + playerId +
+&nbsp;                &quot;, troopManager=&quot; + troopBuildingManager +
+&nbsp;                &#39;}&#39;;
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-04-29 22:53</div>
+</div>
+</body>
+</html>
