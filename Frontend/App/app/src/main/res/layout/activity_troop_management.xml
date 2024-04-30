@@ -2,6 +2,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/backgroundGif"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true" />
+
     <!-- Back Button -->
     <Button
         android:id="@+id/backButton"
@@ -22,6 +29,7 @@
         android:layout_height="wrap_content"
         android:text="Troop Management"
         android:textSize="20sp"
+        android:textColor="@color/white"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/backButton"/>
 
@@ -31,6 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Total Troops"
+        android:textColor="@color/white"
         android:layout_below="@id/troopManagementTitle"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"/>
@@ -47,6 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Archers: "
+            android:textColor="@color/white"
             android:layout_marginTop="8dp"/>
 
         <TextView
@@ -54,12 +64,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
+            android:textColor="@color/white"
             android:layout_marginTop="8dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Knights: "
+            android:textColor="@color/white"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"/>
 
@@ -68,12 +80,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
+            android:textColor="@color/white"
             android:layout_marginTop="8dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Mages: "
+            android:textColor="@color/white"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"/>
 
@@ -82,12 +96,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
+            android:textColor="@color/white"
             android:layout_marginTop="8dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cavalry: "
+            android:textColor="@color/white"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"/>
 
@@ -96,6 +112,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
+            android:textColor="@color/white"
             android:layout_marginTop="8dp"/>
     </LinearLayout>
 
@@ -105,6 +122,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Troop Levels"
+        android:textColor="@color/white"
         android:layout_below="@id/troopTypesLayout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"/>
@@ -121,6 +139,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Archers: "
+            android:textColor="@color/white"
             android:layout_marginTop="8dp"/>
 
         <TextView
@@ -128,12 +147,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1"
+            android:textColor="@color/white"
             android:layout_marginTop="8dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Knights: "
+            android:textColor="@color/white"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"/>
 
@@ -142,12 +163,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1"
+            android:textColor="@color/white"
             android:layout_marginTop="8dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Mages: "
+            android:textColor="@color/white"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"/>
 
@@ -156,12 +179,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1"
+            android:textColor="@color/white"
             android:layout_marginTop="8dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cavalry: "
+            android:textColor="@color/white"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"/>
 
@@ -170,6 +195,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1"
+            android:textColor="@color/white"
             android:layout_marginTop="8dp"/>
     </LinearLayout>
 
@@ -179,6 +205,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Food Remaining"
+        android:textColor="@color/white"
         android:layout_below="@id/troopLevelsLayout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"/>
@@ -188,6 +215,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="1000"
+        android:textColor="@color/white"
         android:layout_below="@id/foodRemainingLabel"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="8dp"/>
@@ -199,6 +227,7 @@
         android:layout_height="wrap_content"
         android:text="Train Troops"
         android:textSize="20sp"
+        android:textColor="@color/white"
         android:layout_below="@id/foodRemainingCount"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"/>
@@ -217,6 +246,7 @@
             android:id="@+id/archersCheckbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
             android:text="Archers"/>
 
         <CheckBox
@@ -224,6 +254,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Knights"
+            android:textColor="@color/white"
             android:layout_marginStart="16dp"/>
 
         <CheckBox
@@ -231,6 +262,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Mages"
+            android:textColor="@color/white"
             android:layout_marginStart="16dp"/>
 
         <CheckBox
@@ -238,6 +270,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cavalry"
+            android:textColor="@color/white"
             android:layout_marginStart="16dp"/>
 
     </LinearLayout>
@@ -247,6 +280,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Troops to be Trained:"
+        android:textColor="@color/white"
         android:layout_below="@id/checkboxesLayout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"/>
@@ -264,6 +298,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
             android:text="Archers:"/>
 
         <TextView
@@ -271,12 +306,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
+            android:textColor="@color/white"
             android:layout_marginStart="8dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Knights:"
+            android:textColor="@color/white"
             android:layout_marginStart="16dp"/>
 
         <TextView
@@ -284,12 +321,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
+            android:textColor="@color/white"
             android:layout_marginStart="8dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Mages:"
+            android:textColor="@color/white"
             android:layout_marginStart="16dp"/>
 
         <TextView
@@ -297,12 +336,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
+            android:textColor="@color/white"
             android:layout_marginStart="8dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cavalry:"
+            android:textColor="@color/white"
             android:layout_marginStart="16dp"/>
 
         <TextView
@@ -310,6 +351,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
+            android:textColor="@color/white"
             android:layout_marginStart="8dp"/>
 
     </LinearLayout>
@@ -359,6 +401,7 @@
         android:layout_height="wrap_content"
         android:text="Beware: Training a lot of troops will take up more food"
         android:layout_below="@id/trainingButtonsLayout"
+        android:textColor="@color/white"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"/>
 
@@ -367,6 +410,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Training Time:"
+        android:textColor="@color/white"
         android:layout_below="@id/trainingWarning"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"/>
@@ -376,6 +420,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0 minutes"
+        android:textColor="@color/white"
         android:layout_below="@id/trainingTimeLabel"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="8dp"/>

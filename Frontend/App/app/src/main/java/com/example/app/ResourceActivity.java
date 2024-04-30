@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.content.Intent;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.bumptech.glide.Glide;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,6 +64,7 @@ public class ResourceActivity extends AppCompatActivity {
     private Thread updateThread;
 
     private boolean stopThread;
+    private ImageView gifImageView;
 
     /**
      * On the creation of this activity, TextViews and Buttons are initialized.
@@ -104,6 +107,13 @@ public class ResourceActivity extends AppCompatActivity {
         Back = findViewById(R.id.Back);
         updateCurrentStorage();
         updateBuildingAmount();
+
+        gifImageView = findViewById(R.id.gifImageView);
+
+        Glide.with(this)
+                .asGif()
+                .load(R.raw.resources)
+                .into(gifImageView);
 
         stopThread = false;
 

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.content.Intent;
 import android.widget.Toast;
@@ -19,6 +20,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.bumptech.glide.Glide;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -122,6 +124,12 @@ public class TroopManagementActivity extends AppCompatActivity {
         cavalryCheckbox = findViewById(R.id.cavalryCheckbox);
 
         Button backButton = findViewById(R.id.backButton);
+
+        ImageView backgroundGif = findViewById(R.id.backgroundGif);
+        Glide.with(this)
+                .asGif()
+                .load(R.raw.campfire)
+                .into(backgroundGif);
 
         // get troop data from server
         getPlayerData();
