@@ -249,7 +249,7 @@ public class ResourceActivity extends AppCompatActivity {
     private void updateCurrentStorage() {
         String url = "http://coms-309-048.class.las.iastate.edu:8080/players/getPlayer/" + String.valueOf(userID);
 
-        // makes JsonObjectRequest to get the current player.
+        // makes JsonObjectRequest to get the current player. GETs the archerNum, warriorNum, mageNum, and cavalryNum
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -284,9 +284,6 @@ public class ResourceActivity extends AppCompatActivity {
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 
-    /**
-     * Constant calls to update resource count in buildings
-     */
     class UpdateThread implements Runnable {
     public void run()
     {
