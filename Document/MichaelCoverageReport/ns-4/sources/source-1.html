@@ -1,0 +1,288 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > Clan</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">clans</a>
+</div>
+
+<h1>Coverage Summary for Class: Clan (clans)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Clan</td>
+<td class="coverageStat">
+  <span class="percent">
+    42.1%
+  </span>
+  <span class="absValue">
+    (8/19)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    46.2%
+  </span>
+  <span class="absValue">
+    (12/26)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Clan$HibernateInstantiator$UtPrexZM</td>
+  </tr>
+  <tr>
+    <td class="name">Clan$HibernateProxy$ihj2gffT</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    42.1%
+  </span>
+  <span class="absValue">
+    (8/19)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    46.2%
+  </span>
+  <span class="absValue">
+    (12/26)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package clans;
+&nbsp;
+&nbsp;import jakarta.persistence.*;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import player.Player;
+&nbsp;import player.PlayerRepository;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;/**
+&nbsp; * Class for Clans.
+&nbsp; * Contains table information and getters and setters for the Clan.
+&nbsp; */
+&nbsp;@Entity
+&nbsp;public class Clan {
+&nbsp;
+&nbsp;
+&nbsp;    @Id
+&nbsp;    @GeneratedValue(strategy = GenerationType.IDENTITY)
+&nbsp;    private Integer clanID;
+&nbsp;
+&nbsp;    @Column(name=&quot;clan-name&quot;)
+&nbsp;    private String clanName;
+&nbsp;
+&nbsp;    @Column(name=&quot;clan-power&quot;)
+&nbsp;    private double totalClanPower;
+&nbsp;
+&nbsp;    @Column(name=&quot;num-members&quot;)
+&nbsp;    private int clanMembersNumber;
+&nbsp;
+<b class="fc">&nbsp;    @Column(name=&quot;max-members&quot;)</b>
+&nbsp;    private int clanMembersMax = 50;
+&nbsp;
+&nbsp;    @OneToOne(cascade = CascadeType.ALL)
+&nbsp;    @JoinColumn(name = &quot;member_manager_id&quot;)
+&nbsp;    private ClanMemberManager memberManager;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets a clan member&#39;s number to the last number in the member list.
+&nbsp;     */
+&nbsp;    public void setClanMembersNumber() {
+<b class="nc">&nbsp;        this.clanMembersNumber = memberManager.getMemberList().size();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Empty constructor for a Clan.
+&nbsp;     */
+<b class="fc">&nbsp;    public Clan() {</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructor for a Clan.
+&nbsp;     * Takes a clan ID, clan name, and a MemberManager.
+&nbsp;     * @param clanID This clan&#39;s ID.
+&nbsp;     * @param clanName This clan&#39;s name.
+&nbsp;     * @param memberManager Member Manager associated with this clan.
+&nbsp;     */
+<b class="fc">&nbsp;    public Clan(int clanID, String clanName, ClanMemberManager memberManager) {</b>
+<b class="fc">&nbsp;        setClanID(clanID);</b>
+<b class="fc">&nbsp;        this.clanName = clanName;</b>
+<b class="fc">&nbsp;        this.memberManager = memberManager;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the clan&#39;s name.
+&nbsp;     * @return Returns the clan&#39;s name as a string.
+&nbsp;     */
+&nbsp;    public String getClanName() {
+<b class="nc">&nbsp;        return clanName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the clan&#39;s name.
+&nbsp;     * @param clanName The name for the clan.
+&nbsp;     */
+&nbsp;    public void setClanName(String clanName) {
+<b class="nc">&nbsp;        this.clanName = clanName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the list of members for this clan.
+&nbsp;     * @param members The ClanMemberManager associated with this clan.
+&nbsp;     */
+&nbsp;    public void setMembers(ClanMemberManager members) {
+<b class="nc">&nbsp;        this.memberManager = members;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public int getClanMembersNumber() {
+<b class="fc">&nbsp;        return clanMembersNumber;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setClanMembersNumber(int clanMembersNumber) {
+<b class="fc">&nbsp;        this.clanMembersNumber = clanMembersNumber;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public int getClanMembersMax() {
+<b class="nc">&nbsp;        return clanMembersMax;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setClanMembersMax(int clanMembersMax) {
+<b class="nc">&nbsp;        this.clanMembersMax = clanMembersMax;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public ClanMemberManager getMemberManager() {
+<b class="fc">&nbsp;        return memberManager;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setMemberManager(ClanMemberManager memberManager) {
+<b class="nc">&nbsp;        this.memberManager = memberManager;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the MemberManager object for this clan.
+&nbsp;     * @return Returns the Membermanager object for this clan.
+&nbsp;     */
+&nbsp;    public ClanMemberManager getMembers() {
+<b class="fc">&nbsp;        return memberManager;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Calculates the combined power of all players in this clan.
+&nbsp;     */
+&nbsp;    public void calculateTotalClanPower() {
+<b class="nc">&nbsp;        this.totalClanPower = 0;</b>
+<b class="nc">&nbsp;        for (Player p : memberManager.getMemberList()) {</b>
+<b class="nc">&nbsp;            totalClanPower += p.getPower();</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public double getTotalClanPower() {
+<b class="nc">&nbsp;        return totalClanPower;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setTotalClanPower(double totalClanPower) {
+<b class="nc">&nbsp;        this.totalClanPower = totalClanPower;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the clan&#39;s ID.
+&nbsp;     * @param clanID The integer ID being used for this clan.
+&nbsp;     */
+&nbsp;    public void setClanID(Integer clanID) {
+<b class="fc">&nbsp;        this.clanID = clanID;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the clan&#39;s ID.
+&nbsp;     * @return Returns the integer ID for this clan.
+&nbsp;     */
+&nbsp;    public Integer getClanID() {
+<b class="nc">&nbsp;        return clanID;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * toString method for displaying this clan.
+&nbsp;     * @return
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public String toString() {
+<b class="fc">&nbsp;        return &quot;Clan{&quot; +</b>
+&nbsp;                &quot;clanID=&quot; + clanID +
+&nbsp;                &quot;, clanName=&#39;&quot; + clanName + &#39;\&#39;&#39; +
+&nbsp;                &quot;, totalClanPower=&quot; + totalClanPower +
+&nbsp;                &quot;, clanMembersNumber=&quot; + clanMembersNumber +
+&nbsp;                &quot;, clanMembersMax=&quot; + clanMembersMax +
+&nbsp;                &#39;}&#39;;
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-04-29 22:53</div>
+</div>
+</body>
+</html>

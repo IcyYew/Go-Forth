@@ -1,0 +1,166 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > Food</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">resources</a>
+</div>
+
+<h1>Coverage Summary for Class: Food (resources)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Food</td>
+<td class="coverageStat">
+  <span class="percent">
+    33.3%
+  </span>
+  <span class="absValue">
+    (1/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    12.5%
+  </span>
+  <span class="absValue">
+    (1/8)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Food$HibernateInstantiator$X8UVB8ed</td>
+  </tr>
+  <tr>
+    <td class="name">Food$HibernateProxy$naF3X5gT</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    33.3%
+  </span>
+  <span class="absValue">
+    (1/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    12.5%
+  </span>
+  <span class="absValue">
+    (1/8)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package resources;
+&nbsp;
+&nbsp;import jakarta.persistence.DiscriminatorColumn;
+&nbsp;import jakarta.persistence.DiscriminatorValue;
+&nbsp;import jakarta.persistence.Entity;
+&nbsp;import player.Player;
+&nbsp;import troops.TroopManager;
+&nbsp;import troops.TroopTypes;
+&nbsp;
+&nbsp;/**
+&nbsp; * The Class for the Food Resource.
+&nbsp; * This class contains the food resource and its consumption calculation.
+&nbsp; * @author Michael Geltz
+&nbsp; */
+&nbsp;@Entity
+&nbsp;@DiscriminatorValue(&quot;FOOD&quot;)
+&nbsp;public class Food extends Resource{
+&nbsp;    private int consumptionRate; // per hour
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructor for Food.
+&nbsp;     * Takes a resourceManager and a quantity as input.
+&nbsp;     * @param resourceManager
+&nbsp;     * @param quantity Quantity of food.
+&nbsp;     */
+&nbsp;    public Food(ResourceManager resourceManager, int quantity) {
+<b class="fc">&nbsp;        super(ResourceType.FOOD, quantity, resourceManager);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Empty Constructor for Food.
+&nbsp;     */
+<b class="nc">&nbsp;    public Food() {</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Calculates the consumption rate of food for a player based on the types and number of troops in an army.
+&nbsp;     * @param player Player for which consumption is being calculated.
+&nbsp;     */
+&nbsp;    public void calculateConsumptionRate(Player player) {
+<b class="nc">&nbsp;        TroopManager tTM = player.getTroops();</b>
+<b class="nc">&nbsp;        this.consumptionRate = 0;</b>
+<b class="nc">&nbsp;        this.consumptionRate += tTM.getTroopNum(TroopTypes.ARCHER) * 10;</b>
+<b class="nc">&nbsp;        this.consumptionRate += tTM.getTroopNum(TroopTypes.MAGE) * 10;</b>
+<b class="nc">&nbsp;        this.consumptionRate += tTM.getTroopNum(TroopTypes.CAVALRY) * 10;</b>
+<b class="nc">&nbsp;        this.consumptionRate += tTM.getTroopNum(TroopTypes.WARRIOR) * 10;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-04-29 22:53</div>
+</div>
+</body>
+</html>
