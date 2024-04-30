@@ -315,11 +315,9 @@ public class BuildingManagementActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-<<<<<<< HEAD
     /**
      * Updates all textviews based what is currently selected on list
      */
-=======
         // Create a JsonObjectRequest with the POST method
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, requestBody,
                 new Response.Listener<JSONObject>() {
@@ -343,7 +341,6 @@ public class BuildingManagementActivity extends AppCompatActivity {
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 
->>>>>>> d09c3528968879d9ac580b15832c381972f82591
     private void updateDisplay(){
         StringBuilder upgradeString = new StringBuilder();
         StringBuilder statsString = new StringBuilder();
