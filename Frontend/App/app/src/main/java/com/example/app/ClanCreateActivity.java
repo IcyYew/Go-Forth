@@ -152,6 +152,11 @@ public class ClanCreateActivity extends AppCompatActivity {
 
         // add to volley request queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         Intent intent = new Intent(ClanCreateActivity.this, ClanActivity.class);
         intent.putExtra("ID", String.valueOf(userID));
         startActivity(intent);

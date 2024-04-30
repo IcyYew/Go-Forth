@@ -5,13 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ResourceActivity">
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ResourceActivity"
         tools:layout_editor_absoluteX="-1dp"
         tools:layout_editor_absoluteY="-28dp">
+
+        <ImageView
+            android:id="@+id/gifImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
             android:id="@+id/foodAmount"
@@ -22,6 +31,7 @@
             android:gravity="center"
             android:text="Food\nAmount:"
             android:textSize="24dp"
+            android:background="#C0FFFFFF"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/FoodText" />
 
@@ -34,6 +44,7 @@
             android:layout_marginEnd="305dp"
             android:text="Wood\nAmount:"
             android:textSize="24dp"
+            android:background="#C0FFFFFF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/foodCollect" />
@@ -47,6 +58,7 @@
             android:gravity="center"
             android:text="Wood\nAmount:"
             android:textSize="24dp"
+            android:background="#C0FFFFFF"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/WoodText" />
 
@@ -59,6 +71,7 @@
             android:gravity="center"
             android:text="Wood\nAmount:"
             android:textSize="24dp"
+            android:background="#C0FFFFFF"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/WoodText" />
 
@@ -71,6 +84,7 @@
             android:gravity="center"
             android:text="Stone\nAmount:"
             android:textSize="24dp"
+            android:background="#C0FFFFFF"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/StoneText" />
 
@@ -83,6 +97,7 @@
             android:gravity="center"
             android:text="Stone\nAmount:"
             android:textSize="24dp"
+            android:background="#C0FFFFFF"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/StoneText" />
 
@@ -95,6 +110,7 @@
             android:layout_marginEnd="302dp"
             android:text="Platinum\nAmount:"
             android:textSize="24dp"
+            android:background="#C0FFFFFF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/stoneCollect" />
@@ -108,6 +124,7 @@
             android:gravity="center"
             android:text="Plat\nAmount:"
             android:textSize="24dp"
+            android:background="#C0FFFFFF"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/PlatinumText" />
 
@@ -120,6 +137,7 @@
             android:gravity="center"
             android:text="Plat\nAmount:"
             android:textSize="24dp"
+            android:background="#C0FFFFFF"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/PlatinumText" />
 
@@ -132,6 +150,7 @@
             android:layout_marginEnd="305dp"
             android:text="Stone\nAmount:"
             android:textSize="24dp"
+            android:background="#C0FFFFFF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/woodCollect" />
@@ -145,6 +164,7 @@
             android:layout_marginEnd="304dp"
             android:text="Food\nAmount:"
             android:textSize="24dp"
+            android:background="#C0FFFFFF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/Back" />
@@ -158,6 +178,7 @@
             android:gravity="center"
             android:text="Food\nAmount:"
             android:textSize="24dp"
+            android:background="#C0FFFFFF"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/FoodText" />
 

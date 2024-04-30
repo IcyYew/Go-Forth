@@ -1,0 +1,671 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > PlayerController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">player</a>
+</div>
+
+<h1>Coverage Summary for Class: PlayerController (player)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PlayerController</td>
+<td class="coverageStat">
+  <span class="percent">
+    15.4%
+  </span>
+  <span class="absValue">
+    (2/13)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    16.2%
+  </span>
+  <span class="absValue">
+    (12/74)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">PlayerController$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">PlayerController$LocationRequest</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">PlayerController$PlayerCreator</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">PlayerController$ResourceRequest</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">PlayerController$TroopRequest</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    20.6%
+  </span>
+  <span class="absValue">
+    (7/34)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    18.4%
+  </span>
+  <span class="absValue">
+    (19/103)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package player;
+&nbsp;
+&nbsp;import buildings.Building;
+&nbsp;import buildings.BuildingManager;
+&nbsp;import buildings.BuildingTypes;
+&nbsp;import buildings.troopBuildings.*;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;import resources.ResourceManager;
+&nbsp;import resources.ResourceRepository;
+&nbsp;import resources.ResourceType;
+&nbsp;import troops.*;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Random;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;
+&nbsp;/**
+&nbsp; * A REST controller for managing a player&#39;s information
+&nbsp; * @author Michael Geltz
+&nbsp; */
+&nbsp;@RestController
+<b class="fc">&nbsp;public class PlayerController {</b>
+&nbsp;
+&nbsp;    // Player repository storing players data
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private PlayerRepository playerRepository;
+&nbsp;
+&nbsp;
+&nbsp;    // Returns all currently existing players and their info
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets all the players stored in the database
+&nbsp;     * @return Every player in the database
+&nbsp;     */
+&nbsp;    @GetMapping(&quot;/players/getall&quot;)
+&nbsp;    public List&lt;Player&gt; getAllPlayers() {
+<b class="nc">&nbsp;        return playerRepository.findAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Gets a specific players info
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets a specific player based on ID
+&nbsp;     * @param playerID
+&nbsp;     * @return A specific player based on ID
+&nbsp;     */
+&nbsp;    @GetMapping(&quot;/players/getPlayer/{playerID}&quot;)
+&nbsp;    public Player getPlayer(@PathVariable int playerID) {
+<b class="nc">&nbsp;        return playerRepository.findById(playerID).orElse(null);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    // Creates a new player, to test use Postman POST option with url:
+&nbsp;    // http://coms-309-048.class.las.iastate.edu:8080/players/new (then send in a raw JSON body, {&quot;userName&quot; : &quot;(name)&quot;, &quot;password&quot; : &quot;(password)&quot;}
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Creates a new player based on a provided username and password
+&nbsp;     * @param created
+&nbsp;     * @return A string showing the ID the new player was created with
+&nbsp;     */
+&nbsp;    @PostMapping(&quot;/players/new&quot;)
+&nbsp;    public String newPlayer(@RequestBody PlayerCreator created) {
+&nbsp;
+&nbsp;        // Create empty player and store username and password to generate a player ID used in the managers
+<b class="fc">&nbsp;        Player player = new Player();</b>
+<b class="fc">&nbsp;        Random rand = new Random();</b>
+<b class="fc">&nbsp;        player.setUserName(created.getUserName());</b>
+<b class="fc">&nbsp;        player.setPassword(created.getPassword());</b>
+&nbsp;        // Save &quot;empty&quot; player to generate ID
+<b class="fc">&nbsp;        player = playerRepository.save(player);</b>
+<b class="fc">&nbsp;        player.setTroops(new TroopManager(player.getPlayerID()));</b>
+<b class="fc">&nbsp;        player.setResources(new ResourceManager(player.getPlayerID()));</b>
+<b class="fc">&nbsp;        player.setLocationX(rand.nextInt(20));</b>
+<b class="fc">&nbsp;        player.setLocationY(rand.nextInt(20));</b>
+&nbsp;        //Save fully created player into database
+<b class="fc">&nbsp;        playerRepository.save(player);</b>
+&nbsp;        // Return id of created player
+<b class="fc">&nbsp;        return &quot;New player of ID: &quot; + player.getPlayerID();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Returns sorted list of players based on power, descending order
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sorts the player repository based on power level, descending
+&nbsp;     * @return A list of all players sorted by descending power
+&nbsp;     */
+&nbsp;    @GetMapping(&quot;/players/getsorted&quot;)
+&nbsp;    public List&lt;Player&gt; getSortedPlayers() {
+<b class="nc">&nbsp;        List&lt;Player&gt; sortedList = playerRepository.findAll();</b>
+<b class="nc">&nbsp;        return sortedList.stream()</b>
+<b class="nc">&nbsp;                .sorted((z, y) -&gt; Double.compare(y.getPower(), z.getPower()))</b>
+<b class="nc">&nbsp;                .collect(Collectors.toList());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Addtroops to a declared player via their ID, to use, use Postman POST option, make sure you already have a player declared and use:
+&nbsp;    // http://coms-309-048.class.las.iastate,edu:8080/players/addtroops/(playerID) --&gt; Raw JSON, {&quot;troopType&quot; : &quot;(trooptype)&quot;, &quot;quantity&quot; : (integer)}
+&nbsp;    // An example request: http://coms-309-048.class.las.iastate,edu:8080/players/addtroops/1 --&gt; {&quot;troopType&quot; : &quot;ARCHER&quot;, &quot;quantity&quot; : 100}
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adds troops to a specific player based on ID, trooptype, and quantity
+&nbsp;     * @param playerID
+&nbsp;     * @param troopRequest
+&nbsp;     * @return A JSON of the player&#39;s info
+&nbsp;     */
+&nbsp;    @PostMapping(&quot;/players/addtroops/{playerID}&quot;)
+&nbsp;    public Player addTroops(@PathVariable int playerID, @RequestBody TroopRequest troopRequest) {
+<b class="nc">&nbsp;        Player player = playerRepository.findById(playerID).orElse(null);</b>
+<b class="nc">&nbsp;        if (player != null) {</b>
+<b class="nc">&nbsp;            player.troops.addTroop(troopRequest.getTroopType(), troopRequest.getQuantity());</b>
+<b class="nc">&nbsp;            player.updatePower();</b>
+<b class="nc">&nbsp;            return playerRepository.save(player);</b>
+&nbsp;        }
+&nbsp;        else {
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping(&quot;/players/changePlayerLocation/{playerID}&quot;)
+&nbsp;    public Player changePlayerLocation(@PathVariable int playerID, @RequestBody LocationRequest locationRequest)
+&nbsp;    {
+<b class="nc">&nbsp;        Player player = playerRepository.findById(playerID).orElse(null);</b>
+<b class="nc">&nbsp;        if (player != null)</b>
+&nbsp;        {
+<b class="nc">&nbsp;            player.setLocationX(locationRequest.getLocationX());</b>
+<b class="nc">&nbsp;            player.setLocationY(locationRequest.getLocationY());</b>
+<b class="nc">&nbsp;            return playerRepository.save(player);</b>
+&nbsp;        }
+&nbsp;        else
+&nbsp;        {
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    @GetMapping(&quot;/players/calculateTrainingTime/{playerID}&quot;)
+&nbsp;    public String calculateTrainingTime(@PathVariable int playerID, @RequestBody TroopRequest troopRequest)
+&nbsp;    {
+<b class="nc">&nbsp;        Player player = playerRepository.findById(playerID).orElse(null);</b>
+<b class="nc">&nbsp;        if (player != null)</b>
+&nbsp;        {
+&nbsp;            String formattedTime;
+<b class="nc">&nbsp;            switch (troopRequest.getTroopType())</b>
+&nbsp;            {
+&nbsp;                case ARCHER:
+<b class="nc">&nbsp;                    formattedTime = player.troopBuildings.trainTroops(BuildingTypes.ARCHERYRANGE, troopRequest.getQuantity());</b>
+<b class="nc">&nbsp;                    player.setArcherFinalDate(formattedTime);</b>
+<b class="nc">&nbsp;                    return formattedTime;</b>
+&nbsp;                case MAGE:
+<b class="nc">&nbsp;                    formattedTime = player.troopBuildings.trainTroops(BuildingTypes.MAGETOWER, troopRequest.getQuantity());</b>
+<b class="nc">&nbsp;                    player.setMageFinalDate(formattedTime);</b>
+<b class="nc">&nbsp;                    return formattedTime;</b>
+&nbsp;                case CAVALRY:
+<b class="nc">&nbsp;                    formattedTime = player.troopBuildings.trainTroops(BuildingTypes.STABLES, troopRequest.getQuantity());</b>
+<b class="nc">&nbsp;                    player.setCavalryFinalDate(formattedTime);</b>
+<b class="nc">&nbsp;                    return formattedTime;</b>
+&nbsp;                case WARRIOR:
+<b class="nc">&nbsp;                    formattedTime = player.troopBuildings.trainTroops(BuildingTypes.WARRIORSCHOOL, troopRequest.getQuantity());</b>
+<b class="nc">&nbsp;                    player.setCavalryFinalDate(formattedTime);</b>
+<b class="nc">&nbsp;                    return formattedTime;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Removetroops from a declared player via their ID, to use, use Postman POST option, make sure you have a player declared and use:
+&nbsp;    // http://coms-309-048.class.las.iastate,edu:8080/players/removetroops/(playerID) --&gt; Raw JSON, {&quot;troopType&quot; : &quot;(trooptype)&quot;, &quot;quantity&quot; : (integer)}
+&nbsp;    // An example request: http://coms-309-048.class.las.iastate,edu:8080/players/removetroops/1 --&gt; {&quot;troopType&quot; : &quot;ARCHER&quot;, &quot;quantity&quot; : 100}
+&nbsp;    /**
+&nbsp;     * Removes troops from a specific player based on ID, trooptype, and quantity
+&nbsp;     * @param playerID
+&nbsp;     * @param troopRequest
+&nbsp;     * @return A JSON of the player&#39;s info
+&nbsp;     */
+&nbsp;    @PostMapping(&quot;/players/removetroops/{playerID}&quot;)
+&nbsp;    public Player removeTroops(@PathVariable int playerID, @RequestBody TroopRequest troopRequest) {
+<b class="nc">&nbsp;        Player player = playerRepository.findById(playerID).orElse(null);</b>
+<b class="nc">&nbsp;        if (player != null) {</b>
+<b class="nc">&nbsp;            player.troops.removeTroop(troopRequest.getTroopType(), troopRequest.getQuantity());</b>
+<b class="nc">&nbsp;            player.updatePower();</b>
+<b class="nc">&nbsp;            return playerRepository.save(player);</b>
+&nbsp;        }
+&nbsp;        else {
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    // Add resource from a declared player via their ID, to use, use Postman POST option, make sure you have a player declared and use:
+&nbsp;    // http://coms-309-048.class.las.iastate,edu:8080/players/addResource/(playerID) --&gt; Raw JSON, {&quot;resourceType&quot; : &quot;(resourcetype)&quot;, &quot;quantity&quot; : (integer)}
+&nbsp;    // An example request: http://coms-309-048.class.las.iastate,edu:8080/players/addresource/1 --&gt; {&quot;resourceType&quot; : &quot;WOOD&quot;, &quot;quantity&quot; : 100}
+&nbsp;    /**
+&nbsp;     * Adds resources to a specific player based on ID, resourcetype, and quantity
+&nbsp;     * @param playerID
+&nbsp;     * @param resourceRequest
+&nbsp;     * @return A JSON of the player&#39;s info
+&nbsp;     */
+&nbsp;    @PostMapping(&quot;/players/addresource/{playerID}&quot;)
+&nbsp;    public Player addResource(@PathVariable int playerID, @RequestBody ResourceRequest resourceRequest) {
+<b class="nc">&nbsp;        Player player = playerRepository.findById(playerID).orElse(null);</b>
+<b class="nc">&nbsp;        if (player != null) {</b>
+<b class="nc">&nbsp;            player.resources.addResource(resourceRequest.getResourceType(), resourceRequest.getQuantity());</b>
+<b class="nc">&nbsp;            return playerRepository.save(player);</b>
+&nbsp;        }
+&nbsp;        else {
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    // Remove resource from a declared player via their ID, to use, use Postman POST option, make sure you have a player declared and use:
+&nbsp;    // http://coms-309-048.class.las.iastate,edu:8080/players/removeresource/(playerID) --&gt; Raw JSON, {&quot;resourceType&quot; : &quot;(resourcetype)&quot;, &quot;quantity&quot; : (integer)}
+&nbsp;    // An example request: http://coms-309-048.class.las.iastate,edu:8080/players/removeresource/1 --&gt; {&quot;resourceType&quot; : &quot;WOOD&quot;, &quot;quantity&quot; : 100}
+&nbsp;    /**
+&nbsp;     * Removes resources from a specific player based on ID, resourcetype, and quantity
+&nbsp;     * @param playerID
+&nbsp;     * @param resourceRequest
+&nbsp;     * @return A JSON of the player&#39;s info
+&nbsp;     */
+&nbsp;    @PostMapping(&quot;/players/removeresource/{playerID}&quot;)
+&nbsp;    public Player removeResource(@PathVariable int playerID, @RequestBody ResourceRequest resourceRequest) {
+<b class="nc">&nbsp;        Player player = playerRepository.findById(playerID).orElse(null);</b>
+<b class="nc">&nbsp;        if (player != null) {</b>
+<b class="nc">&nbsp;            player.resources.removeResource(resourceRequest.getResourceType(), resourceRequest.getQuantity());</b>
+<b class="nc">&nbsp;            return playerRepository.save(player);</b>
+&nbsp;        }
+&nbsp;        else {
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    // Delete or &quot;ban&quot; a player from the server, effectively removes all information and data of the player from the database
+&nbsp;    // To test use Postman DELETE option, make sure the player you are trying to delete exist, use:
+&nbsp;    // http://coms-309-048.class.las.iastate,edu:8080/players/banplayer/(playerID)
+&nbsp;    // Example request: http://coms-309-048.class.las.iastate,edu:8080/players/banplayer/1
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Deletes a player from the database based on playerID
+&nbsp;     * @param playerID
+&nbsp;     * @return Infomation about the player deleted
+&nbsp;     */
+&nbsp;    @DeleteMapping(&quot;/players/banplayer/{playerID}&quot;)
+&nbsp;    public String banPlayer(@PathVariable int playerID) {
+&nbsp;        // Remove provided player from db
+<b class="nc">&nbsp;        playerRepository.deleteById(playerID);</b>
+&nbsp;        // Return basic string saying player banned etc
+<b class="nc">&nbsp;        return &quot;Player of ID: &quot; + playerID +&quot; banned from server &amp; removed from database&quot;;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // fight method can be used to see the result of two existing players armies battling
+&nbsp;    // To use this method, use Postman GET option, make sure the two players exist and at least have some troops:
+&nbsp;    // http://coms-309-048.class.las.iastate,edu:8080/players/fight/(playerID1)/(playerID2)
+&nbsp;    // Example request: http://coms-309-048.class.las.iastate,edu:8080/players/fight/1/2
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Simulates and calculates a battle result between two players
+&nbsp;     * @param playerID1
+&nbsp;     * @param playerID2
+&nbsp;     * @return String detailing the result of the battle
+&nbsp;     */
+&nbsp;    @GetMapping(&quot;/players/fight/{playerID1}/{playerID2}&quot;)
+&nbsp;    public String fight(@PathVariable int playerID1, @PathVariable int playerID2) {
+&nbsp;        // Declare new troopcombatcalculator to determine battle result between two players
+&nbsp;        // player troop counts updated in the combat calculator
+<b class="nc">&nbsp;        Player p1 = playerRepository.findById(playerID1).orElse(null);</b>
+<b class="nc">&nbsp;        Player p2 = playerRepository.findById(playerID2).orElse(null);</b>
+<b class="nc">&nbsp;        if (p1 != null &amp;&amp; p2 != null) {</b>
+<b class="nc">&nbsp;            TroopCombatCalculator tcc = new TroopCombatCalculator(p1.troops, p2.troops);</b>
+<b class="nc">&nbsp;            p1.updatePower();</b>
+<b class="nc">&nbsp;            p2.updatePower();</b>
+<b class="nc">&nbsp;            playerRepository.save(p1);</b>
+<b class="nc">&nbsp;            playerRepository.save(p2);</b>
+&nbsp;
+<b class="nc">&nbsp;            return tcc.getResult() + &quot;\n&quot; + p1.getPlayerID() + &quot;\n\n&quot; +  p2.getPlayerID();</b>
+&nbsp;        }
+&nbsp;        else {
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public static class LocationRequest {
+&nbsp;        private int locationX;
+&nbsp;        private int locationY;
+&nbsp;
+&nbsp;        public LocationRequest(int locationX, int locationY)
+<b class="nc">&nbsp;        {</b>
+<b class="nc">&nbsp;            setLocationX(locationX);</b>
+<b class="nc">&nbsp;            setLocationY(locationY);</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        public int getLocationX() {
+<b class="nc">&nbsp;            return locationX;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        public void setLocationX(int locationX) {
+<b class="nc">&nbsp;            this.locationX = locationX;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        public int getLocationY() {
+<b class="nc">&nbsp;            return locationY;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        public void setLocationY(int locationY) {
+<b class="nc">&nbsp;            this.locationY = locationY;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;    // Class used for managing resource requests
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Resource request class to make sending resource requests easier
+&nbsp;     */
+&nbsp;    public static class ResourceRequest {
+&nbsp;        private ResourceType resourceType;
+&nbsp;        private int quantity;
+&nbsp;
+&nbsp;        /**
+&nbsp;         * Creates a resource request based on resourcetype and quantity
+&nbsp;         * @param resourceType
+&nbsp;         * @param quantity
+&nbsp;         */
+<b class="nc">&nbsp;        public ResourceRequest(ResourceType resourceType, int quantity) {</b>
+<b class="nc">&nbsp;            setResourceType(resourceType);</b>
+<b class="nc">&nbsp;            setQuantity(quantity);</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        /**
+&nbsp;         * Gets the resourcetype of the request
+&nbsp;         * @return resourcetype of request
+&nbsp;         */
+&nbsp;        public ResourceType getResourceType() {
+<b class="nc">&nbsp;            return resourceType;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        /**
+&nbsp;         * Sets the resourcetype requested
+&nbsp;         * @param resourceType
+&nbsp;         */
+&nbsp;        public void setResourceType(ResourceType resourceType) {
+<b class="nc">&nbsp;            this.resourceType = resourceType;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        /**
+&nbsp;         * Gets the quantity of a resource requested
+&nbsp;         * @return quantity of resource requested
+&nbsp;         */
+&nbsp;        public int getQuantity() {
+<b class="nc">&nbsp;            return quantity;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        /**
+&nbsp;         * Sets the quantity of the resource requested
+&nbsp;         * @param quantity
+&nbsp;         */
+&nbsp;        public void setQuantity(int quantity) {
+<b class="nc">&nbsp;            this.quantity = quantity;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    // Class used for managing player creation
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Player creator class to make sending player creation requests easier
+&nbsp;     */
+&nbsp;    public static class PlayerCreator {
+&nbsp;        private String userName;
+&nbsp;        private String password;
+&nbsp;
+&nbsp;
+&nbsp;        /**
+&nbsp;         * Creates a player creation request based on username and password
+&nbsp;         * @param userName
+&nbsp;         * @param password
+&nbsp;         */
+<b class="fc">&nbsp;        public PlayerCreator(String userName, String password) {</b>
+<b class="fc">&nbsp;            setUserName(userName);</b>
+<b class="fc">&nbsp;            setPassword(password);</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        /**
+&nbsp;         * Gets the username of the requested player to be created
+&nbsp;         * @return username of player being created
+&nbsp;         */
+&nbsp;        public String getUserName() {
+<b class="fc">&nbsp;            return userName;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        /**
+&nbsp;         * Sets the username of the player being created
+&nbsp;         * @param userName
+&nbsp;         */
+&nbsp;        public void setUserName(String userName) {
+<b class="fc">&nbsp;            this.userName = userName;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        /**
+&nbsp;         * Gets the password of the player being created
+&nbsp;         * @return password of player being created
+&nbsp;         */
+&nbsp;        public String getPassword() {
+<b class="fc">&nbsp;            return password;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        /**
+&nbsp;         * Sets the password of the player being created
+&nbsp;         * @param password
+&nbsp;         */
+&nbsp;        public void setPassword(String password) {
+<b class="fc">&nbsp;            this.password = password;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    // Class for managing troop requests
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Troop request class to make troop requests easier to send
+&nbsp;     */
+&nbsp;    public static class TroopRequest {
+&nbsp;        private TroopTypes troopType;
+&nbsp;        private int quantity;
+&nbsp;
+&nbsp;        /**
+&nbsp;         * Creates a troop request based on trooptype and quantity
+&nbsp;         * @param troopType
+&nbsp;         * @param quantity
+&nbsp;         */
+<b class="nc">&nbsp;        public TroopRequest(TroopTypes troopType, int quantity) {</b>
+<b class="nc">&nbsp;            setTroopType(troopType);</b>
+<b class="nc">&nbsp;            setQuantity(quantity);</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        /**
+&nbsp;         * Gets the trooptype of the troop request
+&nbsp;         * @return trooptype of troop request
+&nbsp;         */
+&nbsp;        public TroopTypes getTroopType() {
+<b class="nc">&nbsp;            return troopType;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        /**
+&nbsp;         * Sets the trooptype of a troop request
+&nbsp;         * @param troopType
+&nbsp;         */
+&nbsp;        public void setTroopType(TroopTypes troopType) {
+<b class="nc">&nbsp;            this.troopType = troopType;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        /**
+&nbsp;         * Gets the quantity of troops requested
+&nbsp;         * @return quantity of troops requested
+&nbsp;         */
+&nbsp;        public int getQuantity() {
+<b class="nc">&nbsp;            return quantity;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        /**
+&nbsp;         * Sets the quantity of troops requested
+&nbsp;         * @param quantity
+&nbsp;         */
+&nbsp;        public void setQuantity(int quantity) {
+<b class="nc">&nbsp;            this.quantity = quantity;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-04-29 22:53</div>
+</div>
+</body>
+</html>

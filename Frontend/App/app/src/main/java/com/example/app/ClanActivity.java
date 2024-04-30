@@ -235,7 +235,7 @@ public class ClanActivity extends AppCompatActivity {
                             JSONArray jsonArray = new JSONArray(response);
                             JSONObject playerObject = jsonArray.getJSONObject(userID - 1);
                             clanID = playerObject.getInt("clanMembershipID"); //Put players clan into clan ID
-                            if(clanID != 0) getClanName(clanID - 1);
+                            if(clanID != 0) getClanName(clanID);
                             else ClanName.setText("No Clan");
                             }
                          catch (JSONException e) {
@@ -262,10 +262,10 @@ public class ClanActivity extends AppCompatActivity {
                         public void onResponse(String response) {
                             try {
                                 JSONArray jsonArray = new JSONArray(response); //Array of clans
-                                JSONObject clanObject = jsonArray.getJSONObject(ID);
+                                JSONObject clanObject = jsonArray.getJSONObject(ID - 1);
                                 ClanName.setText("Clan: " + clanObject.getString("clanName")); //Set clanname
                                 ClanName.append("\n ID: ");
-                                ClanName.append(Integer.toString(ID + 1));
+                                ClanName.append(Integer.toString(clanID));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

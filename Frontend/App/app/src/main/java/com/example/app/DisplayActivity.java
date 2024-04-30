@@ -211,7 +211,7 @@ public class DisplayActivity extends AppCompatActivity {
     private class sortByKills implements Comparator<User> {
         public int compare(User a, User b) {
             power = false;
-            return a.totalKills - b.totalKills;
+            return b.totalKills - a.totalKills;
         }
     }
 
@@ -220,7 +220,7 @@ public class DisplayActivity extends AppCompatActivity {
         for(int i = 0; i < List.size(); i++){
             if(power) playersString.append("Rank: ").append(i + 1);
             else playersString.append(i + 1).append(":");
-            playersString.append(" User: ").append(List.get(i).name).append(" Total Kills: ").append(List.get(i).totalKills).append(" Power: ").append(List.get(i).userPower).append(" ID: ").append(List.get(i).userID);
+            playersString.append(" User: ").append(List.get(i).name).append(" Total Kills: ").append(List.get(i).totalKills).append(" Power: ").append(List.get(i).userPower);
             playersString.append("\n");
         }
         users.setText(playersString.toString());
