@@ -211,7 +211,7 @@ public class DisplayActivity extends AppCompatActivity {
     private class sortByKills implements Comparator<User> {
         public int compare(User a, User b) {
             power = false;
-            return b.totalKills - a.totalKills;
+            return a.totalKills - b.totalKills;
         }
     }
 
