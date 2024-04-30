@@ -59,10 +59,10 @@ public class ResourceManager {
      * Initializes the player's resources to the default amount.
      */
     private void initializeResources() {
-        resourceManager.add(new Wood(this, 100000));
-        resourceManager.add(new Food(this, 100000));
-        resourceManager.add(new Platinum(this, 100000));
-        resourceManager.add(new Stone(this, 100000));
+        resourceManager.add(new Wood(this, 1000000));
+        resourceManager.add(new Food(this, 1000000));
+        resourceManager.add(new Platinum(this, 1000000));
+        resourceManager.add(new Stone(this, 1000000));
     }
 
     // Goes through resources in a resources manager until it finds it then returns it
