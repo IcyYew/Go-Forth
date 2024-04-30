@@ -300,40 +300,40 @@ public class BuildingManagementActivity extends AppCompatActivity {
     }
 
     private void upgradeCurrent(){
-            // use the new player endpoint
-            String url = "http://coms-309-048.class.las.iastate.edu:8080/buildings/upgrade";
+        // use the new player endpoint
+        String url = "http://coms-309-048.class.las.iastate.edu:8080/buildings/upgrade";
 
-            // Create a JSONObject with the user's details
-            JSONObject requestBody = new JSONObject();
-            try {
-                requestBody.put("playerID", userID);
-                requestBody.put("buildingType", List.get(Index).buildingName);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            // Create a JsonObjectRequest with the POST method
-            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, requestBody,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            // Handle successful response from the server
-                            Log.d("Building Upgraded", "Building upgraded: " + response.toString());
-                            updateDisplay();
-                            updateCurrentStorage();
-                            fillList();
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            // Handle error response from the server
-                            Log.e("Building Upgrade", "Error upgrading building: " + error.getMessage());
-                        }
-                    });
-            // add to volley request queue
-            VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+        // Create a JSONObject with the user's details
+        JSONObject requestBody = new JSONObject();
+        try {
+            requestBody.put("playerID", userID);
+            requestBody.put("buildingType", List.get(Index).buildingName);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+
+        // Create a JsonObjectRequest with the POST method
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, requestBody,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // Handle successful response from the server
+                        Log.d("Building Upgraded", "Building upgraded: " + response.toString());
+                        updateDisplay();
+                        updateCurrentStorage();
+                        fillList();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle error response from the server
+                        Log.e("Building Upgrade", "Error upgrading building: " + error.getMessage());
+                    }
+                });
+        // add to volley request queue
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
+    }
 
     private void updateDisplay(){
         StringBuilder upgradeString = new StringBuilder();
