@@ -556,16 +556,16 @@ public class TroopManagementActivity extends AppCompatActivity {
             Duration knightDuration = Duration.between(now, knightFinal);
 
             if (archersToTrainCount > 0) {
-                totalDifference += archerDuration.toMillis() - 2000;
+                totalDifference += archerDuration.toMillis();
             }
             if (magesToTrainCount > 0) {
-                totalDifference += mageDuration.toMillis() - 2000;
+                totalDifference += mageDuration.toMillis();
             }
             if (cavalryToTrainCount > 0) {
-                totalDifference += cavalryDuration.toMillis() - 2000;
+                totalDifference += cavalryDuration.toMillis();
             }
             if (knightsToTrainCount > 0) {
-                totalDifference += knightDuration.toMillis() - 2000;
+                totalDifference += knightDuration.toMillis();
             }
         }
 
