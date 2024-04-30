@@ -28,7 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Activity to manage current clan
+ * Activity to manage current resources
  */
 public class BuildingManagementActivity extends AppCompatActivity {
 
@@ -151,7 +151,7 @@ public class BuildingManagementActivity extends AppCompatActivity {
         });
 
         /**
-         * Moves left through the list
+         * Upgrades current buildings
          */
         Upgrade.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -205,7 +205,7 @@ public class BuildingManagementActivity extends AppCompatActivity {
         }
 
         /**
-         * Fills the list based on clan ID
+         * Fills the list based on players buildings
          */
         private void fillList() {
             // use getall endpoint URL
@@ -266,7 +266,7 @@ public class BuildingManagementActivity extends AppCompatActivity {
         }
 
     /**
-     * This method gets the newly updated resource amount from the database.
+     * This method gets resourcesstored from the database.
      * It then displays the values on the corresponding TextView.
      */
     private void updateCurrentStorage() {
@@ -299,6 +299,9 @@ public class BuildingManagementActivity extends AppCompatActivity {
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 
+    /**
+     * Upgrades building the list is currently on
+     */
     private void upgradeCurrent(){
             // use the new player endpoint
             String url = "http://coms-309-048.class.las.iastate.edu:8080/buildings/upgrade";
@@ -335,6 +338,9 @@ public class BuildingManagementActivity extends AppCompatActivity {
             VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
         }
 
+    /**
+     * Updates all textviews based what is currently selected on list
+     */
     private void updateDisplay(){
         StringBuilder upgradeString = new StringBuilder();
         StringBuilder statsString = new StringBuilder();
@@ -363,6 +369,11 @@ public class BuildingManagementActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Gets the name to print
+     * @param n name from the database
+     * @return name with proper capitalization and spaces
+     */
     private String getName(String n){
         switch(n){
             case "FARM":
@@ -388,6 +399,13 @@ public class BuildingManagementActivity extends AppCompatActivity {
         }
         return "";
     }
+
+    /**
+     * Gets the gif to display
+     * @param n string gotten from database
+     * @return Int ID of gif
+     */
+    
     private int getGIF(String n){
         switch(n){
             case "FARM":
