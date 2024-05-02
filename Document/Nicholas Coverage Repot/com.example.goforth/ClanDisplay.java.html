@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClanDisplay.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">com.example.goforth</a> &gt; <span class="el_source">ClanDisplay.java</span></div><h1>ClanDisplay.java</h1><pre class="source lang-java linenums">package com.example.goforth;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+/**
+ * Shows all clans and their corresponding IDS
+ */
+<span class="nc" id="L25">public class ClanDisplay extends AppCompatActivity {</span>
+
+    private int userID;
+
+    private Button Back;
+
+    private TextView Text;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="nc" id="L35">        super.onCreate(savedInstanceState);</span>
+<span class="nc" id="L36">        setContentView(R.layout.activity_clan_display);</span>
+
+        //Get ID
+<span class="nc" id="L39">        Bundle extras = getIntent().getExtras();</span>
+<span class="nc bnc" id="L40" title="All 2 branches missed.">        if (extras != null) {</span>
+<span class="nc" id="L41">            userID = extras.getInt(&quot;ID&quot;);</span>
+        }
+
+<span class="nc" id="L44">        Back = findViewById(R.id.Back);</span>
+
+<span class="nc" id="L46">        Text = findViewById(R.id.Text);</span>
+
+<span class="nc" id="L48">        displayClans();</span>
+
+        /**
+         * Goes back to ClanActivity
+         */
+<span class="nc" id="L53">        Back.setOnClickListener(new View.OnClickListener() {</span>
+            //Back button clicked
+            @Override
+            public void onClick(View v) {
+                //goes to MainActivity with userID
+<span class="nc" id="L58">                Intent intent = new Intent(ClanDisplay.this, ClanActivity.class);</span>
+<span class="nc" id="L59">                intent.putExtra(&quot;ID&quot;, String.valueOf(userID));</span>
+<span class="nc" id="L60">                startActivity(intent);</span>
+<span class="nc" id="L61">            }</span>
+        });
+
+<span class="nc" id="L64">    }</span>
+
+    /**
+     * Displays all clans
+     */
+    private void displayClans() {
+        // use getallclans endpoint URL
+<span class="nc" id="L71">        String url = &quot;http://coms-309-048.class.las.iastate.edu:8080/clan/getallclans&quot;;</span>
+
+        // make a StringRequest to get the users from the server. Converts JSONArray into StringBuilder.
+<span class="nc" id="L74">        StringRequest request = new StringRequest(Request.Method.GET, url,</span>
+<span class="nc" id="L75">                new Response.Listener&lt;String&gt;() {</span>
+                    @Override
+                    public void onResponse(String response) {
+<span class="nc" id="L78">                        Log.d(&quot;Display response&quot;, response);</span>
+                        try {
+<span class="nc" id="L80">                            JSONArray jsonArray = new JSONArray(response);</span>
+
+<span class="nc" id="L82">                            StringBuilder clansString = new StringBuilder();</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">                            for (int i = 0; i &lt; jsonArray.length(); i++) {</span>
+                                //Prints clan ID and clan name
+<span class="nc" id="L85">                                JSONObject playerObject = jsonArray.getJSONObject(i);</span>
+<span class="nc" id="L86">                                clansString.append(&quot;Clan ID: &quot;).append(playerObject.getInt(&quot;clanID&quot;)).append(&quot;\n&quot;);</span>
+<span class="nc" id="L87">                                clansString.append(&quot;Clan name: &quot;).append(playerObject.getString(&quot;clanName&quot;)).append(&quot;\n&quot;);</span>
+                                //clansString.append(&quot;Clan power: &quot;).append(Double.toString(playerObject.getDouble(&quot;totalClanPower&quot;))).append(&quot;\n&quot;);
+<span class="nc" id="L89">                                clansString.append(&quot;\n&quot;);</span>
+                            }
+
+<span class="nc" id="L92">                            Text.setText(clansString.toString()); //Sets text onscreen</span>
+<span class="nc" id="L93">                        } catch (JSONException e) {</span>
+<span class="nc" id="L94">                            e.printStackTrace();</span>
+<span class="nc" id="L95">                        }</span>
+<span class="nc" id="L96">                    }</span>
+                },
+<span class="nc" id="L98">                new Response.ErrorListener() {</span>
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+<span class="nc" id="L101">                        Toast.makeText(getApplicationContext(), &quot;Error fetching clans: &quot; + error.getMessage(), Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L102">                    }</span>
+                });
+
+        // add to the request queue
+<span class="nc" id="L106">        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request); //Add to queue</span>
+<span class="nc" id="L107">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span>Generated by the Android Gradle plugin 8.4.0</div></body></html>

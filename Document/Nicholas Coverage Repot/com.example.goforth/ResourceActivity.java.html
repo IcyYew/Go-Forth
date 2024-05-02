@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ResourceActivity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">com.example.goforth</a> &gt; <span class="el_source">ResourceActivity.java</span></div><h1>ResourceActivity.java</h1><pre class="source lang-java linenums">package com.example.goforth;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+/**
+ * This activity is respnsible for resource management.
+ *
+ * @author Nicholas Lynch
+ */
+<span class="nc" id="L26">public class ResourceActivity extends AppCompatActivity {</span>
+    //Current userID
+    private int userID;
+
+    //Back Button
+    private Button Back;
+
+    //Food UI
+    private TextView foodHeld;
+    private Button addFood;
+    private Button removeFood;
+    private EditText foodPrompt;
+
+    //Wood UI
+    private TextView woodHeld;
+    private Button addWood;
+    private Button removeWood;
+    private EditText woodPrompt;
+
+    //Stone UI
+    private TextView stoneHeld;
+    private Button addStone;
+    private Button removeStone;
+    private EditText stonePrompt;
+
+    //Platinum UI
+    private TextView platinumHeld;
+    private Button addPlatinum;
+    private Button removePlatinum;
+    private EditText platinumPrompt;
+
+    /**
+     * On the creation of this activity, TextViews and Buttons are initialized.
+     * Extras are received and put in userID variable (for carrying across activities)
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  &lt;b&gt;&lt;i&gt;Note: Otherwise it is null.&lt;/i&gt;&lt;/b&gt;
+     *
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="nc" id="L68">        super.onCreate(savedInstanceState);</span>
+<span class="nc" id="L69">        setContentView(R.layout.activity_resource);</span>
+
+        //Get ID
+<span class="nc" id="L72">        Bundle extras = getIntent().getExtras();</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">        if (extras != null) {</span>
+<span class="nc" id="L74">            userID = extras.getInt(&quot;ID&quot;);</span>
+        }
+
+        //Initialize buttons
+<span class="nc" id="L78">        Back = findViewById(R.id.Back);</span>
+
+<span class="nc" id="L80">        foodHeld = findViewById(R.id.FoodAmount);</span>
+<span class="nc" id="L81">        addFood = findViewById(R.id.FoodPlus);</span>
+<span class="nc" id="L82">        removeFood = findViewById(R.id.FoodMinus);</span>
+<span class="nc" id="L83">        foodPrompt = findViewById(R.id.FoodPrompt);</span>
+
+<span class="nc" id="L85">        woodHeld = findViewById(R.id.WoodAmount);</span>
+<span class="nc" id="L86">        addWood = findViewById(R.id.WoodPlus);</span>
+<span class="nc" id="L87">        removeWood = findViewById(R.id.WoodMinus);</span>
+<span class="nc" id="L88">        woodPrompt = findViewById(R.id.WoodPrompt);</span>
+
+<span class="nc" id="L90">        stoneHeld = findViewById(R.id.StoneAmount);</span>
+<span class="nc" id="L91">        addStone = findViewById(R.id.StonePlus);</span>
+<span class="nc" id="L92">        removeStone = findViewById(R.id.StoneMinus);</span>
+<span class="nc" id="L93">        stonePrompt = findViewById(R.id.StonePrompt);</span>
+
+<span class="nc" id="L95">        platinumHeld = findViewById(R.id.PlatinumAmount);</span>
+<span class="nc" id="L96">        addPlatinum = findViewById(R.id.PlatinumPlus);</span>
+<span class="nc" id="L97">        removePlatinum = findViewById(R.id.PlatinumMinus);</span>
+<span class="nc" id="L98">        platinumPrompt = findViewById(R.id.PlatinumPrompt);</span>
+
+<span class="nc" id="L100">        Back = findViewById(R.id.Back);</span>
+<span class="nc" id="L101">        updateAmount();</span>
+
+<span class="nc" id="L103">        Back.setOnClickListener(new View.OnClickListener() {</span>
+            //Back button clicked
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L107">                Intent intent = new Intent(ResourceActivity.this, MainActivity.class);</span>
+<span class="nc" id="L108">                intent.putExtra(&quot;ID&quot;, String.valueOf(userID));</span>
+<span class="nc" id="L109">                startActivity(intent);</span>
+<span class="nc" id="L110">            }</span>
+        });
+
+<span class="nc" id="L113">        addFood.setOnClickListener(new View.OnClickListener() {</span>
+            //Back add food clicked
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L117">                addResource(Integer.parseInt(foodPrompt.getText().toString()), &quot;FOOD&quot;);</span>
+<span class="nc" id="L118">            }</span>
+        });
+
+<span class="nc" id="L121">        removeFood.setOnClickListener(new View.OnClickListener() {</span>
+            //Remove food clicked
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L125">                removeResource(Integer.parseInt(foodPrompt.getText().toString()), &quot;FOOD&quot;);</span>
+<span class="nc" id="L126">            }</span>
+        });
+<span class="nc" id="L128">        addWood.setOnClickListener(new View.OnClickListener() {</span>
+            //Add wood clicked
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L132">                addResource(Integer.parseInt(woodPrompt.getText().toString()), &quot;WOOD&quot;);</span>
+<span class="nc" id="L133">            }</span>
+        });
+
+<span class="nc" id="L136">        removeWood.setOnClickListener(new View.OnClickListener() {</span>
+            //Remove wood clicked
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L140">                removeResource(Integer.parseInt(woodPrompt.getText().toString()), &quot;WOOD&quot;);</span>
+<span class="nc" id="L141">            }</span>
+        });
+
+<span class="nc" id="L144">        addStone.setOnClickListener(new View.OnClickListener() {</span>
+            //Add stone clicked
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L148">                addResource(Integer.parseInt(stonePrompt.getText().toString()), &quot;STONE&quot;);</span>
+<span class="nc" id="L149">            }</span>
+        });
+
+<span class="nc" id="L152">        removeStone.setOnClickListener(new View.OnClickListener() {</span>
+            //Remove stone clicked
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L156">                removeResource(Integer.parseInt(stonePrompt.getText().toString()), &quot;STONE&quot;);</span>
+<span class="nc" id="L157">            }</span>
+        });
+<span class="nc" id="L159">        addPlatinum.setOnClickListener(new View.OnClickListener() {</span>
+            //Add platinum clicked
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L163">                addResource(Integer.parseInt(platinumPrompt.getText().toString()), &quot;PLATINUM&quot;);</span>
+<span class="nc" id="L164">            }</span>
+        });
+
+<span class="nc" id="L167">        removePlatinum.setOnClickListener(new View.OnClickListener() {</span>
+            //Remove platinum clicked
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L171">                removeResource(Integer.parseInt(platinumPrompt.getText().toString()), &quot;PLATINUM&quot;);</span>
+<span class="nc" id="L172">            }</span>
+        });
+
+<span class="nc" id="L175">    }</span>
+
+    /**
+     * Adds resources to the backend then updates the current count shown onscreen.
+     *
+     * @param amount Amount of resources to add
+     * @param resourceName Name of the resource to add
+     */
+    private void addResource(int amount, String resourceName){
+<span class="nc" id="L184">        JSONObject jsonObject = new JSONObject(); //Initialize input JSON</span>
+        try {
+<span class="nc" id="L186">            jsonObject.put(&quot;resourceType&quot;, resourceName);</span>
+<span class="nc" id="L187">            jsonObject.put(&quot;quantity&quot;, amount);</span>
+<span class="nc" id="L188">        } catch (JSONException e) {</span>
+<span class="nc" id="L189">            e.printStackTrace();</span>
+<span class="nc" id="L190">        }</span>
+<span class="nc" id="L191">        String url = &quot;http://coms-309-048.class.las.iastate.edu:8080/players/addresource/&quot; + userID;</span>
+<span class="nc" id="L192">        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonObject,</span>
+<span class="nc" id="L193">                new Response.Listener&lt;JSONObject&gt;() {</span>
+                    @Override
+                    public void onResponse(JSONObject response) {
+<span class="nc" id="L196">                        updateAmount(); //update screen when backend is done updating</span>
+<span class="nc" id="L197">                    }</span>
+                },
+<span class="nc" id="L199">                new Response.ErrorListener() {</span>
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+<span class="nc" id="L202">                        Toast.makeText(ResourceActivity.this, &quot;Error updating resources: &quot; + error.getMessage(), Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L203">                    }</span>
+                });
+
+        // add to volley queue
+<span class="nc" id="L207">        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);</span>
+<span class="nc" id="L208">    }</span>
+
+    /** Adds resources to the backend then updates the current count shown onscreen.
+     *
+     * @param amount Amount of resources to remove
+     * @param resourceName Name of resource to remove
+     */
+    private void removeResource(int amount, String resourceName){
+<span class="nc" id="L216">        JSONObject jsonObject = new JSONObject(); //Initialize input JSON</span>
+        try {
+<span class="nc" id="L218">            jsonObject.put(&quot;resourceType&quot;, resourceName);</span>
+<span class="nc" id="L219">            jsonObject.put(&quot;quantity&quot;, amount);</span>
+<span class="nc" id="L220">        } catch (JSONException e) {</span>
+<span class="nc" id="L221">            e.printStackTrace();</span>
+<span class="nc" id="L222">        }</span>
+<span class="nc" id="L223">        String url = &quot;http://coms-309-048.class.las.iastate.edu:8080/players/removeresource/&quot; + userID;</span>
+<span class="nc" id="L224">        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonObject,</span>
+<span class="nc" id="L225">                new Response.Listener&lt;JSONObject&gt;() {</span>
+                    @Override
+                    public void onResponse(JSONObject response) {
+<span class="nc" id="L228">                        updateAmount(); //update screen when backend is done updating</span>
+<span class="nc" id="L229">                    }</span>
+                },
+<span class="nc" id="L231">                new Response.ErrorListener() {</span>
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+<span class="nc" id="L234">                        Toast.makeText(ResourceActivity.this, &quot;Error updating resources: &quot; + error.getMessage(), Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L235">                    }</span>
+                });
+
+        // add to volley queue
+<span class="nc" id="L239">        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);</span>
+<span class="nc" id="L240">    }</span>
+
+    /**
+     * This method gets the newly updated resource amount from the database.
+     * It then displays the values on the corresponding TextView.
+     */
+    private void updateAmount() {
+<span class="nc" id="L247">        String url = &quot;http://coms-309-048.class.las.iastate.edu:8080/players/getPlayer/&quot; + String.valueOf(userID);</span>
+
+        // makes JsonObjectRequest to get the current player. GETs the archerNum, warriorNum, mageNum, and cavalryNum
+<span class="nc" id="L250">        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,</span>
+<span class="nc" id="L251">                new Response.Listener&lt;JSONObject&gt;() {</span>
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            //Get current resource values
+<span class="nc" id="L256">                            JSONObject resourceObject = response.getJSONObject(&quot;resources&quot;);</span>
+<span class="nc" id="L257">                            int food = resourceObject.getInt(&quot;food&quot;);</span>
+<span class="nc" id="L258">                            int wood = resourceObject.getInt(&quot;wood&quot;);</span>
+<span class="nc" id="L259">                            int stone = resourceObject.getInt(&quot;stone&quot;);</span>
+<span class="nc" id="L260">                            int platinum = resourceObject.getInt(&quot;platinum&quot;);</span>
+
+                            //print current resource values on screen.
+<span class="nc" id="L263">                            foodHeld.setText(String.valueOf(food));</span>
+<span class="nc" id="L264">                            woodHeld.setText(String.valueOf(wood));</span>
+<span class="nc" id="L265">                            stoneHeld.setText(String.valueOf(stone));</span>
+<span class="nc" id="L266">                            platinumHeld.setText(String.valueOf(platinum));</span>
+<span class="nc" id="L267">                        } catch (JSONException e) {</span>
+<span class="nc" id="L268">                            e.printStackTrace();</span>
+<span class="nc" id="L269">                            Toast.makeText(ResourceActivity.this, &quot;Error parsing JSON response&quot;, Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L270">                        }</span>
+<span class="nc" id="L271">                    }</span>
+                },
+<span class="nc" id="L273">                new Response.ErrorListener() {</span>
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+<span class="nc" id="L276">                        Toast.makeText(ResourceActivity.this, &quot;Error fetching player resources: &quot; + error.getMessage(), Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L277">                    }</span>
+                });
+
+        // add to volley queue
+<span class="nc" id="L281">        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);</span>
+<span class="nc" id="L282">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span>Generated by the Android Gradle plugin 8.4.0</div></body></html>

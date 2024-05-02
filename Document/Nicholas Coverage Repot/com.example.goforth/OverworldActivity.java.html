@@ -1,0 +1,722 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OverworldActivity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">com.example.goforth</a> &gt; <span class="el_source">OverworldActivity.java</span></div><h1>OverworldActivity.java</h1><pre class="source lang-java linenums">package com.example.goforth;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Random;
+
+/**
+ * Activity used to do most of the game stuff
+ */
+<span class="nc" id="L31">public class OverworldActivity extends AppCompatActivity {</span>
+    private static final int GRID_SIZE = 30;
+    private static final int GRID_ITEM_SIZE_DP = 75;
+    private static final int RESOURCE_CHANCE = 5;
+<span class="nc" id="L35">    private ArrayList&lt;String&gt; names = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L36">    private ArrayList&lt;Integer&gt; ids = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L37">    private ArrayList&lt;Integer&gt; xCoords = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L38">    private ArrayList&lt;Integer&gt; yCoords = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L39">    private ArrayList&lt;Integer&gt; resourceXCoords = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L40">    private ArrayList&lt;Integer&gt; resourceYCoords = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L41">    private ArrayList&lt;String&gt; resourceTypes = new ArrayList&lt;&gt;(); // To keep track of the type of resource (stone or wood)</span>
+    private LinearLayout gridLayout;
+<span class="nc" id="L43">    private int userID = 1;</span>
+    private int playerRow, playerCol, originalRow, originalCol, enemyIndex, enemyID;
+    public int power, wood, stone;
+<span class="nc" id="L46">    private boolean isPlayerMoved = false; // To track whether the player has moved</span>
+    private Button collectButton, moveButton, fightButton, backButton;
+    private TextView woodHeld, stoneHeld, powerLevel;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="nc" id="L52">        super.onCreate(savedInstanceState);</span>
+<span class="nc" id="L53">        setContentView(R.layout.activity_overworld);</span>
+
+        // Retrieve user ID from intent extras
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        if (getIntent().hasExtra(&quot;ID&quot;)) {</span>
+<span class="nc" id="L57">            userID = getIntent().getIntExtra(&quot;ID&quot;, -1);</span>
+        }
+
+        // Initialize layout
+<span class="nc" id="L61">        gridLayout = findViewById(R.id.gridLayout);</span>
+
+        // Initialize buttons
+<span class="nc" id="L64">        collectButton = findViewById(R.id.collectButton);</span>
+<span class="nc" id="L65">        collectButton.setVisibility(View.GONE);</span>
+<span class="nc" id="L66">        moveButton = findViewById(R.id.moveButton);</span>
+<span class="nc" id="L67">        moveButton.setVisibility(View.GONE);</span>
+<span class="nc" id="L68">        fightButton = findViewById(R.id.fightButton);</span>
+<span class="nc" id="L69">        fightButton.setVisibility(View.GONE);</span>
+<span class="nc" id="L70">        backButton = findViewById(R.id.backButton);</span>
+<span class="nc" id="L71">        backButton.setVisibility(View.GONE);</span>
+
+        // Set up the buttons
+<span class="nc" id="L74">        collectButton.setOnClickListener(view -&gt; collectResource());</span>
+<span class="nc" id="L75">        moveButton.setOnClickListener(view -&gt; moveBase());</span>
+<span class="nc" id="L76">        fightButton.setOnClickListener(view -&gt; startFight(userID, enemyID));</span>
+<span class="nc" id="L77">        backButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+                // Return to the main activity
+<span class="nc" id="L81">                Intent intent = new Intent(OverworldActivity.this, MainActivity.class);</span>
+<span class="nc" id="L82">                intent.putExtra(&quot;ID&quot;, String.valueOf(userID));</span>
+<span class="nc" id="L83">                startActivity(intent);</span>
+<span class="nc" id="L84">            }</span>
+        });
+
+<span class="nc" id="L87">        woodHeld = findViewById(R.id.WoodAmount);</span>
+<span class="nc" id="L88">        stoneHeld = findViewById(R.id.StoneAmount);</span>
+<span class="nc" id="L89">        powerLevel = findViewById(R.id.PowerLevel);</span>
+
+        // Fetch player data and generate the initial map
+<span class="nc" id="L92">        fetchPlayerDataAndGenerateMap();</span>
+<span class="nc" id="L93">    }</span>
+
+
+
+
+
+    /**
+     * Generates the displayed map (slots pictures in the correct grid positions)
+     */
+    private void displayMap() {
+        // Clear current grid layout
+<span class="nc" id="L104">        gridLayout.removeAllViews();</span>
+
+        // Loop to create grid items based on the player's position
+<span class="nc bnc" id="L107" title="All 2 branches missed.">        for (int row = 0; row &lt; GRID_SIZE; row++) {</span>
+<span class="nc" id="L108">            LinearLayout rowLayout = new LinearLayout(this);</span>
+<span class="nc" id="L109">            rowLayout.setOrientation(LinearLayout.HORIZONTAL);</span>
+
+<span class="nc bnc" id="L111" title="All 2 branches missed.">            for (int col = 0; col &lt; GRID_SIZE; col++) {</span>
+<span class="nc" id="L112">                ImageView gridItem = new ImageView(this);</span>
+<span class="nc" id="L113">                gridItem.setLayoutParams(new LinearLayout.LayoutParams(</span>
+<span class="nc" id="L114">                        dpToPx(GRID_ITEM_SIZE_DP), dpToPx(GRID_ITEM_SIZE_DP)</span>
+                ));
+
+                // Determine the type of cell at the current position
+<span class="nc" id="L118">                boolean isCellSet = false;  // Used to track if a cell is set with an image</span>
+
+<span class="nc bnc" id="L120" title="All 6 branches missed.">                if (row == playerRow &amp;&amp; col == playerCol &amp;&amp; !isUserPosition(row, col)) {</span>
+<span class="nc" id="L121">                    fightButton.setVisibility(View.GONE);</span>
+<span class="nc" id="L122">                    backButton.setVisibility(View.GONE);</span>
+
+<span class="nc" id="L124">                    gridItem.setBackgroundResource(R.drawable.knight);</span>
+<span class="nc" id="L125">                    isCellSet = true;</span>
+
+<span class="nc bnc" id="L127" title="All 2 branches missed.">                    if (isEmptyTile(row, col)) {</span>
+<span class="nc" id="L128">                        moveButton.setVisibility(View.VISIBLE);</span>
+                    } else {
+<span class="nc" id="L130">                        moveButton.setVisibility(View.GONE);</span>
+                    }
+<span class="nc bnc" id="L132" title="All 4 branches missed.">                } else if (row == originalRow &amp;&amp; col == originalCol) {</span>
+                    // Original player position
+<span class="nc" id="L134">                    gridItem.setBackgroundResource(R.drawable.castle);</span>
+<span class="nc" id="L135">                    isCellSet = true;</span>
+
+<span class="nc bnc" id="L137" title="All 2 branches missed.">                    if (!isPlayerMoved) {</span>
+<span class="nc" id="L138">                        backButton.setVisibility(View.VISIBLE);</span>
+                    }
+<span class="nc bnc" id="L140" title="All 2 branches missed.">                } else if (isUserPosition(row, col)) {</span>
+                    // Other players' positions
+<span class="nc" id="L142">                    gridItem.setBackgroundResource(R.drawable.enemy);</span>
+<span class="nc" id="L143">                    isCellSet = true;</span>
+
+                    // If the player is at an enemy's position, show the fight button
+<span class="nc bnc" id="L146" title="All 4 branches missed.">                    if (row == playerRow &amp;&amp; col == playerCol) {</span>
+<span class="nc" id="L147">                        fightButton.setVisibility(View.VISIBLE);</span>
+<span class="nc" id="L148">                        enemyIndex = getEnemyIndex(row, col);</span>
+<span class="nc" id="L149">                        fightButton.setText(&quot;Fight &quot; + names.get(enemyIndex));</span>
+<span class="nc" id="L150">                        enemyID = ids.get(enemyIndex);</span>
+                    }
+<span class="nc bnc" id="L152" title="All 2 branches missed.">                } else if (isResourcePosition(row, col)) {</span>
+                    // Resource positions
+                    // Find the index of the resource at the current position
+<span class="nc" id="L155">                    int resourceIndex = -1;</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">                    for (int i = 0; i &lt; resourceXCoords.size(); i++) {</span>
+<span class="nc bnc" id="L157" title="All 4 branches missed.">                        if (resourceXCoords.get(i) == row &amp;&amp; resourceYCoords.get(i) == col) {</span>
+<span class="nc" id="L158">                            resourceIndex = i;</span>
+<span class="nc" id="L159">                            break; // Exit the loop as soon as we find a match</span>
+                        }
+                    }
+
+                    // Check if a resource was found at the current position
+<span class="nc bnc" id="L164" title="All 2 branches missed.">                    if (resourceIndex != -1) {</span>
+<span class="nc" id="L165">                        String resourceType = resourceTypes.get(resourceIndex);</span>
+<span class="nc bnc" id="L166" title="All 2 branches missed.">                        if (resourceType.equals(&quot;stone&quot;)) {</span>
+<span class="nc" id="L167">                            gridItem.setBackgroundResource(R.drawable.stone);</span>
+                        } else {
+<span class="nc" id="L169">                            gridItem.setBackgroundResource(R.drawable.wood);</span>
+                        }
+<span class="nc" id="L171">                        isCellSet = true;</span>
+                    }
+                }
+
+                // If no specific condition was met, set the cell as grass
+<span class="nc bnc" id="L176" title="All 2 branches missed.">                if (!isCellSet) {</span>
+<span class="nc" id="L177">                    gridItem.setBackgroundResource(R.drawable.grass);</span>
+                }
+
+                // Add grid item to row layout
+<span class="nc" id="L181">                rowLayout.addView(gridItem);</span>
+            }
+
+            // Add row layout to grid layout
+<span class="nc" id="L185">            gridLayout.addView(rowLayout);</span>
+        }
+
+<span class="nc" id="L188">        updateAmount();</span>
+<span class="nc" id="L189">    }</span>
+
+    /**
+     * Get the locations of players and ensure we don't overwrite them
+     */
+    private void fetchPlayerDataAndGenerateMap() {
+<span class="nc" id="L195">        String url = &quot;http://coms-309-048.class.las.iastate.edu:8080/players/getall&quot;;</span>
+
+        // Make a GET request to fetch player data
+<span class="nc" id="L198">        StringRequest request = new StringRequest(Request.Method.GET, url,</span>
+<span class="nc" id="L199">                new Response.Listener&lt;String&gt;() {</span>
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+<span class="nc" id="L203">                            JSONArray jsonArray = new JSONArray(response);</span>
+
+                            // Iterate through player data
+<span class="nc bnc" id="L206" title="All 2 branches missed.">                            for (int i = 0; i &lt; jsonArray.length(); i++) {</span>
+<span class="nc" id="L207">                                JSONObject playerObject = jsonArray.getJSONObject(i);</span>
+<span class="nc" id="L208">                                int id = playerObject.getInt(&quot;playerID&quot;);</span>
+<span class="nc" id="L209">                                ids.add(playerObject.getInt(&quot;playerID&quot;));</span>
+<span class="nc" id="L210">                                names.add(playerObject.getString(&quot;userName&quot;));</span>
+<span class="nc" id="L211">                                xCoords.add(playerObject.getInt(&quot;locationX&quot;));</span>
+<span class="nc" id="L212">                                yCoords.add(playerObject.getInt(&quot;locationY&quot;));</span>
+
+                                // Identify player's initial position
+<span class="nc bnc" id="L215" title="All 2 branches missed.">                                if (id == userID) {</span>
+<span class="nc" id="L216">                                    playerCol = yCoords.get(i);</span>
+<span class="nc" id="L217">                                    playerRow = xCoords.get(i);</span>
+<span class="nc" id="L218">                                    originalRow = playerRow;</span>
+<span class="nc" id="L219">                                    originalCol = playerCol;</span>
+                                }
+                            }
+
+                            // Randomly generate resources on the map
+<span class="nc" id="L224">                            generateResources();</span>
+
+                            // Display the initial map
+<span class="nc" id="L227">                            displayMap();</span>
+<span class="nc" id="L228">                        } catch (JSONException e) {</span>
+<span class="nc" id="L229">                            e.printStackTrace();</span>
+<span class="nc" id="L230">                        }</span>
+<span class="nc" id="L231">                    }</span>
+                },
+<span class="nc" id="L233">                new Response.ErrorListener() {</span>
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+<span class="nc" id="L236">                        Toast.makeText(getApplicationContext(), &quot;Error fetching players: &quot; + error.getMessage(), Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L237">                    }</span>
+                });
+
+        // Add request to Volley request queue
+<span class="nc" id="L241">        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);</span>
+<span class="nc" id="L242">    }</span>
+
+    /**
+     * Generate resource positions depending on the RESOURCE_CHANCE
+     */
+    private void generateResources() {
+<span class="nc" id="L248">        Random random = new Random();</span>
+        // Clear any previous resource positions
+<span class="nc" id="L250">        resourceXCoords.clear();</span>
+<span class="nc" id="L251">        resourceYCoords.clear();</span>
+<span class="nc" id="L252">        resourceTypes.clear();</span>
+
+        // Calculate the probability threshold based on RESOURCE_CHANCE
+<span class="nc" id="L255">        double probabilityThreshold = 1.0 / RESOURCE_CHANCE;</span>
+
+        // Iterate through the grid
+<span class="nc bnc" id="L258" title="All 2 branches missed.">        for (int i = 0; i &lt; GRID_SIZE; i++) {</span>
+<span class="nc bnc" id="L259" title="All 2 branches missed.">            for (int j = 0; j &lt; GRID_SIZE; j++) {</span>
+                // Generate a random double between 0 and 1
+<span class="nc" id="L261">                double randomValue = random.nextDouble();</span>
+
+                // Place a resource if the random value is less than the threshold
+<span class="nc bnc" id="L264" title="All 2 branches missed.">                if (randomValue &lt; probabilityThreshold) {</span>
+<span class="nc" id="L265">                    resourceXCoords.add(i);</span>
+<span class="nc" id="L266">                    resourceYCoords.add(j);</span>
+                    // Randomly choose the type of resource (stone or wood)
+<span class="nc bnc" id="L268" title="All 2 branches missed.">                    resourceTypes.add(random.nextBoolean() ? &quot;stone&quot; : &quot;wood&quot;);</span>
+                }
+            }
+        }
+<span class="nc" id="L272">    }</span>
+
+
+
+
+
+    /**
+     * Moves the player's base to the new position and updates the original position
+     */
+    private void moveBase() {
+<span class="nc bnc" id="L282" title="All 4 branches missed.">        if (!(wood &gt;= 5000 &amp;&amp; stone &gt;= 5000)) {</span>
+<span class="nc" id="L283">            Toast.makeText(this, &quot;You need at least 5000 wood and 5000 stone to move your base!&quot;, Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L284">            return;</span>
+        }
+
+<span class="nc" id="L287">        removeResource(5000, &quot;WOOD&quot;);</span>
+
+        try {
+<span class="nc" id="L290">            Thread.sleep(100);</span>
+<span class="nc" id="L291">        } catch (InterruptedException e) {</span>
+<span class="nc" id="L292">            e.printStackTrace();</span>
+<span class="nc" id="L293">        }</span>
+
+<span class="nc" id="L295">        removeResource(5000, &quot;STONE&quot;);</span>
+
+        try {
+<span class="nc" id="L298">            Thread.sleep(100);</span>
+<span class="nc" id="L299">        } catch (InterruptedException e) {</span>
+<span class="nc" id="L300">            e.printStackTrace();</span>
+<span class="nc" id="L301">        }</span>
+
+<span class="nc bnc" id="L303" title="All 2 branches missed.">        for (int i = 0; i &lt; xCoords.size(); i++) {</span>
+<span class="nc bnc" id="L304" title="All 4 branches missed.">            if (xCoords.get(i) == originalRow &amp;&amp; yCoords.get(i) == originalCol) {</span>
+<span class="nc" id="L305">                xCoords.remove(i);</span>
+<span class="nc" id="L306">                yCoords.remove(i);</span>
+<span class="nc" id="L307">                break;</span>
+            }
+        }
+
+        // Save the current position as the new base position
+<span class="nc" id="L312">        originalRow = playerRow;</span>
+<span class="nc" id="L313">        originalCol = playerCol;</span>
+
+        // Add the new base position to the list of player coordinates
+<span class="nc" id="L316">        xCoords.add(playerRow);</span>
+<span class="nc" id="L317">        yCoords.add(playerCol);</span>
+
+        // Send an update to the server
+<span class="nc" id="L320">        updateBasePosition();</span>
+
+        // Hide the move button after moving the base
+<span class="nc" id="L323">        moveButton.setVisibility(View.GONE);</span>
+
+<span class="nc" id="L325">        isPlayerMoved = false;</span>
+
+        // Re-render the map to reflect the changes
+<span class="nc" id="L328">        displayMap();</span>
+<span class="nc" id="L329">    }</span>
+
+    private void updateBasePosition() {
+<span class="nc" id="L332">        JSONObject jsonObject = new JSONObject(); //Initialize input JSON</span>
+        try {
+<span class="nc" id="L334">            jsonObject.put(&quot;locationX&quot;, playerRow);</span>
+<span class="nc" id="L335">            jsonObject.put(&quot;locationY&quot;, playerCol);</span>
+<span class="nc" id="L336">        } catch (JSONException e) {</span>
+<span class="nc" id="L337">            e.printStackTrace();</span>
+<span class="nc" id="L338">        }</span>
+<span class="nc" id="L339">        String url = &quot;http://coms-309-048.class.las.iastate.edu:8080/players/changePlayerLocation/&quot; + userID;</span>
+<span class="nc" id="L340">        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonObject,</span>
+<span class="nc" id="L341">                new Response.Listener&lt;JSONObject&gt;() {</span>
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+<span class="nc" id="L345">                    }</span>
+                },
+<span class="nc" id="L347">                new Response.ErrorListener() {</span>
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+<span class="nc" id="L350">                        Toast.makeText(OverworldActivity.this, &quot;Error updating resources: &quot; + error.getMessage(), Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L351">                    }</span>
+                });
+
+        // add to volley queue
+<span class="nc" id="L355">        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);</span>
+<span class="nc" id="L356">    }</span>
+
+
+
+
+
+    private int dpToPx(int dp) {
+        // Convert dp to pixels
+<span class="nc" id="L364">        return Math.round(dp * getResources().getDisplayMetrics().density);</span>
+    }
+
+    // Functions to move player in the respective directions
+    public void moveUp(View view) {
+<span class="nc" id="L369">        movePlayer(-1, 0);</span>
+<span class="nc" id="L370">    }</span>
+
+    public void moveDown(View view) {
+<span class="nc" id="L373">        movePlayer(1, 0);</span>
+<span class="nc" id="L374">    }</span>
+
+    public void moveLeft(View view) {
+<span class="nc" id="L377">        movePlayer(0, -1);</span>
+<span class="nc" id="L378">    }</span>
+
+    public void moveRight(View view) {
+<span class="nc" id="L381">        movePlayer(0, 1);</span>
+<span class="nc" id="L382">    }</span>
+
+    /**
+     * Moves the player in the desired direction
+     * @param deltaY
+     * @param deltaX
+     */
+    private void movePlayer(int deltaY, int deltaX) {
+        // Calculate the new position of the player
+<span class="nc" id="L391">        int newRow = playerRow + deltaY;</span>
+<span class="nc" id="L392">        int newCol = playerCol + deltaX;</span>
+
+        // Define the boundaries for the user based on their original position
+<span class="nc" id="L395">        int minRow = originalRow - 10;</span>
+<span class="nc" id="L396">        int maxRow = originalRow + 10;</span>
+<span class="nc" id="L397">        int minCol = originalCol - 10;</span>
+<span class="nc" id="L398">        int maxCol = originalCol + 10;</span>
+
+        // Ensure the new position is within grid boundaries and within the defined boundaries from the original position
+<span class="nc bnc" id="L401" title="All 16 branches missed.">        if (newRow &gt;= minRow &amp;&amp; newRow &lt;= maxRow &amp;&amp; newCol &gt;= minCol &amp;&amp; newCol &lt;= maxCol</span>
+                &amp;&amp; newRow &gt;= 0 &amp;&amp; newRow &lt; GRID_SIZE &amp;&amp; newCol &gt;= 0 &amp;&amp; newCol &lt; GRID_SIZE) {
+            // Update the player's position
+<span class="nc" id="L404">            playerRow = newRow;</span>
+<span class="nc" id="L405">            playerCol = newCol;</span>
+
+            // Hide or show the move button depending on the new position
+<span class="nc bnc" id="L408" title="All 2 branches missed.">            if (isEmptyTile(newRow, newCol)) {</span>
+<span class="nc" id="L409">                moveButton.setVisibility(View.VISIBLE);</span>
+            } else {
+<span class="nc" id="L411">                moveButton.setVisibility(View.GONE);</span>
+            }
+
+<span class="nc bnc" id="L414" title="All 2 branches missed.">            if (!isPlayerMoved) {</span>
+<span class="nc" id="L415">                isPlayerMoved = true;</span>
+            }
+
+<span class="nc bnc" id="L418" title="All 6 branches missed.">            if (playerCol == originalCol &amp;&amp; playerRow == originalRow &amp;&amp; isPlayerMoved) {</span>
+<span class="nc" id="L419">                isPlayerMoved = false;</span>
+            }
+
+            // Update the button visibility and text based on the current position
+<span class="nc" id="L423">            updateCollectButton();</span>
+
+            // Update the map to reflect the player's new position
+<span class="nc" id="L426">            displayMap();</span>
+        }
+<span class="nc" id="L428">    }</span>
+
+
+
+
+
+    /**
+     * Checks to see if we need to display collect button
+     */
+    private void updateCollectButton() {
+        // Check if the player is on a resource tile
+<span class="nc" id="L439">        boolean isOnResourceTile = false;</span>
+<span class="nc bnc" id="L440" title="All 2 branches missed.">        for (int i = 0; i &lt; resourceXCoords.size(); i++) {</span>
+<span class="nc" id="L441">            int resourceRow = resourceXCoords.get(i);</span>
+<span class="nc" id="L442">            int resourceCol = resourceYCoords.get(i);</span>
+<span class="nc bnc" id="L443" title="All 4 branches missed.">            if (playerRow == resourceRow &amp;&amp; playerCol == resourceCol) {</span>
+                // Player is on a resource tile
+<span class="nc" id="L445">                String resourceType = resourceTypes.get(i);</span>
+<span class="nc" id="L446">                collectButton.setText(&quot;Collect &quot; + resourceType);</span>
+<span class="nc" id="L447">                collectButton.setVisibility(View.VISIBLE);</span>
+<span class="nc" id="L448">                isOnResourceTile = true;</span>
+<span class="nc" id="L449">                break;</span>
+            }
+        }
+
+        // If not on a resource tile, hide the button
+<span class="nc bnc" id="L454" title="All 2 branches missed.">        if (!isOnResourceTile) {</span>
+<span class="nc" id="L455">            collectButton.setVisibility(View.GONE);</span>
+        }
+<span class="nc" id="L457">    }</span>
+
+    /**
+     * Collects resource and updates map to no longer have the resource
+     */
+    private void collectResource() {
+        // Collect the resource from the player's current tile
+<span class="nc bnc" id="L464" title="All 2 branches missed.">        for (int i = 0; i &lt; resourceXCoords.size(); i++) {</span>
+<span class="nc" id="L465">            int resourceRow = resourceXCoords.get(i);</span>
+<span class="nc" id="L466">            int resourceCol = resourceYCoords.get(i);</span>
+<span class="nc bnc" id="L467" title="All 4 branches missed.">            if (playerRow == resourceRow &amp;&amp; playerCol == resourceCol) {</span>
+<span class="nc" id="L468">                String resourceType = resourceTypes.get(i);</span>
+<span class="nc" id="L469">                String upper = resourceType.toUpperCase();</span>
+
+<span class="nc" id="L471">                Random rand = new Random();</span>
+<span class="nc" id="L472">                int amount = rand.nextInt((400 - 100) + 1) + 100;</span>
+
+<span class="nc" id="L474">                addResource(amount, upper);</span>
+
+                try {
+<span class="nc" id="L477">                    Thread.sleep(100);</span>
+<span class="nc" id="L478">                } catch (InterruptedException e) {</span>
+<span class="nc" id="L479">                    e.printStackTrace();</span>
+<span class="nc" id="L480">                }</span>
+
+                // Remove the resource from the map
+<span class="nc" id="L483">                resourceXCoords.remove(i);</span>
+<span class="nc" id="L484">                resourceYCoords.remove(i);</span>
+<span class="nc" id="L485">                resourceTypes.remove(i);</span>
+
+                // Hide the collect button
+<span class="nc" id="L488">                collectButton.setVisibility(View.GONE);</span>
+
+<span class="nc" id="L490">                updateAmount();</span>
+
+                // Update the display
+<span class="nc" id="L493">                displayMap();</span>
+
+                // Exit the loop as we've handled the resource collection
+<span class="nc" id="L496">                break;</span>
+            }
+        }
+<span class="nc" id="L499">    }</span>
+
+    /**
+     * Adds resources to the backend then updates the current count shown onscreen.
+     *
+     * @param amount Amount of resources to add
+     * @param resourceName Name of the resource to add
+     */
+    private void addResource(int amount, String resourceName){
+<span class="nc" id="L508">        JSONObject jsonObject = new JSONObject(); //Initialize input JSON</span>
+        try {
+<span class="nc" id="L510">            jsonObject.put(&quot;resourceType&quot;, resourceName);</span>
+<span class="nc" id="L511">            jsonObject.put(&quot;quantity&quot;, amount);</span>
+<span class="nc" id="L512">        } catch (JSONException e) {</span>
+<span class="nc" id="L513">            e.printStackTrace();</span>
+<span class="nc" id="L514">        }</span>
+<span class="nc" id="L515">        String url = &quot;http://coms-309-048.class.las.iastate.edu:8080/players/addresource/&quot; + userID;</span>
+<span class="nc" id="L516">        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonObject,</span>
+<span class="nc" id="L517">                new Response.Listener&lt;JSONObject&gt;() {</span>
+                    @Override
+                    public void onResponse(JSONObject response) {
+<span class="nc" id="L520">                        updateAmount();</span>
+<span class="nc" id="L521">                    }</span>
+                },
+<span class="nc" id="L523">                new Response.ErrorListener() {</span>
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+<span class="nc" id="L526">                        Toast.makeText(OverworldActivity.this, &quot;Error updating resources: &quot; + error.getMessage(), Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L527">                    }</span>
+                });
+
+        // add to volley queue
+<span class="nc" id="L531">        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);</span>
+<span class="nc" id="L532">    }</span>
+
+    /** Adds resources to the backend then updates the current count shown onscreen.
+     *
+     * @param amount Amount of resources to remove
+     * @param resourceName Name of resource to remove
+     */
+    private void removeResource(int amount, String resourceName){
+<span class="nc" id="L540">        JSONObject jsonObject = new JSONObject(); //Initialize input JSON</span>
+        try {
+<span class="nc" id="L542">            jsonObject.put(&quot;resourceType&quot;, resourceName);</span>
+<span class="nc" id="L543">            jsonObject.put(&quot;quantity&quot;, amount);</span>
+<span class="nc" id="L544">        } catch (JSONException e) {</span>
+<span class="nc" id="L545">            e.printStackTrace();</span>
+<span class="nc" id="L546">        }</span>
+<span class="nc" id="L547">        String url = &quot;http://coms-309-048.class.las.iastate.edu:8080/players/removeresource/&quot; + userID;</span>
+<span class="nc" id="L548">        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonObject,</span>
+<span class="nc" id="L549">                new Response.Listener&lt;JSONObject&gt;() {</span>
+                    @Override
+                    public void onResponse(JSONObject response) {
+<span class="nc" id="L552">                        updateAmount(); //update screen when backend is done updating</span>
+<span class="nc" id="L553">                    }</span>
+                },
+<span class="nc" id="L555">                new Response.ErrorListener() {</span>
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+<span class="nc" id="L558">                        Toast.makeText(OverworldActivity.this, &quot;Error updating resources: &quot; + error.getMessage(), Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L559">                    }</span>
+                });
+
+        // add to volley queue
+<span class="nc" id="L563">        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);</span>
+<span class="nc" id="L564">    }</span>
+
+    /**
+     * This method gets the newly updated resource amount from the database.
+     * It then displays the values on the corresponding TextView.
+     */
+    private void updateAmount() {
+<span class="nc" id="L571">        String url = &quot;http://coms-309-048.class.las.iastate.edu:8080/players/getPlayer/&quot; + String.valueOf(userID);</span>
+
+        // makes JsonObjectRequest to get the current player. GETs the archerNum, warriorNum, mageNum, and cavalryNum
+<span class="nc" id="L574">        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,</span>
+<span class="nc" id="L575">                new Response.Listener&lt;JSONObject&gt;() {</span>
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+<span class="nc" id="L579">                            power = response.getInt(&quot;power&quot;);</span>
+                            //Get current resource values
+<span class="nc" id="L581">                            JSONObject resourceObject = response.getJSONObject(&quot;resources&quot;);</span>
+<span class="nc" id="L582">                            wood = resourceObject.getInt(&quot;wood&quot;);</span>
+<span class="nc" id="L583">                            stone = resourceObject.getInt(&quot;stone&quot;);</span>
+
+<span class="nc" id="L585">                            String woodText = &quot;Wood: &quot; + wood;</span>
+<span class="nc" id="L586">                            String stoneText = &quot;Stone: &quot; + stone;</span>
+<span class="nc" id="L587">                            String powerText = &quot;Power: &quot;+ power;</span>
+                            //print current resource values on screen.
+<span class="nc" id="L589">                            woodHeld.setText(woodText);</span>
+<span class="nc" id="L590">                            stoneHeld.setText(stoneText);</span>
+<span class="nc" id="L591">                            powerLevel.setText(powerText);</span>
+<span class="nc" id="L592">                        } catch (JSONException e) {</span>
+<span class="nc" id="L593">                            e.printStackTrace();</span>
+<span class="nc" id="L594">                            Toast.makeText(OverworldActivity.this, &quot;Error parsing JSON response&quot;, Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L595">                        }</span>
+<span class="nc" id="L596">                    }</span>
+                },
+<span class="nc" id="L598">                new Response.ErrorListener() {</span>
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+<span class="nc" id="L601">                        Toast.makeText(OverworldActivity.this, &quot;Error fetching player resources: &quot; + error.getMessage(), Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L602">                    }</span>
+                });
+
+        // add to volley queue
+<span class="nc" id="L606">        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);</span>
+<span class="nc" id="L607">    }</span>
+
+
+
+
+
+    private int getEnemyIndex(int row, int col) {
+<span class="nc bnc" id="L614" title="All 2 branches missed.">        for (int i = 0; i &lt; xCoords.size(); i++) {</span>
+<span class="nc bnc" id="L615" title="All 4 branches missed.">            if (xCoords.get(i) == row &amp;&amp; yCoords.get(i) == col) {</span>
+<span class="nc" id="L616">                return i;</span>
+            }
+        }
+<span class="nc" id="L619">        return -1; // If no enemy found at the given coordinates</span>
+    }
+
+    /**
+     * Simulates fight by calling the players/fight/{user1}/{user2} endpoint. Displays returned value
+     *
+     * @param player1ID
+     * @param player2ID
+     */
+    private void startFight(int player1ID, int player2ID) {
+        // use the players/fight/{user1}/{user2} endpoint
+<span class="nc" id="L630">        String url = &quot;http://coms-309-048.class.las.iastate.edu:8080/players/fight/&quot; + player1ID + &quot;/&quot; + player2ID;</span>
+
+        // Makes StringRequest at the endpoint and sets the TextView to the result
+<span class="nc" id="L633">        StringRequest request = new StringRequest(Request.Method.GET, url,</span>
+<span class="nc" id="L634">                new Response.Listener&lt;String&gt;() {</span>
+                    @Override
+                    public void onResponse(String response) {
+<span class="nc" id="L637">                        handleFightResult(response);</span>
+<span class="nc" id="L638">                    }</span>
+                },
+<span class="nc" id="L640">                new Response.ErrorListener() {</span>
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+<span class="nc" id="L643">                        Toast.makeText(getApplicationContext(), &quot;Error during fight: &quot; + error.getMessage(), Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L644">                    }</span>
+                });
+
+        // add request to volley queue
+<span class="nc" id="L648">        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);</span>
+<span class="nc" id="L649">    }</span>
+
+    /**
+     * Method to handle fight results and declare a winner
+     *
+     * @param response
+     */
+    private void handleFightResult(String response) {
+<span class="nc" id="L657">        Log.d(&quot;Response&quot;, response);</span>
+        // parse the response
+<span class="nc" id="L659">        String[] parts = response.split(&quot;\n&quot;);</span>
+<span class="nc" id="L660">        String result = parts[0];</span>
+<span class="nc" id="L661">        String player1Info = parts[1];</span>
+<span class="nc" id="L662">        String player2Info = parts[3];</span>
+
+        // display the appropriate message based on the result
+        String message;
+<span class="nc bnc" id="L666" title="All 2 branches missed.">        if (result.equals(&quot;ATTACKER_WIN&quot;)) {</span>
+<span class="nc" id="L667">            Toast.makeText(this, &quot;You won!&quot;, Toast.LENGTH_SHORT).show();</span>
+<span class="nc bnc" id="L668" title="All 2 branches missed.">        } else if (result.equals(&quot;DEFENDER_WIN&quot;)) {</span>
+<span class="nc" id="L669">            Toast.makeText(this, &quot;You lost!&quot;, Toast.LENGTH_SHORT).show();</span>
+        } else {
+<span class="nc" id="L671">            Toast.makeText(this, &quot;It's a draw&quot;, Toast.LENGTH_SHORT).show();</span>
+        }
+
+<span class="nc" id="L674">        updateAmount();</span>
+<span class="nc" id="L675">    }</span>
+
+
+
+
+
+    /**
+     * Checks if a grid position is a user position
+     *
+     * @param x
+     * @param y
+     * @return true or false
+     */
+    private boolean isUserPosition(int x, int y) {
+        // Check if the provided coordinates match any other players' positions
+<span class="nc bnc" id="L690" title="All 2 branches missed.">        for (int i = 0; i &lt; xCoords.size(); i++) {</span>
+<span class="nc bnc" id="L691" title="All 4 branches missed.">            if (x == xCoords.get(i) &amp;&amp; y == yCoords.get(i)) {</span>
+<span class="nc" id="L692">                return true;</span>
+            }
+        }
+<span class="nc" id="L695">        return false;</span>
+    }
+
+    /**
+     * Checks if a grid position is a resource position
+     * @param x
+     * @param y
+     * @return true or false
+     */
+    private boolean isResourcePosition(int x, int y) {
+        // Check if the provided coordinates match any resource positions
+<span class="nc bnc" id="L706" title="All 2 branches missed.">        for (int i = 0; i &lt; resourceXCoords.size(); i++) {</span>
+<span class="nc bnc" id="L707" title="All 4 branches missed.">            if (x == resourceXCoords.get(i) &amp;&amp; y == resourceYCoords.get(i)) {</span>
+<span class="nc" id="L708">                return true;</span>
+            }
+        }
+<span class="nc" id="L711">        return false;</span>
+    }
+
+    /**
+     * Check if the tile is empty at the given coordinates
+     */
+    private boolean isEmptyTile(int row, int col) {
+        // Check if the given position is free of other players and resources
+<span class="nc bnc" id="L719" title="All 4 branches missed.">        return !isUserPosition(row, col) &amp;&amp; !isResourcePosition(row, col);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span>Generated by the Android Gradle plugin 8.4.0</div></body></html>

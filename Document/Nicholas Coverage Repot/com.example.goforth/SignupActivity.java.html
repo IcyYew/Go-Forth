@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SignupActivity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">com.example.goforth</a> &gt; <span class="el_source">SignupActivity.java</span></div><h1>SignupActivity.java</h1><pre class="source lang-java linenums">package com.example.goforth;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+/**
+ * This activity is responsible for sign-up/user creation.
+ *
+ * @author Nicholas Lynch
+ */
+<span class="fc" id="L28">public class SignupActivity extends AppCompatActivity {</span>
+    private EditText Username;
+
+    private EditText Password;
+
+    private EditText ConfirmPassword;
+
+    private Button Signup;
+
+    private Button Back;
+
+    private int userID;
+
+    /**
+     * On the creation of this activity, TextViews and Buttons are initialized.
+     * Extras are received and put in userID variable (for carrying across activities)
+     * The signup button's on-click is used for making a GET (and then POST) to see if the user exists, and then POSTs if it doesn't.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  &lt;b&gt;&lt;i&gt;Note: Otherwise it is null.&lt;/i&gt;&lt;/b&gt;
+     */
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="fc" id="L51">        super.onCreate(savedInstanceState);</span>
+<span class="fc" id="L52">        setContentView(R.layout.activity_signup);</span>
+
+<span class="fc" id="L54">        Bundle extras = getIntent().getExtras();</span>
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">        if (extras != null) {</span>
+<span class="fc" id="L56">            userID = extras.getInt(&quot;ID&quot;);</span>
+        }
+
+        //UI initialization
+<span class="fc" id="L60">        Username = findViewById(R.id.username);</span>
+
+<span class="fc" id="L62">        Password = findViewById(R.id.password);</span>
+
+<span class="fc" id="L64">        ConfirmPassword = findViewById(R.id.confirm);</span>
+
+<span class="fc" id="L66">        Signup = findViewById(R.id.Button);</span>
+
+<span class="fc" id="L68">        Back = findViewById(R.id.back);</span>
+
+        //Back button clicked
+<span class="fc" id="L71">        Back.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+
+                /* when login button is pressed, use intent to switch to Main Activity */
+<span class="nc" id="L76">                Intent intent = new Intent(SignupActivity.this, MainActivity.class);</span>
+<span class="nc" id="L77">                intent.putExtra(&quot;ID&quot;, String.valueOf(userID));</span>
+<span class="nc" id="L78">                startActivity(intent);  // go to MainActivity</span>
+<span class="nc" id="L79">            }</span>
+        });
+
+        //Signup button clicked
+<span class="fc" id="L83">        Signup.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+                //Convert user inputs to strings
+<span class="fc" id="L87">                String usernameString = Username.getText().toString(); //Username given by user</span>
+<span class="fc" id="L88">                String passwordString = Password.getText().toString(); //Password given by user</span>
+<span class="fc" id="L89">                String confirmString = ConfirmPassword.getText().toString(); //confirm given by user</span>
+
+<span class="pc bpc" id="L91" title="1 of 2 branches missed.">                if(!passwordString.equals(confirmString)){ //checks if password and confirm match</span>
+<span class="nc" id="L92">                    Toast toast = Toast.makeText(SignupActivity.this, &quot;Passwords do not match&quot;, Toast.LENGTH_SHORT);</span>
+<span class="nc" id="L93">                    toast.show();</span>
+<span class="nc" id="L94">                    return;</span>
+                }
+
+<span class="fc" id="L97">                String url = &quot;http://coms-309-048.class.las.iastate.edu:8080/players/getall&quot;; //URL to get all existing users</span>
+                // make a StringRequest to get the users from the server. Converts JSONArray into StringBuilder.
+<span class="fc" id="L99">                StringRequest request = new StringRequest(Request.Method.GET, url,</span>
+<span class="fc" id="L100">                        new Response.Listener&lt;String&gt;() {</span>
+                            @Override
+                            public void onResponse(String response) {
+<span class="nc" id="L103">                                Log.d(&quot;Display response&quot;, response);</span>
+                                try {
+<span class="nc" id="L105">                                    JSONArray jsonArray = new JSONArray(response); //Array of users</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">                                    for (int i = 0; i &lt; jsonArray.length(); i++) {</span>
+<span class="nc" id="L107">                                        JSONObject playerObject = jsonArray.getJSONObject(i); //Get user at current i</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">                                        if ((playerObject.getString(&quot;userName&quot;)).equals((Username.getText().toString()))) { //If the user name exists</span>
+<span class="nc" id="L109">                                            Toast toast = Toast.makeText(SignupActivity.this, &quot;Username already exists&quot;, Toast.LENGTH_SHORT);</span>
+<span class="nc" id="L110">                                            toast.show();</span>
+<span class="nc" id="L111">                                            return; //exit</span>
+                                        }
+                                    }
+                                    //If no existing user is found, create a new user and switch to Main Activity
+<span class="nc" id="L115">                                    createNewPlayer(usernameString, passwordString); //Creates player with username and password given by user</span>
+<span class="nc" id="L116">                                    Intent intent = new Intent(SignupActivity.this, SignupSuccessActivity.class);</span>
+<span class="nc" id="L117">                                    startActivity(intent); //go to SignupSuccess activity</span>
+
+<span class="nc" id="L119">                                    return;</span>
+
+<span class="nc" id="L121">                                } catch (JSONException e) {</span>
+<span class="nc" id="L122">                                    e.printStackTrace();</span>
+                                }
+<span class="nc" id="L124">                            }</span>
+                        },
+<span class="fc" id="L126">                        new Response.ErrorListener() {</span>
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+<span class="fc" id="L129">                                Toast.makeText(getApplicationContext(), &quot;Error fetching players: &quot; + error.getMessage(), Toast.LENGTH_SHORT).show();</span>
+<span class="fc" id="L130">                            }</span>
+                        });
+
+                // add to the request queue
+<span class="fc" id="L134">                VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);</span>
+
+
+
+<span class="fc" id="L138">            }</span>
+        });
+<span class="fc" id="L140">    }</span>
+
+    /**
+     * creates a new player in the server with the given username and password
+     *
+     * @param userName
+     * @param password
+     */
+    private void createNewPlayer(String userName, String password) {
+        // use the new player endpoint
+<span class="nc" id="L150">        String url = &quot;http://coms-309-048.class.las.iastate.edu:8080/players/new&quot;;</span>
+
+        // Create a JSONObject with the user's details
+<span class="nc" id="L153">        JSONObject requestBody = new JSONObject();</span>
+        try {
+<span class="nc" id="L155">            requestBody.put(&quot;userName&quot;, userName);</span>
+<span class="nc" id="L156">            requestBody.put(&quot;password&quot;, password);</span>
+<span class="nc" id="L157">        } catch (JSONException e) {</span>
+<span class="nc" id="L158">            e.printStackTrace();</span>
+<span class="nc" id="L159">        }</span>
+
+        // Create a JsonObjectRequest with the POST method
+<span class="nc" id="L162">        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, requestBody,</span>
+<span class="nc" id="L163">                new Response.Listener&lt;JSONObject&gt;() {</span>
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // Handle successful response from the server
+<span class="nc" id="L167">                        Log.d(&quot;User Creation&quot;, &quot;New user created: &quot; + response.toString());</span>
+<span class="nc" id="L168">                    }</span>
+                },
+<span class="nc" id="L170">                new Response.ErrorListener() {</span>
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle error response from the server
+<span class="nc" id="L174">                        Log.e(&quot;User Creation&quot;, &quot;Error creating user: &quot; + error.getMessage());</span>
+<span class="nc" id="L175">                    }</span>
+                });
+
+        // add to volley request queue
+<span class="nc" id="L179">        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);</span>
+<span class="nc" id="L180">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span>Generated by the Android Gradle plugin 8.4.0</div></body></html>

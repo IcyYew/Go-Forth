@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ResearchActivity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">com.example.goforth</a> &gt; <span class="el_source">ResearchActivity.java</span></div><h1>ResearchActivity.java</h1><pre class="source lang-java linenums">package com.example.goforth;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+/**
+ * Activity used for research functionality.
+ */
+<span class="nc" id="L19">public class ResearchActivity extends AppCompatActivity {</span>
+    private int userID;
+    private ImageView troopTrainingImageView;
+    private ImageView researchCostImageView;
+    private ImageView buildingCostImageView;
+    private ImageView attackBonusImageView;
+    private ImageView troopCapacityImageView;
+    private ImageView buildingSpeedImageView;
+
+    private Button upgradeButton;
+    private Button backButton;
+
+    private TextView troopTrainingLevelTextView;
+    private TextView troopTrainingBonusTextView;
+    private TextView researchCostLevelTextView;
+    private TextView researchCostBonusTextView;
+    private TextView buildingCostLevelTextView;
+    private TextView buildingCostBonusTextView;
+    private TextView attackBonusLevelTextView;
+    private TextView attackBonusBonusTextView;
+    private TextView troopCapacityLevelTextView;
+    private TextView troopCapacityBonusTextView;
+    private TextView buildingSpeedLevelTextView;
+    private TextView buildingSpeedBonusTextView;
+
+    // Variables to store current level and bonus for troop training and resource gathering
+<span class="nc" id="L45">    private int troopTrainingLevel = 0;</span>
+<span class="nc" id="L46">    private float troopTrainingBonus = 0.0f;</span>
+<span class="nc" id="L47">    private int researchCostLevel = 0;</span>
+<span class="nc" id="L48">    private float researchCostBonus = 0.0f;</span>
+<span class="nc" id="L49">    private int buildingCostLevel = 0;</span>
+<span class="nc" id="L50">    private float buildingCostBonus = 0.0f;</span>
+<span class="nc" id="L51">    private int attackBonusLevel = 0;</span>
+<span class="nc" id="L52">    private float attackBonusBonus = 0.0f;</span>
+<span class="nc" id="L53">    private int troopCapacityLevel = 0;</span>
+<span class="nc" id="L54">    private float troopCapacityBonus = 0.0f;</span>
+<span class="nc" id="L55">    private int buildingSpeedLevel = 0;</span>
+<span class="nc" id="L56">    private float buildingSpeedBonus = 0.0f;</span>
+
+    // Variable to track the currently selected skill
+<span class="nc" id="L59">    private enum SelectedSkill { TROOP_TRAINING, RESEARCH_COST, BUILDING_COST, ATTACK_BONUS, TROOP_CAPACITY, BUILDING_SPEED }</span>
+<span class="nc" id="L60">    private SelectedSkill selectedSkill = SelectedSkill.TROOP_TRAINING; // Default to troop training</span>
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="nc" id="L64">        super.onCreate(savedInstanceState);</span>
+<span class="nc" id="L65">        setContentView(R.layout.activity_research);</span>
+
+<span class="nc" id="L67">        Bundle extras = getIntent().getExtras();</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">        if (extras != null) {</span>
+<span class="nc" id="L69">            userID = extras.getInt(&quot;ID&quot;);</span>
+        }
+
+        // Find the toolbar
+<span class="nc" id="L73">        Toolbar toolbar = findViewById(R.id.toolbar);</span>
+
+        // Set the toolbar as the app bar
+<span class="nc" id="L76">        setSupportActionBar(toolbar);</span>
+
+        // Initialize views
+<span class="nc" id="L79">        troopTrainingImageView = findViewById(R.id.troopTrainingImageView);</span>
+<span class="nc" id="L80">        researchCostImageView = findViewById(R.id.researchCostImageView);</span>
+<span class="nc" id="L81">        buildingCostImageView = findViewById(R.id.buildingCostImageView);</span>
+<span class="nc" id="L82">        attackBonusImageView = findViewById(R.id.attackBonusImageView);</span>
+<span class="nc" id="L83">        troopCapacityImageView = findViewById(R.id.troopCapacityImageView);</span>
+<span class="nc" id="L84">        buildingSpeedImageView = findViewById(R.id.buildingSpeedImageView);</span>
+
+<span class="nc" id="L86">        troopTrainingLevelTextView = findViewById(R.id.troopTrainingLevelTextView);</span>
+<span class="nc" id="L87">        troopTrainingBonusTextView = findViewById(R.id.troopTrainingBonusTextView);</span>
+<span class="nc" id="L88">        researchCostLevelTextView = findViewById(R.id.researchCostLevelTextView);</span>
+<span class="nc" id="L89">        researchCostBonusTextView = findViewById(R.id.researchCostBonusTextView);</span>
+<span class="nc" id="L90">        buildingCostLevelTextView = findViewById(R.id.buildingCostLevelTextView);</span>
+<span class="nc" id="L91">        buildingCostBonusTextView = findViewById(R.id.buildingCostBonusTextView);</span>
+<span class="nc" id="L92">        attackBonusLevelTextView = findViewById(R.id.attackBonusLevelTextView);</span>
+<span class="nc" id="L93">        attackBonusBonusTextView = findViewById(R.id.attackBonusBonusTextView);</span>
+<span class="nc" id="L94">        troopCapacityLevelTextView = findViewById(R.id.troopCapacityLevelTextView);</span>
+<span class="nc" id="L95">        troopCapacityBonusTextView = findViewById(R.id.troopCapacityBonusTextView);</span>
+<span class="nc" id="L96">        buildingSpeedLevelTextView = findViewById(R.id.buildingSpeedLevelTextView);</span>
+<span class="nc" id="L97">        buildingSpeedBonusTextView = findViewById(R.id.buildingSpeedBonusTextView);</span>
+
+<span class="nc" id="L99">        upgradeButton = findViewById(R.id.upgradeButton);</span>
+<span class="nc" id="L100">        backButton = findViewById(R.id.backButton);</span>
+
+        // Set initial visibility of images
+<span class="nc" id="L103">        updateImageViewVisibility(1); // Set initial tier to 1</span>
+
+        // Set click listeners for images
+<span class="nc" id="L106">        troopTrainingImageView.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+                // Set selected skill to troop training
+<span class="nc" id="L110">                selectedSkill = SelectedSkill.TROOP_TRAINING;</span>
+                // Display current level and bonus for troop training
+<span class="nc" id="L112">                showTroopTrainingInfo();</span>
+<span class="nc" id="L113">            }</span>
+        });
+
+<span class="nc" id="L116">        researchCostImageView.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+                // Set selected skill to resource gathering
+<span class="nc" id="L120">                selectedSkill = SelectedSkill.RESEARCH_COST;</span>
+                // Display current level and bonus for resource gathering
+<span class="nc" id="L122">                showResearchCostInfo();</span>
+<span class="nc" id="L123">            }</span>
+        });
+
+<span class="nc" id="L126">        buildingCostImageView.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L129">                selectedSkill = SelectedSkill.BUILDING_COST;</span>
+<span class="nc" id="L130">                showBuildingCostInfo();</span>
+<span class="nc" id="L131">            }</span>
+        });
+
+<span class="nc" id="L134">        attackBonusImageView.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L137">                selectedSkill = SelectedSkill.ATTACK_BONUS;</span>
+<span class="nc" id="L138">                showAttackBonusInfo();</span>
+<span class="nc" id="L139">            }</span>
+        });
+
+<span class="nc" id="L142">        troopCapacityImageView.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L145">                selectedSkill = SelectedSkill.TROOP_CAPACITY;</span>
+<span class="nc" id="L146">                showTroopCapacityInfo();</span>
+<span class="nc" id="L147">            }</span>
+        });
+
+<span class="nc" id="L150">        buildingSpeedImageView.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L153">                selectedSkill = SelectedSkill.BUILDING_SPEED;</span>
+<span class="nc" id="L154">                showBuildingSpeedInfo();</span>
+<span class="nc" id="L155">            }</span>
+        });
+
+<span class="nc" id="L158">        backButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L161">                Intent intent = new Intent(ResearchActivity.this, MainActivity.class);</span>
+<span class="nc" id="L162">                intent.putExtra(&quot;ID&quot;, String.valueOf(userID));</span>
+<span class="nc" id="L163">                startActivity(intent);</span>
+<span class="nc" id="L164">            }</span>
+        });
+
+        // Set click listener for upgrade button
+<span class="nc" id="L168">        upgradeButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+                // Handle upgrade button click based on the selected skill
+<span class="nc bnc" id="L172" title="All 7 branches missed.">                switch (selectedSkill) {</span>
+                    case TROOP_TRAINING:
+<span class="nc" id="L174">                        upgradeTroopTraining();</span>
+<span class="nc" id="L175">                        break;</span>
+                    case RESEARCH_COST:
+<span class="nc" id="L177">                        upgradeResearchCost();</span>
+<span class="nc" id="L178">                        break;</span>
+                    case BUILDING_COST:
+<span class="nc" id="L180">                        upgradeBuildingCost();</span>
+<span class="nc" id="L181">                        break;</span>
+                    case ATTACK_BONUS:
+<span class="nc" id="L183">                        upgradeAttackBonus();</span>
+<span class="nc" id="L184">                        break;</span>
+                    case TROOP_CAPACITY:
+<span class="nc" id="L186">                        upgradeTroopCapacity();</span>
+<span class="nc" id="L187">                        break;</span>
+                    case BUILDING_SPEED:
+<span class="nc" id="L189">                        upgradeBuildingSpeed();</span>
+                        break;
+                }
+<span class="nc" id="L192">            }</span>
+        });
+<span class="nc" id="L194">    }</span>
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+<span class="nc" id="L198">        getMenuInflater().inflate(R.menu.tier_menu, menu);</span>
+<span class="nc" id="L199">        return true;</span>
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+<span class="nc" id="L204">        int id = item.getItemId();</span>
+<span class="nc bnc" id="L205" title="All 2 branches missed.">        if (id == R.id.tier1) {</span>
+<span class="nc" id="L206">            updateImageViewVisibility(1);</span>
+<span class="nc" id="L207">            return true;</span>
+<span class="nc bnc" id="L208" title="All 2 branches missed.">        } else if (id == R.id.tier2) {</span>
+<span class="nc" id="L209">            updateImageViewVisibility(2);</span>
+<span class="nc" id="L210">            return true;</span>
+<span class="nc bnc" id="L211" title="All 2 branches missed.">        } else if (id == R.id.tier3) {</span>
+<span class="nc" id="L212">            updateImageViewVisibility(3);</span>
+<span class="nc" id="L213">            return true;</span>
+        }
+<span class="nc" id="L215">        return super.onOptionsItemSelected(item);</span>
+    }
+
+    private void updateImageViewVisibility(int selectedTier) {
+        // Hide images on tiers other than the selected tier
+<span class="nc bnc" id="L220" title="All 2 branches missed.">        if (selectedTier == 1) {</span>
+<span class="nc" id="L221">            troopTrainingImageView.setVisibility(View.VISIBLE);</span>
+<span class="nc" id="L222">            researchCostImageView.setVisibility(View.VISIBLE);</span>
+<span class="nc" id="L223">            troopTrainingLevelTextView.setVisibility(View.VISIBLE);</span>
+<span class="nc" id="L224">            troopTrainingBonusTextView.setVisibility(View.VISIBLE);</span>
+<span class="nc" id="L225">            researchCostLevelTextView.setVisibility(View.VISIBLE);</span>
+<span class="nc" id="L226">            researchCostBonusTextView.setVisibility(View.VISIBLE);</span>
+        } else {
+<span class="nc" id="L228">            troopTrainingImageView.setVisibility(View.INVISIBLE);</span>
+<span class="nc" id="L229">            researchCostImageView.setVisibility(View.INVISIBLE);</span>
+<span class="nc" id="L230">            troopTrainingLevelTextView.setVisibility(View.INVISIBLE);</span>
+<span class="nc" id="L231">            troopTrainingBonusTextView.setVisibility(View.INVISIBLE);</span>
+<span class="nc" id="L232">            researchCostLevelTextView.setVisibility(View.INVISIBLE);</span>
+<span class="nc" id="L233">            researchCostBonusTextView.setVisibility(View.INVISIBLE);</span>
+        }
+
+<span class="nc bnc" id="L236" title="All 2 branches missed.">        if (selectedTier == 2) {</span>
+<span class="nc" id="L237">            buildingCostImageView.setVisibility(View.VISIBLE);</span>
+<span class="nc" id="L238">            buildingCostLevelTextView.setVisibility(View.VISIBLE);</span>
+<span class="nc" id="L239">            buildingCostBonusTextView.setVisibility(View.VISIBLE);</span>
+<span class="nc" id="L240">            attackBonusImageView.setVisibility(View.VISIBLE);</span>
+<span class="nc" id="L241">            attackBonusLevelTextView.setVisibility(View.VISIBLE);</span>
+<span class="nc" id="L242">            attackBonusBonusTextView.setVisibility(View.VISIBLE);</span>
+        } else {
+<span class="nc" id="L244">            buildingCostImageView.setVisibility(View.INVISIBLE);</span>
+<span class="nc" id="L245">            buildingCostLevelTextView.setVisibility(View.INVISIBLE);</span>
+<span class="nc" id="L246">            buildingCostBonusTextView.setVisibility(View.INVISIBLE);</span>
+<span class="nc" id="L247">            attackBonusImageView.setVisibility(View.INVISIBLE);</span>
+<span class="nc" id="L248">            attackBonusLevelTextView.setVisibility(View.INVISIBLE);</span>
+<span class="nc" id="L249">            attackBonusBonusTextView.setVisibility(View.INVISIBLE);</span>
+        }
+
+<span class="nc bnc" id="L252" title="All 2 branches missed.">        if (selectedTier == 3) {</span>
+<span class="nc" id="L253">            troopCapacityImageView.setVisibility(View.VISIBLE);</span>
+<span class="nc" id="L254">            troopCapacityLevelTextView.setVisibility(View.VISIBLE);</span>
+<span class="nc" id="L255">            troopCapacityBonusTextView.setVisibility(View.VISIBLE);</span>
+<span class="nc" id="L256">            buildingSpeedImageView.setVisibility(View.VISIBLE);</span>
+<span class="nc" id="L257">            buildingSpeedLevelTextView.setVisibility(View.VISIBLE);</span>
+<span class="nc" id="L258">            buildingSpeedBonusTextView.setVisibility(View.VISIBLE);</span>
+        } else {
+<span class="nc" id="L260">            troopCapacityImageView.setVisibility(View.INVISIBLE);</span>
+<span class="nc" id="L261">            troopCapacityLevelTextView.setVisibility(View.INVISIBLE);</span>
+<span class="nc" id="L262">            troopCapacityBonusTextView.setVisibility(View.INVISIBLE);</span>
+<span class="nc" id="L263">            buildingSpeedImageView.setVisibility(View.INVISIBLE);</span>
+<span class="nc" id="L264">            buildingSpeedLevelTextView.setVisibility(View.INVISIBLE);</span>
+<span class="nc" id="L265">            buildingSpeedBonusTextView.setVisibility(View.INVISIBLE);</span>
+        }
+<span class="nc" id="L267">    }</span>
+
+    private void showTroopTrainingInfo() {
+<span class="nc" id="L270">        troopTrainingLevelTextView.setText(&quot;Troop Training Speed Level: &quot; + troopTrainingLevel);</span>
+<span class="nc" id="L271">        troopTrainingBonusTextView.setText(&quot;Troop Training Speed Bonus: &quot; + troopTrainingBonus * 100 + &quot;%&quot;);</span>
+<span class="nc" id="L272">    }</span>
+
+    private void showResearchCostInfo() {
+<span class="nc" id="L275">        researchCostLevelTextView.setText(&quot;Cheaper Research Level: &quot; + researchCostLevel);</span>
+<span class="nc" id="L276">        researchCostBonusTextView.setText(&quot;Cheaper Research Bonus: &quot; + researchCostBonus * 100 + &quot;%&quot;);</span>
+<span class="nc" id="L277">    }</span>
+
+    private void showBuildingCostInfo() {
+<span class="nc" id="L280">        buildingCostLevelTextView.setText(&quot;Cheaper Building Upgrades Level: &quot; + buildingCostLevel);</span>
+<span class="nc" id="L281">        buildingCostBonusTextView.setText(&quot;Cheaper Building Upgrades Bonus: &quot; + buildingCostBonus * 100 + &quot;%&quot;);</span>
+<span class="nc" id="L282">    }</span>
+
+    private void showAttackBonusInfo() {
+<span class="nc" id="L285">        attackBonusLevelTextView.setText(&quot;All Troops Attack Bonus Level: &quot; + attackBonusLevel);</span>
+<span class="nc" id="L286">        attackBonusBonusTextView.setText(&quot;All Troops Attack Bonus: &quot; + attackBonusBonus * 100 + &quot;%&quot;);</span>
+<span class="nc" id="L287">    }</span>
+
+    private void showTroopCapacityInfo() {
+<span class="nc" id="L290">        troopCapacityLevelTextView.setText(&quot;Increased Troop Capacity Level: &quot; + troopCapacityLevel);</span>
+<span class="nc" id="L291">        troopCapacityBonusTextView.setText(&quot;Increased Troop Capacity Bonus: +&quot; + troopCapacityBonus + &quot; troops&quot;);</span>
+<span class="nc" id="L292">    }</span>
+
+    private void showBuildingSpeedInfo() {
+<span class="nc" id="L295">        buildingSpeedLevelTextView.setText(&quot;Building Upgrade Speed Level: &quot; + buildingSpeedLevel);</span>
+<span class="nc" id="L296">        buildingSpeedBonusTextView.setText(&quot;Building Upgrade Speed Bonus: &quot; + buildingSpeedBonus * 100 + &quot;%&quot;);</span>
+<span class="nc" id="L297">    }</span>
+
+    private void upgradeTroopTraining() {
+<span class="nc bnc" id="L300" title="All 2 branches missed.">        if (troopTrainingLevel &lt; 2) {</span>
+<span class="nc" id="L301">            troopTrainingLevel++;</span>
+<span class="nc" id="L302">            troopTrainingBonus = troopTrainingLevel * 0.03f;</span>
+<span class="nc bnc" id="L303" title="All 2 branches missed.">        } else if (troopTrainingLevel == 2) {</span>
+<span class="nc" id="L304">            troopTrainingLevel++;</span>
+<span class="nc" id="L305">            troopTrainingBonus = 0.10f;</span>
+<span class="nc bnc" id="L306" title="All 2 branches missed.">        } else if (troopTrainingLevel == 3) {</span>
+<span class="nc" id="L307">            troopTrainingLevel++;</span>
+<span class="nc" id="L308">            troopTrainingBonus = 0.13f;</span>
+<span class="nc bnc" id="L309" title="All 2 branches missed.">        } else if (troopTrainingLevel == 4) {</span>
+<span class="nc" id="L310">            troopTrainingLevel++;</span>
+<span class="nc" id="L311">            troopTrainingBonus = 0.17f;</span>
+        } else {
+<span class="nc" id="L313">            Toast.makeText(this, &quot;MAX LEVEL REACHED&quot;, Toast.LENGTH_SHORT).show();</span>
+        }
+
+<span class="nc" id="L316">        showTroopTrainingInfo();</span>
+<span class="nc" id="L317">    }</span>
+
+    private void upgradeResearchCost() {
+<span class="nc bnc" id="L320" title="All 2 branches missed.">        if (researchCostLevel == 0) {</span>
+<span class="nc" id="L321">            researchCostLevel++;</span>
+<span class="nc" id="L322">            researchCostBonus = 0.01f;</span>
+<span class="nc bnc" id="L323" title="All 2 branches missed.">        } else if (researchCostLevel &lt; 5) {</span>
+<span class="nc" id="L324">            researchCostLevel++;</span>
+<span class="nc" id="L325">            researchCostBonus = (researchCostLevel - 1) * 0.03f;</span>
+        } else {
+<span class="nc" id="L327">            Toast.makeText(this, &quot;MAX LEVEL REACHED&quot;, Toast.LENGTH_SHORT).show();</span>
+        }
+
+<span class="nc" id="L330">        showResearchCostInfo();</span>
+<span class="nc" id="L331">    }</span>
+
+    private void upgradeBuildingCost() {
+<span class="nc bnc" id="L334" title="All 2 branches missed.">        if (buildingCostLevel &lt; 2) {</span>
+<span class="nc" id="L335">            buildingCostLevel++;</span>
+<span class="nc" id="L336">            buildingCostBonus = buildingCostLevel * 0.03f;</span>
+<span class="nc bnc" id="L337" title="All 2 branches missed.">        } else if (buildingCostLevel == 2) {</span>
+<span class="nc" id="L338">            buildingCostLevel++;</span>
+<span class="nc" id="L339">            buildingCostBonus = 0.10f;</span>
+<span class="nc bnc" id="L340" title="All 2 branches missed.">        } else if (buildingCostLevel == 3) {</span>
+<span class="nc" id="L341">            buildingCostLevel++;</span>
+<span class="nc" id="L342">            buildingCostBonus = 0.14f;</span>
+<span class="nc bnc" id="L343" title="All 2 branches missed.">        } else if (buildingCostLevel == 4) {</span>
+<span class="nc" id="L344">            buildingCostLevel++;</span>
+<span class="nc" id="L345">            buildingCostBonus = 0.17f;</span>
+        } else {
+<span class="nc" id="L347">            Toast.makeText(this, &quot;MAX LEVEL REACHED&quot;, Toast.LENGTH_SHORT).show();</span>
+        }
+
+<span class="nc" id="L350">        showBuildingCostInfo();</span>
+<span class="nc" id="L351">    }</span>
+
+    private void upgradeAttackBonus() {
+<span class="nc bnc" id="L354" title="All 2 branches missed.">        if (attackBonusLevel &lt; 2) {</span>
+<span class="nc" id="L355">            attackBonusLevel++;</span>
+<span class="nc" id="L356">            attackBonusBonus = attackBonusLevel * 0.03f;</span>
+<span class="nc bnc" id="L357" title="All 2 branches missed.">        } else if (attackBonusLevel == 2) {</span>
+<span class="nc" id="L358">            attackBonusLevel++;</span>
+<span class="nc" id="L359">            attackBonusBonus = 0.11f;</span>
+<span class="nc bnc" id="L360" title="All 2 branches missed.">        } else if (attackBonusLevel == 3) {</span>
+<span class="nc" id="L361">            attackBonusLevel++;</span>
+<span class="nc" id="L362">            attackBonusBonus = 0.16f;</span>
+<span class="nc bnc" id="L363" title="All 2 branches missed.">        } else if (attackBonusLevel == 4) {</span>
+<span class="nc" id="L364">            attackBonusLevel++;</span>
+<span class="nc" id="L365">            attackBonusBonus = 0.20f;</span>
+        } else {
+<span class="nc" id="L367">            Toast.makeText(this, &quot;MAX LEVEL REACHED&quot;, Toast.LENGTH_SHORT).show();</span>
+        }
+
+<span class="nc" id="L370">        showAttackBonusInfo();</span>
+<span class="nc" id="L371">    }</span>
+
+    private void upgradeTroopCapacity() {
+<span class="nc bnc" id="L374" title="All 2 branches missed.">        if (troopCapacityLevel == 0) {</span>
+<span class="nc" id="L375">            troopCapacityLevel++;</span>
+<span class="nc" id="L376">            troopCapacityBonus = 5;</span>
+<span class="nc bnc" id="L377" title="All 2 branches missed.">        } else if (troopCapacityLevel == 1) {</span>
+<span class="nc" id="L378">            troopCapacityLevel++;</span>
+<span class="nc" id="L379">            troopCapacityBonus = 15;</span>
+<span class="nc bnc" id="L380" title="All 2 branches missed.">        } else if (troopCapacityLevel == 2) {</span>
+<span class="nc" id="L381">            troopCapacityLevel++;</span>
+<span class="nc" id="L382">            troopCapacityBonus = 30;</span>
+<span class="nc bnc" id="L383" title="All 2 branches missed.">        } else if (troopCapacityLevel == 3) {</span>
+<span class="nc" id="L384">            troopCapacityLevel++;</span>
+<span class="nc" id="L385">            troopCapacityBonus = 45;</span>
+<span class="nc bnc" id="L386" title="All 2 branches missed.">        } else if (troopCapacityLevel == 4) {</span>
+<span class="nc" id="L387">            troopCapacityLevel++;</span>
+<span class="nc" id="L388">            troopCapacityBonus = 65;</span>
+        } else {
+<span class="nc" id="L390">            Toast.makeText(this, &quot;MAX LEVEL REACHED&quot;, Toast.LENGTH_SHORT).show();</span>
+        }
+
+<span class="nc" id="L393">        showTroopCapacityInfo();</span>
+<span class="nc" id="L394">    }</span>
+
+    private void upgradeBuildingSpeed() {
+<span class="nc bnc" id="L397" title="All 2 branches missed.">        if (buildingSpeedLevel &lt; 2) {</span>
+<span class="nc" id="L398">            buildingSpeedLevel++;</span>
+<span class="nc" id="L399">            buildingSpeedBonus = buildingSpeedLevel * 0.03f;</span>
+<span class="nc bnc" id="L400" title="All 2 branches missed.">        } else if (buildingSpeedLevel == 2) {</span>
+<span class="nc" id="L401">            buildingSpeedLevel++;</span>
+<span class="nc" id="L402">            buildingSpeedBonus = 0.12f;</span>
+<span class="nc bnc" id="L403" title="All 2 branches missed.">        } else if (buildingSpeedLevel == 3) {</span>
+<span class="nc" id="L404">            buildingSpeedLevel++;</span>
+<span class="nc" id="L405">            buildingSpeedBonus = 0.18f;</span>
+<span class="nc bnc" id="L406" title="All 2 branches missed.">        } else if (buildingSpeedLevel == 4) {</span>
+<span class="nc" id="L407">            buildingSpeedLevel++;</span>
+<span class="nc" id="L408">            buildingSpeedBonus = 0.25f;</span>
+        } else {
+<span class="nc" id="L410">            Toast.makeText(this, &quot;MAX LEVEL REACHED&quot;, Toast.LENGTH_SHORT).show();</span>
+        }
+
+<span class="nc" id="L413">        showBuildingSpeedInfo();</span>
+<span class="nc" id="L414">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span>Generated by the Android Gradle plugin 8.4.0</div></body></html>

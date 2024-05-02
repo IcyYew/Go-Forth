@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LoginActivity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">com.example.goforth</a> &gt; <span class="el_source">LoginActivity.java</span></div><h1>LoginActivity.java</h1><pre class="source lang-java linenums">package com.example.goforth;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+/**
+ * This activity is responsible for login functionalities.
+ *
+ * @author Nicholas Lynch
+ */
+<span class="fc" id="L27">public class LoginActivity extends AppCompatActivity {</span>
+    private EditText Username;
+
+    private EditText Password;
+
+    private Button Login;
+
+    private Button Back;
+
+    private int userID;
+
+    /**
+     * On the creation of this activity, TextViews and Buttons are initialized.
+     * Extras are received and put in userID variable (for carrying across activities).
+     * The login button is used to make a GET request to get all users to see if login can succeed.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  &lt;b&gt;&lt;i&gt;Note: Otherwise it is null.&lt;/i&gt;&lt;/b&gt;
+     */
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="fc" id="L48">        super.onCreate(savedInstanceState);</span>
+<span class="fc" id="L49">        setContentView(R.layout.activity_login);</span>
+
+<span class="fc" id="L51">        Bundle extras = getIntent().getExtras();</span>
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">        if (extras != null) {</span>
+<span class="fc" id="L53">            userID = extras.getInt(&quot;ID&quot;);</span>
+        }
+
+
+        //Initialize UI
+<span class="fc" id="L58">        Username = findViewById(R.id.username);</span>
+
+<span class="fc" id="L60">        Password = findViewById(R.id.password);</span>
+
+<span class="fc" id="L62">        Login = findViewById(R.id.Button);</span>
+
+<span class="fc" id="L64">        Back = findViewById(R.id.back);</span>
+
+<span class="fc" id="L66">        Back.setOnClickListener(new View.OnClickListener() {</span>
+            //Back button clicked
+            @Override
+            public void onClick(View v) {
+                //goes to MainActivity with userID
+<span class="nc" id="L71">                Intent intent = new Intent(LoginActivity.this, MainActivity.class);</span>
+<span class="nc" id="L72">                intent.putExtra(&quot;ID&quot;, String.valueOf(userID));</span>
+<span class="nc" id="L73">                startActivity(intent);</span>
+<span class="nc" id="L74">            }</span>
+        });
+        //Login Button Clicked
+<span class="fc" id="L77">        Login.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="fc" id="L80">                String url = &quot;http://coms-309-048.class.las.iastate.edu:8080/players/getall&quot;; //URL to get all players</span>
+<span class="fc" id="L81">                String usernameString = Username.getText().toString(); //Get username inputed</span>
+<span class="fc" id="L82">                String passwordString = Password.getText().toString(); //Get password inputed</span>
+                // make a StringRequest to get the users from the server. Converts JSONArray into StringBuilder.
+<span class="fc" id="L84">                StringRequest request = new StringRequest(Request.Method.GET, url,</span>
+<span class="fc" id="L85">                        new Response.Listener&lt;String&gt;() {</span>
+                            @Override
+                            public void onResponse(String response) {
+<span class="nc" id="L88">                                Log.d(&quot;Display response&quot;, response);</span>
+                                try {
+<span class="nc" id="L90">                                    JSONArray jsonArray = new JSONArray(response); //Array of users</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">                                    for (int i = 0; i &lt; jsonArray.length(); i++) { //loop to get all players</span>
+<span class="nc" id="L92">                                        JSONObject playerObject = jsonArray.getJSONObject(i); //gets user at I</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">                                        if (playerObject.getString(&quot;userName&quot;).equals(usernameString)) //If the username matches the current username at i</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">                                            if (playerObject.getString(&quot;password&quot;).equals(passwordString)) { //If the password matches the username</span>
+                                                //username and password match
+<span class="nc" id="L96">                                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);</span>
+<span class="nc" id="L97">                                                intent.putExtra(&quot;ID&quot;, playerObject.getString(&quot;playerID&quot;)); //Brings user ID to main activity</span>
+<span class="nc" id="L98">                                                startActivity(intent);  // go to LoginActivity</span>
+<span class="nc" id="L99">                                                return;</span>
+                                            } else {
+                                                //username exist but password does not match
+<span class="nc" id="L102">                                                Toast toast = Toast.makeText(LoginActivity.this, &quot;Username Doesnt exist or password doesn't match (Password)&quot;, Toast.LENGTH_SHORT);</span>
+<span class="nc" id="L103">                                                toast.show();</span>
+<span class="nc" id="L104">                                                return;</span>
+                                            }
+                                    }
+
+<span class="nc" id="L108">                                } catch (JSONException e) {</span>
+<span class="nc" id="L109">                                    e.printStackTrace();</span>
+<span class="nc" id="L110">                                }</span>
+                                //username does not exist
+<span class="nc" id="L112">                                Toast toast = Toast.makeText(LoginActivity.this, &quot;Username Doesnt exist or password doesn't match (Username)&quot;, Toast.LENGTH_SHORT);</span>
+<span class="nc" id="L113">                                toast.show();</span>
+<span class="nc" id="L114">                            }</span>
+                        },
+<span class="fc" id="L116">                        new Response.ErrorListener() {</span>
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+<span class="fc" id="L119">                                Toast.makeText(getApplicationContext(), &quot;Error fetching players: &quot; + error.getMessage(), Toast.LENGTH_SHORT).show();</span>
+<span class="fc" id="L120">                            }</span>
+                        });
+
+                // add to the request queue
+<span class="fc" id="L124">                VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);</span>
+
+<span class="fc" id="L126">            }</span>
+        });
+<span class="fc" id="L128">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span>Generated by the Android Gradle plugin 8.4.0</div></body></html>
