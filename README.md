@@ -1,8 +1,8 @@
-# Tech Conquest - Not being worked on
+# Go Forth - Not being worked on
 
 
 ## Description
-Tech Conquest was a project worked on by myself(Michael Geltz), Nicholas Lynch, Joshua Dwight, and Ryan Johnson for our Software Development Practices course during Spring 2024. Nicholas and Joshua worked on the frontend development while Ryan and I worked on the backend. My role outside of writing the code for the backend was to maintain the database and ensure our server was working as intended. 
+Go Forth was a project worked on by myself(Michael Geltz), Nicholas Lynch, Joshua Dwight, and Ryan Johnson for our Software Development Practices course during Spring 2024. Nicholas and Joshua worked on the frontend development while Ryan and I worked on the backend. My role outside of writing the code for the backend was to maintain the database and ensure our server was working as intended. 
 
 ## Skills Developed
 Scrum Framework Practices
