@@ -6,26 +6,40 @@ Tech Conquest was a project worked on by myself(Michael Geltz), Nicholas Lynch, 
 
 ## Skills Developed
 Scrum Framework Practices
+
 Drafting diagrams to display the interconnectivity of our entire project -- Frontend to backend communication, how our backend internally manages information to send and recieve from the frontend and then relays that information to our   
-database [Image 1]
+database (Image provided below)
+
 Collaborating on a project with separate internal teams
+
 Managing expectations for team member contribution
+
 Learning git workflow
+
 Creating and managing database schemas
+
 Testing for failure cases in our program
+
 Solving failure cases
+
 Writing good coverage tests to ensure proper functionality
+
 Managing a provided server -- setting up pipelines for git, updating application versions, parsing error messages to find issues
+
 Composing JSON payloads to be easily parsable by the frontend, and vice-versa
+
 Writing good compartmentalized code to keep things manageable and to make fixing potential issues easier
+
 Understanding the differences between protocols, HTTP, HTTPS, and SSH
+
 Utilizing websockets for player-to-player chatting and for updating the map simulataneously
+
 Utilizing Maven for package version control & acquisition
+
 Many more...
   
 
 ## Visuals
-[Image 1]
 ![image](https://github.com/user-attachments/assets/48df969c-185a-43a8-bc93-072238e22661)
 
 
