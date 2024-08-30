@@ -42,6 +42,9 @@ Many more...
 ## Visuals
 ![image](https://github.com/user-attachments/assets/48df969c-185a-43a8-bc93-072238e22661)
 
+**Footage of us demoing the game:** ![link](https://www.youtube.com/watch?v=-YE2Q62x9zI)
+
+
 
 ## Installation
 !! Unfortunately, as is, this game cannot be run as the server provided to us is no longer running. I could retrofit the whole thing to operate on a different server but I don't have the time as of now.
