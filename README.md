@@ -48,13 +48,16 @@ Many more...
 
 ## Authors and acknowledgment
 Frontend Development Team --
+
 Joshua Dwight - Awarded "Best Heart" by Dr. Simanta Mitra
+
 Nicholas Lynch
 
 Backend Development Team --
-Ryan Johnson - Awarded "Best Heart" by Dr. Simanta Mitra
-Michael Geltz - Awarded "Best Manager" by Dr. Simanta Mitra -- Able to receive reference from him on request
 
+Ryan Johnson - Awarded "Best Heart" by Dr. Simanta Mitra
+
+Michael Geltz - Awarded "Best Manager" by Dr. Simanta Mitra -- Able to receive reference from him on request
 
 ## Project status
 No longer being developed or maintained
